@@ -32,11 +32,11 @@ from fs.errors import ResourceInvalidError
 	# return summary
 
 
-# def build-web-page(standard, sub_standards, descriptions_path):
+# def build_web_page(standard, sub_standards, descriptions_path):
 	# open standard configuration file that contains descriptions for each sub standard
 	# descriptions = loadJSON(descriptions_path)
 
-	# load HTML template
+	# load standard HTML template
 
 	# construct title
 	# create_title(descriptions['title'])
@@ -54,7 +54,31 @@ from fs.errors import ResourceInvalidError
 	
 	# return HTML page
 
+# def create_overview_entry(standard, description):
+	# overview = '''
+	# 	<p>
+	#		<i class="fa fa-file"></i>
+	#		<span style='margin-left: 25px'>
+	#			<a href="http://register.geostandaarden.nl/%s/">%s</a>
+	#		</span>
+	#	</p>
+	# 	<p><span style='margin-left:37px; width: 100%'>%s</span></p>
+ 	#''' % (standard, standard.allCaps(), description)
 
+ 	# return overview
+
+# def create_overview_page(standards):
+	# open overview page template
+
+	# fetch #leftcolumn element
+
+	# iterate over standaards
+		# if standard has informatiemodel substandard
+			# description = fetch description from standard conf. file in repos/standard/conf.json
+			# overview = create_overview_entry()
+			# add to #leftcolumng element
+
+	# save overview page to ./web/index.html
 
 source = 'repos'
 source_fs = OSFS(source)
@@ -66,7 +90,8 @@ root.removedir(destination, force=True)
 root.makedir(destination)
 
 # iterate over the contents of source dir
-for standard in source_fs.listdir(dirs_only=True):
+standards = source_fs.listdir(dirs_only=True)
+for standard in standards:
 	print standard
 	standard_fs = source_fs.opendir(standard)
 
@@ -82,5 +107,7 @@ for standard in source_fs.listdir(dirs_only=True):
 				
 			root.copydir('%s/%s/%s' % (source, standard, sub_standard),  '%s/%s/%s' % (destination, sub_standard, standard))
 
-	# build-web-page(standard, sub_standards, source + '/' + standard + '/descriptions.json')
+	# build_web_page(standard, sub_standards, source + '/' + standard + '/descriptions.json')
 	# save HTML page to root/web/standard/index.html
+
+# create_overview_page(standards)
