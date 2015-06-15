@@ -1,5 +1,5 @@
 from fs.osfs import OSFS
-from fs.errors import ResourceInvalidError
+from bs4 import BeautifulSoup as BS
 
 
 # def create_title(title, summary)
@@ -80,34 +80,38 @@ from fs.errors import ResourceInvalidError
 
 	# save overview page to ./web/index.html
 
-source = 'repos'
-source_fs = OSFS(source)
 
-destination = 'register/'
+def build_folders(source, destination, standards, root):
+	source_fs = OSFS(source)
 
-root = OSFS('./') # 'c:\Users\<login name>' on Windows
-root.removedir(destination, force=True)
-root.makedir(destination)
+	for standard in standards:
+		print standard
+		standard_fs = source_fs.opendir(standard)
 
-# iterate over the contents of source dir
-standards = source_fs.listdir(dirs_only=True)
-for standard in standards:
-	print standard
-	standard_fs = source_fs.opendir(standard)
+		sub_standards = standard_fs.listdir(dirs_only=True)
 
-	sub_standards = standard_fs.listdir(dirs_only=True)
+		# iterate over dirs in each standard dir
+		for sub_standard in sub_standards:
+			# skip git dir
+			if ".git" not in sub_standard:
+				# check whether sub_standard folder exists in root
+				if root.exists(destination + sub_standard) == False:
+					root.makedir(destination + sub_standard)
+					
+				root.copydir('%s/%s/%s' % (source, standard, sub_standard),  '%s/%s/%s' % (destination, sub_standard, standard))
 
-	# iterate over dirs in each standard dir
-	for sub_standard in sub_standards:
-		# skip git dir
-		if ".git" not in sub_standard:
-			# check whether sub_standard folder exists in root
-			if root.exists(destination + sub_standard) == False:
-				root.makedir(destination + sub_standard)
-				
-			root.copydir('%s/%s/%s' % (source, standard, sub_standard),  '%s/%s/%s' % (destination, sub_standard, standard))
+		# build_web_page(standard, sub_standards, source + '/' + standard + '/descriptions.json')
+		# save HTML page to root/web/standard/index.html
 
-	# build_web_page(standard, sub_standards, source + '/' + standard + '/descriptions.json')
-	# save HTML page to root/web/standard/index.html
+if __name__ == "__main__":
+	source = 'repos'
+	destination = 'register/'
 
-# create_overview_page(standards)
+	root = OSFS('./') # 'c:\Users\<login name>' on Windows
+	root.removedir(destination, force=True)
+	root.makedir(destination)
+
+	standards = OSFS(source).listdir(dirs_only=True)
+	build_folders(source, destination, standards, root)
+
+	# create_overview_page(standards)
