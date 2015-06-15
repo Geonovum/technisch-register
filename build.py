@@ -74,21 +74,27 @@ def build_web_page(standard, sub_standards, descriptions_path):
 		title = create_substandard_title(standard, sub_standard)
 		el_container.append(title)
 
-		description = create_substandard_description(descriptions['sub_standards'][sub_standard])
+		try:
+			description = create_substandard_description(descriptions['sub_standards'][sub_standard])
+		except KeyError:
+			description = ""
+
 		el_container.append(description)
 
 	return html.prettify()
 
 def create_overview_entry(standard, description):
+	# url = "http://register.geostandaarden.nl"
+	url = "."
 	overview = '''
 		<p>
 			<i class="fa fa-file"></i>
 			<span style='margin-left: 25px'>
-				<a href="http://register.geostandaarden.nl/%s/">%s</a>
+				<a href="%s/%s/index.html">%s</a>
 			</span>
 		</p>
 		<p><span style='margin-left:37px; width: 100%%'>%s</span></p>
- 	''' % (standard, standard.upper(), description)
+ 	''' % (url, standard, standard.upper(), description)
 
  	return BS(overview, 'html.parser')
 
@@ -117,7 +123,8 @@ def create_overview_page(standards, source, destination):
 		print html
 		f.write(html.prettify())
 
-	# save overview page to ./register/index.html
+		# OSFS('./').copydir('web/assets', '%sassets' % destination)
+
 	# copy web assets to ./register/assets
 
 
@@ -136,14 +143,13 @@ def build_folders(source, destination, standards, root):
 		# iterate over all sub standards
 		for sub_standard in sub_standards:
 			# check whether sub_standard folder exists in root
-			if root.exists(destination + sub_standard) == False:
-				root.makedir(destination + sub_standard)
+			if root.exists('%s/%s' % (destination, sub_standard)) == False:
+				root.makedir('%s/%s' % (destination, sub_standard))
 				
 			root.copydir('%s/%s/%s' % (source, standard, sub_standard),  '%s/%s/%s' % (destination, sub_standard, standard))
 
 		html = build_web_page(standard, sub_standards, source + '/' + standard + '/configuratie.json')
 
-		
 		if root.exists('%s/%s' % (destination, standard)) == False:
 			root.makedir('%s/%s' % (destination, standard))
 		
@@ -152,13 +158,13 @@ def build_folders(source, destination, standards, root):
 
 if __name__ == "__main__":
 	source = 'repos'
-	destination = 'register/'
+	destination = 'register'
 
 	root = OSFS('./') # 'c:\Users\<login name>' on Windows
 	root.removedir(destination, force=True)
 	root.makedir(destination)
 
 	standards = OSFS(source).listdir(dirs_only=True)
-	#build_folders(source, destination, standards, root)
+	build_folders(source, destination, standards, root)
 
 	create_overview_page(standards, source, destination)
