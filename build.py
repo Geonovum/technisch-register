@@ -123,7 +123,7 @@ def create_overview_page(standards, source, destination):
 		print html
 		f.write(html.prettify())
 
-		# OSFS('./').copydir('web/assets', '%sassets' % destination)
+		OSFS('./').copydir('web/assets', '%s/assets' % destination)
 
 	# copy web assets to ./register/assets
 
