@@ -1,6 +1,7 @@
 from fs.osfs import OSFS
 from bs4 import BeautifulSoup as BS
 from json import load
+import codecs
 
 
 def create_title(title, description):
@@ -78,31 +79,46 @@ def build_web_page(standard, sub_standards, descriptions_path):
 
 	return html.prettify()
 
-# def create_overview_entry(standard, description):
-	# overview = '''
-	# 	<p>
-	#		<i class="fa fa-file"></i>
-	#		<span style='margin-left: 25px'>
-	#			<a href="http://register.geostandaarden.nl/%s/">%s</a>
-	#		</span>
-	#	</p>
-	# 	<p><span style='margin-left:37px; width: 100%'>%s</span></p>
- 	#''' % (standard, standard.allCaps(), description)
+def create_overview_entry(standard, description):
+	overview = '''
+		<p>
+			<i class="fa fa-file"></i>
+			<span style='margin-left: 25px'>
+				<a href="http://register.geostandaarden.nl/%s/">%s</a>
+			</span>
+		</p>
+		<p><span style='margin-left:37px; width: 100%%'>%s</span></p>
+ 	''' % (standard, standard.upper(), description)
 
- 	# return overview
+ 	return BS(overview, 'html.parser')
 
-# def create_overview_page(standards):
+def create_overview_page(standards, source, destination):
 	# open overview page template
+	with codecs.open('web/templates/overview.html', 'r', encoding='utf8') as f:
+		html = BS(f)
 
-	# fetch #leftcolumn element
+	el_container = html.find(id='leftcolumn')
 
 	# iterate over standaards
-		# if standard has informatiemodel substandard
-			# description = fetch description from standard conf. file in repos/standard/conf.json
-			# overview = create_overview_entry()
-			# add to #leftcolumng element
+	for standard in standards:
+		print standard
+		try:
+			with open('%s/%s/configuratie.json' % (source, standard)) as f:
+				description = load(f)
+		except IOError:
+			print "Warning, could not find configuration file for %s " % standard
+			continue
 
-	# save overview page to ./web/index.html
+		# if 'informatiemodel' in description:
+		overview = create_overview_entry(standard, description['description'])
+		el_container.append(overview)
+
+	with codecs.open('%s/index.html' % destination, 'w', encoding='utf8') as f:
+		print html
+		f.write(html.prettify())
+
+	# save overview page to ./register/index.html
+	# copy web assets to ./register/assets
 
 
 def build_folders(source, destination, standards, root):
@@ -143,6 +159,6 @@ if __name__ == "__main__":
 	root.makedir(destination)
 
 	standards = OSFS(source).listdir(dirs_only=True)
-	build_folders(source, destination, standards, root)
+	#build_folders(source, destination, standards, root)
 
-	# create_overview_page(standards)
+	create_overview_page(standards, source, destination)
