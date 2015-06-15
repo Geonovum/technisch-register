@@ -1,58 +1,82 @@
 from fs.osfs import OSFS
 from bs4 import BeautifulSoup as BS
+from json import load
 
 
-# def create_title(title, summary)
-	# title = '''
-	#	<!-- <h2>%s</h2>
-	#	            <p>%s</p> -->
-	#''' % (tile, summary)
+def create_title(title, description):
+	title = '''
+		<h2>%s</h2>
+		<p>%s</p>
+	''' % (title, description)
 
-	# return title
+	# use python's built-in parser which skips
+	# creation of html and body tags
+	return BS(title, 'html.parser')
 
-# def create_substandard_title(standard, sub_standard):
-	# title = '''
-	# <p>
-	# 	<i class="fa fa-file-o"></i>
-	# 	<span style='margin-left: 25px'>
-	# 		<a href="http://register.geostandaarden.nl/%s/%s">%s</a>
-	# 	</span>
-	# </p>
-	#''' % (sub_standard, standard, sub_standard.capitalize())
+def create_substandard_title(standard, sub_standard):
+	title = '''
+	<p>
+		<i class="fa fa-file-o"></i>
+		<span style='margin-left: 25px'>
+			<a href="http://register.geostandaarden.nl/%s/%s">%s</a>
+		</span>
+	</p>
+	''' % (sub_standard, standard, sub_standard.capitalize())
 
-	# return title
+	return BS(title, 'html.parser')
 
-# def create_substandard_description(description):
-	# summary = '''
-	# <p>
-	# 	<span style='margin-left:37px; width: 100%'>%s</span>
-	# </p>
-	# ''' % summary
+def create_substandard_description(description):
+	summary = '''
+	<p>
+		<span style='margin-left:37px; width: 100%%'>%s</span>
+	</p>
+	''' % description
 
-	# return summary
+	return BS(summary, 'html.parser')
 
 
-# def build_web_page(standard, sub_standards, descriptions_path):
-	# open standard configuration file that contains descriptions for each sub standard
-	# descriptions = loadJSON(descriptions_path)
+def build_web_page(standard, sub_standards, descriptions_path):
+	# builds each standard's overview page
+	# e.g. http://register.geostandaarden.nl/imgeo/
+
+	print descriptions_path
+
+	try:
+		# open standard configuration file that contains descriptions for each sub standard
+		with open(descriptions_path, 'r') as f:
+			descriptions = load(f)
+
+	except IOError:
+		print "Warning, couldn't find configuration file for %s" % standard
+
+		# return empty HTML page
+		return ""
 
 	# load standard HTML template
+	with open('web/templates/standard.html', 'r') as f:
+		html = BS(f)
 
 	# construct title
-	# create_title(descriptions['title'])
-	# append to #title
-
-	# fetch #container from template
-
-	# iterate over all sub_standards
-		# for each type of sub_standard i.e. informatiemodel, gmlapplicatieschema, regels, etc.
-			# create HTML snippet
-				# title = create_substandard_title(standard, sub_standard)
-				# append to #conainter
-				# description = create_substandard_description(descriptions['sub-standards']['sub_standard'])
-				# append to #container
+	title = create_title(descriptions['title'], descriptions['description'])
 	
-	# return HTML page
+	# add to #title div
+	el_title = html.find(id="title")
+	# fetch #container from template
+	el_container = html.find(id="container")
+
+	# append title
+	el_title.append(title)
+
+	# iterate over all sub_standards i.e. informatiemodel, gmlapplicatieschema, regels, etc.
+	for sub_standard in sub_standards:
+		# create title
+		title = create_substandard_title(standard, sub_standard)
+		el_container.append(title)
+
+		description = create_substandard_description(descriptions['sub_standards'][sub_standard])
+		el_container.append(description)
+
+	return html.prettify()
 
 # def create_overview_entry(standard, description):
 	# overview = '''
@@ -84,24 +108,31 @@ from bs4 import BeautifulSoup as BS
 def build_folders(source, destination, standards, root):
 	source_fs = OSFS(source)
 
+	# iterate over all standards in sources directory
 	for standard in standards:
 		print standard
 		standard_fs = source_fs.opendir(standard)
 
+		# list all sub standards of a standard
 		sub_standards = standard_fs.listdir(dirs_only=True)
+		if '.git' in sub_standards: sub_standards.remove(".git")
 
-		# iterate over dirs in each standard dir
+		# iterate over all sub standards
 		for sub_standard in sub_standards:
-			# skip git dir
-			if ".git" not in sub_standard:
-				# check whether sub_standard folder exists in root
-				if root.exists(destination + sub_standard) == False:
-					root.makedir(destination + sub_standard)
-					
-				root.copydir('%s/%s/%s' % (source, standard, sub_standard),  '%s/%s/%s' % (destination, sub_standard, standard))
+			# check whether sub_standard folder exists in root
+			if root.exists(destination + sub_standard) == False:
+				root.makedir(destination + sub_standard)
+				
+			root.copydir('%s/%s/%s' % (source, standard, sub_standard),  '%s/%s/%s' % (destination, sub_standard, standard))
 
-		# build_web_page(standard, sub_standards, source + '/' + standard + '/descriptions.json')
-		# save HTML page to root/web/standard/index.html
+		html = build_web_page(standard, sub_standards, source + '/' + standard + '/configuratie.json')
+
+		
+		if root.exists('%s/%s' % (destination, standard)) == False:
+			root.makedir('%s/%s' % (destination, standard))
+		
+		with open('%s/%s/index.html' % (destination, standard), 'w') as f:
+			f.write(html)
 
 if __name__ == "__main__":
 	source = 'repos'
