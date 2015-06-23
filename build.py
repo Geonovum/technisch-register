@@ -14,13 +14,13 @@ def create_standard_title(title, description):
 	# creation of html and body tags
 	return BS(title, 'html.parser')
 
-def create_substandard_title(standard, sub_standard, title):
+def create_substandard_title(standard, artifact, title):
 	title = '''
 		<p><i class="fa fa-file-o"></i>
 			<span style='margin-left: 25px'>
 				<a href="http://register.geostandaarden.nl/%s/%s">%s</a>
 			</span>
-		</p> ''' % (sub_standard, standard, title)
+		</p> ''' % (artifact, standard, title)
 
 	return BS(title, 'html.parser')
 
@@ -33,7 +33,7 @@ def create_substandard_description(substandard):
 
 	return BS(summary, 'html.parser')
 
-def create_standard_webpage(standard, sub_standards):
+def create_standard_webpage(standard, artifacts):
 	# builds each standard's overview page
 	# e.g. http://register.geostandaarden.nl/imgeo/
 
@@ -56,14 +56,14 @@ def create_standard_webpage(standard, sub_standards):
 	with codecs.open('descriptions.json', encoding='utf8') as f:
 		descriptions = load(f)
 
-	# iterate over all sub_standards i.e. informatiemodel, gmlapplicatieschema, regels, etc.
-	for sub_standard in sub_standards:
+	# iterate over all artifacts i.e. informatiemodel, gmlapplicatieschema, regels, etc.
+	for artifact in artifacts:
 		# create title of each sub standard
-		title = create_substandard_title(standard['id'], sub_standard, descriptions[sub_standard]['titel'])
+		title = create_substandard_title(standard['id'], artifact, descriptions[artifact]['titel'])
 		el_container.append(title)
 
 		# create description of each standard
-		description = create_substandard_description(descriptions[sub_standard])
+		description = create_substandard_description(descriptions[artifact])
 		el_container.append(description)
 
 	return html.prettify()
@@ -113,19 +113,19 @@ def build_folders(source, destination, standards, root):
 		standard_fs = source_fs.opendir(standard['id'])
 
 		# list all sub standards of a standard
-		sub_standards = standard_fs.listdir(dirs_only=True)
-		if '.git' in sub_standards: sub_standards.remove(".git")
+		artifacts = standard_fs.listdir(dirs_only=True)
+		if '.git' in artifacts: artifacts.remove(".git")
 
-		for sub_standard in sub_standards:
-			# check whether sub_standard folder exists in destination 
-			if root.exists('%s/%s' % (destination, sub_standard)) == False:
-				root.makedir('%s/%s' % (destination, sub_standard))
+		for artifact in artifacts:
+			# check whether artifact folder exists in destination 
+			if root.exists('%s/%s' % (destination, artifact)) == False:
+				root.makedir('%s/%s' % (destination, artifact))
 				
 			# copy standard folders from source to destination in desired structure
-			root.copydir('%s/%s/%s' % (source, standard['id'], sub_standard),  '%s/%s/%s' % (destination, sub_standard, standard['id']))
+			root.copydir('%s/%s/%s' % (source, standard['id'], artifact),  '%s/%s/%s' % (destination, artifact, standard['id']))
 
 		# create standard HTML page
-		html = create_standard_webpage(standard, sub_standards)
+		html = create_standard_webpage(standard, artifacts)
 
 		# check whether standard folder exists in register root
 		if root.exists('%s/%s' % (destination, standard['id'])) == False:
