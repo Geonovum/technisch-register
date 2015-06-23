@@ -14,13 +14,13 @@ def create_standard_title(title, description):
 	# creation of html and body tags
 	return BS(title, 'html.parser')
 
-def create_substandard_title(standard, sub_standard):
+def create_substandard_title(standard, sub_standard, title):
 	title = '''
 		<p><i class="fa fa-file-o"></i>
 			<span style='margin-left: 25px'>
 				<a href="http://register.geostandaarden.nl/%s/%s">%s</a>
 			</span>
-		</p> ''' % (sub_standard, standard, sub_standard.capitalize())
+		</p> ''' % (sub_standard, standard, title)
 
 	return BS(title, 'html.parser')
 
@@ -59,7 +59,7 @@ def create_standard_webpage(standard, sub_standards):
 	# iterate over all sub_standards i.e. informatiemodel, gmlapplicatieschema, regels, etc.
 	for sub_standard in sub_standards:
 		# create title of each sub standard
-		title = create_substandard_title(standard['id'], sub_standard)
+		title = create_substandard_title(standard['id'], sub_standard, descriptions[sub_standard]['titel'])
 		el_container.append(title)
 
 		# create description of each standard
