@@ -1,0 +1,23 @@
+[
+	{
+		"id": "BGT-IMGeo",
+		"title": "Informatiemodel Grootschalige Geografie",
+		"beschrijving": "Het informatiemodel geografie (IMGeo) is het informatiemodel horend bij de Basisregistratie Grootschalige Topografie (BGT). Het verplichte deel van IMGeo specificeert de inhoud van de BGT. Het optionele deel biedt ruimte voor het opnemen van meer objecttypen, gedetailleerdere kenmerken van objecten, en het uitwisselen van gegevens in 3D. Voor meer informatie zie BGT|IMGeo op de website van Geonovum.",
+		"beschrijving_kort": "",
+		"url": "https://github.com/Geonovum/BGT-IMGeo"
+	},
+	{
+		"id": "stri",
+		"title": "Standaard Toegankelijkheid Ruimtelijke Instrumenten",
+		"beschrijving": "",
+		"beschrijving_kort": "",
+		"url": "https://github.com/Geonovum/stri"	
+	},
+	{
+		"id": "imkl",
+		"title": "Informatimodel Kabel en Leidingen",
+		"beschrijving": "",
+		"beschrijving_kort": "",
+		"url": "https://github.com/Geonovum/imkl"
+	}
+]
