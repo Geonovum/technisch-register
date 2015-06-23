@@ -24,29 +24,18 @@ def create_substandard_title(standard, sub_standard):
 
 	return BS(title, 'html.parser')
 
-def create_substandard_description(description):
+def create_substandard_description(substandard):
 	summary ='''
 		<p>
 			<span style='margin-left:37px; width: 100%%'>%s</span>
 		</p>
-		''' % description
+		''' % substandard['beschrijving']
 
 	return BS(summary, 'html.parser')
 
 def create_standard_webpage(standard, sub_standards):
 	# builds each standard's overview page
 	# e.g. http://register.geostandaarden.nl/imgeo/
-
-	# try:
-	# 	# open standard configuration file that contains descriptions for each sub standard
-	# 	with open(descriptions_path, 'r') as f:
-	# 		descriptions = load(f)
-
-	# except IOError:
-	# 	print "Warning, couldn't find configuration file for %s" % standard
-
-	# 	# return empty HTML page
-	# 	return ""
 
 	# load standard HTML template
 	with open('web/templates/standard.html', 'r') as f:
@@ -64,19 +53,18 @@ def create_standard_webpage(standard, sub_standards):
 	# append title
 	el_title.append(title)
 
+	with codecs.open('descriptions.json', encoding='utf8') as f:
+		descriptions = load(f)
+
 	# iterate over all sub_standards i.e. informatiemodel, gmlapplicatieschema, regels, etc.
 	for sub_standard in sub_standards:
 		# create title of each sub standard
 		title = create_substandard_title(standard['id'], sub_standard)
 		el_container.append(title)
 
-		# try:
-		# 	description = create_substandard_description(descriptions['sub_standards'][sub_standard])
-		# except KeyError:
-		# 	print "Warning, %s does not provide a description of %s" % (standard['id'], sub_standard)
-		# 	description = ""
-
-		# el_container.append(description)
+		# create description of each standard
+		description = create_substandard_description(descriptions[sub_standard])
+		el_container.append(description)
 
 	return html.prettify()
 
@@ -105,15 +93,6 @@ def create_overview_page(standards, source, destination):
 	el_container = html.find(id='leftcolumn')
 
 	for standard in standards:
-		# try:
-		# 	with open('%s/%s/configuratie.json' % (source, standard['id'])) as f:
-		# 		description = load(f)
-		# except IOError:
-		# 	print "Warning, could not find configuration file for %s." % standard['id']
-		# 	print "Ommitting it from overview page."
-		# 	continue
-
-		# if 'informatiemodel' in description:
 		overview = create_overview_entry(standard['id'], standard['beschrijving'])
 		el_container.append(overview)
 
@@ -153,7 +132,7 @@ def build_folders(source, destination, standards, root):
 			root.makedir('%s/%s' % (destination, standard['id']))
 		
 		# write standard HTML page to register/standard/index.html
-		with open('%s/%s/index.html' % (destination, standard['id']), 'w') as f:
+		with codecs.open('%s/%s/index.html' % (destination, standard['id']), 'w', encoding='utf8') as f:
 			f.write(html)
 
 def fetch_repos():
