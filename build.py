@@ -2,6 +2,8 @@ from fs.osfs import OSFS
 from fs.errors import ResourceNotFoundError
 from bs4 import BeautifulSoup as BS
 from json import load
+from os import chmod
+from stat import S_IRWXO, S_IRWXG, S_IRWXU
 from subprocess import call
 import codecs
 
@@ -165,7 +167,9 @@ if __name__ == "__main__":
 		print "Failed to remove..."
 	
 	root.makedir(source)
+	chmod(source, S_IRWXU | S_IRWXG | S_IRWXO)
 	root.makedir(destination)
+	chmod(destination, S_IRWXU | S_IRWXG | S_IRWXO)
 
 	#standards = OSFS(source).listdir(dirs_only=True)
 	with open('repos.json') as f:
