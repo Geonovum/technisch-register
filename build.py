@@ -136,7 +136,7 @@ def build_folders(source, destination, standards, root):
 		with codecs.open('%s/%s/index.html' % (destination, standard['id']), 'w', encoding='utf8') as f:
 			f.write(html)
 
-def fetch_repos():
+def fetch_repos(root, destination):
 	print "Fetching repositories..."
 
 	with open('repos.json') as f:
@@ -144,6 +144,8 @@ def fetch_repos():
 
 		for repo in repos:
 			print "Cloning %s in repos/%s" % (repo['url'], repo['id'])
+			# explicitely create dir as implicit cration fails on server
+			root.makedir('%s/%s' % (destination, repo['id']))
 			call('git clone %s repos/%s' % (repo['url'], repo['id']))
 
 		#TODO: git pull additions into existing repos, clone new ones
@@ -169,6 +171,6 @@ if __name__ == "__main__":
 	with open('repos.json') as f:
 		standards = load(f)
 	
-	fetch_repos()
+	fetch_repos(root, destination)
 	build_folders(source, destination, standards, root)
 	create_overview_page(standards, source, destination)
