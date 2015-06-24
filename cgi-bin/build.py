@@ -104,7 +104,7 @@ def create_overview_page(standards, source, destination):
 	with codecs.open('%s/index.html' % destination, 'w', encoding='utf8') as f:
 		f.write(html.prettify())
 		#OSFS('./').copydir('../web/assets', '%s/assets' % destination)
-		call('cp -r ../web/assets %s/assets' % destination)
+		call('cp -r ../web/assets %s/assets' % destination, shell=True)
 
 		print 'Done!'
 
