@@ -200,5 +200,6 @@ if __name__ == "__main__":
 	# root.removedir(destination, force=True)
 	
 	call('rm -rf %s' % source, shell=True)
+	call('chmod -R a+rx ../register/staging', shell=True)
 	# root.removedir(source, force=True)
 
