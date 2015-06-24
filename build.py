@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 
 from fs.osfs import OSFS
 from fs.errors import ResourceNotFoundError
@@ -234,6 +234,11 @@ if __name__ == "__main__":
 	with open('status.json') as f:
 		status = load(f)
 
+	print "Content-Type: text/html"
+	print 
+	print "Running sync script..."
+	print "Queue: %s" % status['again']
+
 	if status['running'] == False:
 		status['running'] = True
 		run(status)
@@ -243,11 +248,6 @@ if __name__ == "__main__":
 
 		with open('status.json', 'w') as f:
 			f.write(dumps(status))
-
-	print "Content-Type: text/html"
-	print 
-	print "Running sync script"
-	print "Queue: %s" status['again']
 
 	# if 'TR_RUNNING' not in environ:
 	# 	environ['TR_RUNNING'] = 'true'
