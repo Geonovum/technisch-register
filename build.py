@@ -143,7 +143,8 @@ def fetch_repos():
 		repos = load(f)
 
 		for repo in repos:
-			call('git clone %s repos/%s' % (repo['url'], repo['id']));
+			print "Cloning %s in repos/%s" % (repo['url'], repo['id'])
+			call('git clone %s repos/%s' % (repo['url'], repo['id']))
 
 		#TODO: git pull additions into existing repos, clone new ones
 
@@ -159,7 +160,7 @@ if __name__ == "__main__":
 		root.removedir(source, force=True)
 		root.removedir(destination, force=True)
 	except ResourceNotFoundError:
-		pass
+		print "Failed to remove..."
 	
 	root.makedir(source)
 	root.makedir(destination)
@@ -168,6 +169,6 @@ if __name__ == "__main__":
 	with open('repos.json') as f:
 		standards = load(f)
 	
-	# fetch_repos()
+	fetch_repos()
 	build_folders(source, destination, standards, root)
 	create_overview_page(standards, source, destination)
