@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from fs.osfs import OSFS
 from fs.errors import ResourceNotFoundError
 from bs4 import BeautifulSoup as BS
@@ -241,6 +243,11 @@ if __name__ == "__main__":
 
 		with open('status.json', 'w') as f:
 			f.write(dumps(status))
+
+	print "Content-Type: text/html"
+	print 
+	print "Running sync script"
+	print "Queue: %s" status['again']
 
 	# if 'TR_RUNNING' not in environ:
 	# 	environ['TR_RUNNING'] = 'true'
