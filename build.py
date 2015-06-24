@@ -1,13 +1,12 @@
-
-
 from fs.osfs import OSFS
 from fs.errors import ResourceNotFoundError
 from bs4 import BeautifulSoup as BS
-from json import load
-from os import chmod
+from json import load, dumps
+from os import chmod, environ
 from stat import S_IRWXO, S_IRWXG, S_IRWXU
 from subprocess import call
 import codecs
+import time
 
 def create_standard_title(title, description):
 	title = '''
@@ -153,12 +152,17 @@ def fetch_repos(root, destination, repos):
 	#TODO: git pull additions into existing repos, clone new ones
 
 
-if __name__ == "__main__":
+def run(status):
+	# environ['TR_RUNNING'] = 'true'
+
+	status['running'] = True
+	with open('status.json', 'w') as f:
+		f.write(dumps(status))
+
 	source = 'repos'
 	destination = 'register2'
 
 	root = OSFS('./') # 'c:\Users\<login name>' on Windows
-	
 	
 	try:
 		print "removing %s" % source
@@ -188,10 +192,7 @@ if __name__ == "__main__":
 	create_overview_page(standards, source, destination)
 
 	print 'Copying register to staging...'
-	# remove staging
-	# create staging
-	# makie staging writable
-	# OSFS('register').removedir('staging', force=True)
+
 	call('rm -rf ../register/staging', shell=True)
 
 
@@ -203,3 +204,49 @@ if __name__ == "__main__":
 	call('chmod -R a+rx ../register/staging', shell=True)
 	# root.removedir(source, force=True)
 
+	with open('status.json') as f:
+		status = load(f)
+
+	if status['again'] == True:
+		status['again'] = False
+
+		with open('status.json', 'w') as f:
+			f.write(dumps(status))
+
+		print "Running once more..."
+		run(status)
+	else:
+		status['running'] = False
+		with open('status.json', 'w') as f:
+			f.write(dumps(status))
+
+	# if environ['TR_AGAIN'] == 'true':
+	# 	environ['TR_AGAIN'] = 'false'
+
+	# 	print "Running once more..."
+	# 	run()
+	# else:
+	# 	environ['TR_RUNNING'] = 'false'
+
+if __name__ == "__main__":
+	with open('status.json') as f:
+		status = load(f)
+
+	if status['running'] == False:
+		status['running'] = True
+		run(status)
+	
+	elif status['running'] == True:
+		status['again'] = True
+
+		with open('status.json', 'w') as f:
+			f.write(dumps(status))
+
+	# if 'TR_RUNNING' not in environ:
+	# 	environ['TR_RUNNING'] = 'true'
+	# 	run()
+	# elif environ['TR_RUNNING'] == 'false':
+	# 	environ['TR_RUNNING'] = 'true'
+	# 	run()
+	# elif environ['TR_RUNNING'] == 'true':
+	# 	environ['TR_AGAIN'] = 'true'
