@@ -1,4 +1,5 @@
 from fs.osfs import OSFS
+from fs.errors import ResourceNotFoundError
 from bs4 import BeautifulSoup as BS
 from json import load
 from subprocess import call
@@ -149,13 +150,18 @@ def fetch_repos():
 
 if __name__ == "__main__":
 	source = 'repos'
-	destination = 'register'
+	destination = 'register2'
 
 	root = OSFS('./') # 'c:\Users\<login name>' on Windows
 	print "removing %s" % source
-	# root.removedir(source, force=True)
-	# root.makedir(source)
-	root.removedir(destination, force=True)
+	
+	try:
+		root.removedir(source, force=True)
+		root.removedir(destination, force=True)
+	except ResourceNotFoundError:
+		pass
+	
+	root.makedir(source)
 	root.makedir(destination)
 
 	#standards = OSFS(source).listdir(dirs_only=True)
