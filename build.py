@@ -234,6 +234,10 @@ def run(status):
 with open('status.json') as f:
 	status = load(f)
 
+print "Content-Type: text/html"
+print 
+print "Running sync script..."
+
 if status['running'] == False:
 	status['running'] = True
 	run(status)
@@ -244,9 +248,6 @@ elif status['running'] == True:
 	with open('status.json', 'w') as f:
 		f.write(dumps(status))
 
-print "Content-Type: text/html"
-print 
-print "Running sync script..."
 print "Queue: %s" % status['again']
 
 	# if 'TR_RUNNING' not in environ:
