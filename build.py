@@ -43,7 +43,7 @@ def create_standard_webpage(standard, artifacts):
 	# e.g. http://register.geostandaarden.nl/imgeo/
 
 	# load standard HTML template
-	with open('../web/templates/standard.html', 'r') as f:
+	with open('web/templates/standard.html', 'r') as f:
 		html = BS(f)
 
 	# construct title
@@ -58,7 +58,7 @@ def create_standard_webpage(standard, artifacts):
 	# append title
 	el_title.append(title)
 
-	with codecs.open('../descriptions.json', encoding='utf8') as f:
+	with codecs.open('descriptions.json', encoding='utf8') as f:
 		descriptions = load(f)
 
 	# iterate over all artifacts i.e. informatiemodel, gmlapplicatieschema, regels, etc.
@@ -92,7 +92,7 @@ def create_overview_page(standards, source, destination):
 	print 'Creating overview page...'
 
 	# open overview page template
-	with codecs.open('../web/templates/overview.html', 'r', encoding='utf8') as f:
+	with codecs.open('web/templates/overview.html', 'r', encoding='utf8') as f:
 		html = BS(f)
 
 	el_container = html.find(id='leftcolumn')
@@ -104,7 +104,7 @@ def create_overview_page(standards, source, destination):
 	with codecs.open('%s/index.html' % destination, 'w', encoding='utf8') as f:
 		f.write(html.prettify())
 		#OSFS('./').copydir('../web/assets', '%s/assets' % destination)
-		call('cp -r ../web/assets %s/assets' % destination, shell=True)
+		call('cp -r web/assets %s/assets' % destination, shell=True)
 
 		print 'Done!'
 
@@ -180,7 +180,7 @@ if __name__ == "__main__":
 	# chmod(destination, S_IRWXU | S_IRWXG | S_IRWXO)
 
 	#standards = OSFS(source).listdir(dirs_only=True)
-	with open('../repos.json') as f:
+	with open('repos.json') as f:
 		standards = load(f)
 	
 	fetch_repos(root, destination, standards)
@@ -199,7 +199,7 @@ if __name__ == "__main__":
 	# root.copydir(destination, '../register/staging')
 	# root.removedir(destination, force=True)
 	
-	call('rm -rf %s' % source, shell=True)
+	# call('rm -rf %s' % source, shell=True)
 	call('chmod -R a+rx ../register/staging', shell=True)
 	# root.removedir(source, force=True)
 
