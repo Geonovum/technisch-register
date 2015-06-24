@@ -1,3 +1,5 @@
+
+
 from fs.osfs import OSFS
 from fs.errors import ResourceNotFoundError
 from bs4 import BeautifulSoup as BS
@@ -41,7 +43,7 @@ def create_standard_webpage(standard, artifacts):
 	# e.g. http://register.geostandaarden.nl/imgeo/
 
 	# load standard HTML template
-	with open('web/templates/standard.html', 'r') as f:
+	with open('../web/templates/standard.html', 'r') as f:
 		html = BS(f)
 
 	# construct title
@@ -56,7 +58,7 @@ def create_standard_webpage(standard, artifacts):
 	# append title
 	el_title.append(title)
 
-	with codecs.open('descriptions.json', encoding='utf8') as f:
+	with codecs.open('../descriptions.json', encoding='utf8') as f:
 		descriptions = load(f)
 
 	# iterate over all artifacts i.e. informatiemodel, gmlapplicatieschema, regels, etc.
@@ -90,7 +92,7 @@ def create_overview_page(standards, source, destination):
 	print 'Creating overview page...'
 
 	# open overview page template
-	with codecs.open('web/templates/overview.html', 'r', encoding='utf8') as f:
+	with codecs.open('../web/templates/overview.html', 'r', encoding='utf8') as f:
 		html = BS(f)
 
 	el_container = html.find(id='leftcolumn')
@@ -101,7 +103,8 @@ def create_overview_page(standards, source, destination):
 
 	with codecs.open('%s/index.html' % destination, 'w', encoding='utf8') as f:
 		f.write(html.prettify())
-		OSFS('./').copydir('web/assets', '%s/assets' % destination)
+		#OSFS('./').copydir('../web/assets', '%s/assets' % destination)
+		call('cp -r ../web/assets %s/assets' % destination)
 
 		print 'Done!'
 
@@ -138,19 +141,16 @@ def build_folders(source, destination, standards, root):
 		with codecs.open('%s/%s/index.html' % (destination, standard['id']), 'w', encoding='utf8') as f:
 			f.write(html)
 
-def fetch_repos(root, destination):
+def fetch_repos(root, destination, repos):
 	print "Fetching repositories..."
 
-	with open('repos.json') as f:
-		repos = load(f)
+	for repo in repos:
+		print "Cloning %s in repos/%s" % (repo['url'], repo['id'])
+		# explicitely create dir as implicit cration fails on server
+		root.makedir('%s/%s' % (destination, repo['id']))
+		call('git clone %s repos/%s' % (repo['url'], repo['id']), shell=True)
 
-		for repo in repos:
-			print "Cloning %s in repos/%s" % (repo['url'], repo['id'])
-			# explicitely create dir as implicit cration fails on server
-			root.makedir('%s/%s' % (destination, repo['id']))
-			call('git clone %s repos/%s' % (repo['url'], repo['id']))
-
-		#TODO: git pull additions into existing repos, clone new ones
+	#TODO: git pull additions into existing repos, clone new ones
 
 
 if __name__ == "__main__":
@@ -158,23 +158,47 @@ if __name__ == "__main__":
 	destination = 'register2'
 
 	root = OSFS('./') # 'c:\Users\<login name>' on Windows
-	print "removing %s" % source
+	
 	
 	try:
-		root.removedir(source, force=True)
+		print "removing %s" % source
+		# removedir function cannot deal with protected
+		# files in each repo's .git folder
+		call('rm -rf %s' % source, shell=True)
+	except ResourceNotFoundError: 
+		print "Failed to remove %s..." % source
+
+	try:
+		print "removing %s" % destination
 		root.removedir(destination, force=True)
 	except ResourceNotFoundError:
-		print "Failed to remove..."
+		print "Failed to remove %s..." % destination
 	
 	root.makedir(source)
-	chmod(source, S_IRWXU | S_IRWXG | S_IRWXO)
+	# chmod(source, S_IRWXU | S_IRWXG | S_IRWXO)
 	root.makedir(destination)
-	chmod(destination, S_IRWXU | S_IRWXG | S_IRWXO)
+	# chmod(destination, S_IRWXU | S_IRWXG | S_IRWXO)
 
 	#standards = OSFS(source).listdir(dirs_only=True)
-	with open('repos.json') as f:
+	with open('../repos.json') as f:
 		standards = load(f)
 	
-	fetch_repos(root, destination)
+	fetch_repos(root, destination, standards)
 	build_folders(source, destination, standards, root)
 	create_overview_page(standards, source, destination)
+
+	print 'Copying register to staging...'
+	# remove staging
+	# create staging
+	# makie staging writable
+	# OSFS('register').removedir('staging', force=True)
+	call('rm -rf ../register/staging', shell=True)
+
+
+	call('mv %s ../register/staging' % destination, shell=True)
+	# root.copydir(destination, '../register/staging')
+	# root.removedir(destination, force=True)
+	
+	call('rm -rf %s' % source, shell=True)
+	# root.removedir(source, force=True)
+
