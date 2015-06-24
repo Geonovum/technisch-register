@@ -174,11 +174,11 @@ def run(status):
 	except ResourceNotFoundError: 
 		print "Failed to remove %s..." % source
 
-	try:
-		print "removing %s" % destination
-		root.removedir(destination, force=True)
-	except ResourceNotFoundError:
-		print "Failed to remove %s..." % destination
+	# try:
+	# 	print "removing %s" % destination
+	# 	root.removedir(destination, force=True)
+	# except ResourceNotFoundError:
+	# 	print "Failed to remove %s..." % destination
 	
 	root.makedir(source)
 	# chmod(source, S_IRWXU | S_IRWXG | S_IRWXO)
@@ -230,24 +230,24 @@ def run(status):
 	# else:
 	# 	environ['TR_RUNNING'] = 'false'
 
-if __name__ == "__main__":
-	with open('status.json') as f:
-		status = load(f)
+#if __name__ == "__main__":
+with open('status.json') as f:
+	status = load(f)
 
-	print "Content-Type: text/html"
-	print 
-	print "Running sync script..."
-	print "Queue: %s" % status['again']
+if status['running'] == False:
+	status['running'] = True
+	run(status)
 
-	if status['running'] == False:
-		status['running'] = True
-		run(status)
-	
-	elif status['running'] == True:
-		status['again'] = True
+elif status['running'] == True:
+	status['again'] = True
 
-		with open('status.json', 'w') as f:
-			f.write(dumps(status))
+	with open('status.json', 'w') as f:
+		f.write(dumps(status))
+
+print "Content-Type: text/html"
+print 
+print "Running sync script..."
+print "Queue: %s" % status['again']
 
 	# if 'TR_RUNNING' not in environ:
 	# 	environ['TR_RUNNING'] = 'true'
