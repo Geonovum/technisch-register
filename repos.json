@@ -11,7 +11,7 @@
         "title": "TOP50NL",
         "beschrijving": "TOP50NL is een onderdeel van de Basisregistratie Topografie en is afgeleid van TOP10NL. TOP50NL is vooral bedoeld voor het vervaardigen van een leesbare topografische kaart op schaalniveau 1: 50.000. TOP50NL is gemodelleerd binnen het Informatiemodel BRT (IMBRT).",
         "beschrijving_kort": "BRT-TOP50NL product, gemodelleerd binnen IMBRT",
-.       "url": "https://github.com/Kadaster/TOP50NL"
+        "url": "https://github.com/Kadaster/TOP50NL"
     },
     {
         "id": "brt-algemeen",
