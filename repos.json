@@ -1,49 +1,56 @@
 [
     {
         "id": "top10nl",
-        "title": "TOP10NL",
+        "titel": "TOP10NL",
+        "titel_kort":"TOP10NL",
         "beschrijving": "TOP10NL is het meest gedetailleerde onderdeel van de Basisregistratie Topografie. De mate van detail is zondanig, dat de objecten gebruikt kunnen worden voor een leesbare kaart op schaalniveau 1: 10.000. TOP10NL is gemodelleerd binnen het Informatiemodel BRT (IMBRT).",
         "beschrijving_kort": "BRT-TOP10NL product, gemodelleerd binnen IMBRT",
         "url": "https://github.com/Kadaster/TOP10NL"
     },
     {
         "id": "top50nl",
-        "title": "TOP50NL",
+        "titel": "TOP50NL",
+        "titel_kort":"TOP50NL",
         "beschrijving": "TOP50NL is een onderdeel van de Basisregistratie Topografie en is afgeleid van TOP10NL. TOP50NL is vooral bedoeld voor het vervaardigen van een leesbare topografische kaart op schaalniveau 1: 50.000. TOP50NL is gemodelleerd binnen het Informatiemodel BRT (IMBRT).",
         "beschrijving_kort": "BRT-TOP50NL product, gemodelleerd binnen IMBRT",
         "url": "https://github.com/Kadaster/TOP50NL"
     },
     {
         "id": "brt-algemeen",
-        "title": "BRT-algemeen",
+        "titel": "BRT-algemeen",
+        "titel_kort":"BRT-algemeen",
         "beschrijving": "Algemene klasses binnen het Informatiemodel BRT (IMBRT). TOP10NL, TOP50NL en andere BRT producten refereren naar deze algemene klasses.",
         "beschrijving_kort": "Algemeen applicatie schema binnen IMBRT",
         "url": "https://github.com/Kadaster/BRT-algemeen"
     },
     {
         "id": "imbrt",
-        "title": "IMBRT",
+        "titel": "Informatiemodel Basisregistratie Topografie",
+        "titel_kort":"IMBRT",
         "beschrijving": "Informatiemodel van de BasisRegistratie Topografie (BRT). In IMBRT zijn de BRT producten TOP10NL, TOP50NL opgenomen en zal aangevuld worden met andere producten zoals TOP100NL en TOP250NL. Algemene objectklasses zijn opgenomen in BRT-algemeen. Voor meer informatie zie BRT op de website van het Kadaster.",
         "beschrijving_kort": "Informatiemodel van de BasisRegistratie Topografie (BRT).",
         "url": "https://github.com/Kadaster/IMBRT"
     },
     {
-        "id": "BGT-IMGeo",
-        "title": "Informatiemodel Grootschalige Geografie",
+        "id": "imgeo",
+        "titel": "Informatiemodel Grootschalige Geografie",
+        "titel_kort":"IMGeo",
         "beschrijving": "Het informatiemodel geografie (IMGeo) is het informatiemodel horend bij de Basisregistratie Grootschalige Topografie (BGT). Het verplichte deel van IMGeo specificeert de inhoud van de BGT. Het optionele deel biedt ruimte voor het opnemen van meer objecttypen, gedetailleerdere kenmerken van objecten, en het uitwisselen van gegevens in 3D. Voor meer informatie zie BGT|IMGeo op de website van Geonovum.",
-        "beschrijving_kort": "",
+        "beschrijving_kort": "Informatiemodel Grootschalige Geografie",
         "url": "https://github.com/Geonovum/BGT-IMGeo"
     },
     {
         "id": "stri",
-        "title": "Standaard Toegankelijkheid Ruimtelijke Instrumenten",
+        "titel": "Standaard Toegankelijkheid Ruimtelijke Instrumenten",
+        "titel_kort":"STRI",
         "beschrijving": "",
         "beschrijving_kort": "",
-        "url": "https://github.com/Geonovum/stri"   
+        "url": "https://github.com/Geonovum/stri"
     },
     {
         "id": "imkl",
-        "title": "Informatimodel Kabel en Leidingen",
+        "titel": "Informatimodel Kabel en Leidingen",
+        "titel_kort":"IMKL2015",
         "beschrijving": "",
         "beschrijving_kort": "",
         "url": "https://github.com/Geonovum/imkl"

@@ -48,7 +48,7 @@ def create_standard_webpage(standard, artifacts):
         html = BS(f)
 
     # construct title
-    title = create_standard_title(standard['title'], standard['beschrijving'])
+    title = create_standard_title(standard['titel'], standard['beschrijving'])
     
     # add to #title div
     el_title = html.find(id="title")
@@ -74,7 +74,7 @@ def create_standard_webpage(standard, artifacts):
 
     return html.prettify()
 
-def create_overview_entry(standard, description):
+def create_overview_entry(standard, title_short, description):
     # url = "http://register.geostandaarden.nl"
     url = "."
     overview = '''
@@ -85,7 +85,7 @@ def create_overview_entry(standard, description):
             </span>
         </p>
         <p><span style='margin-left:37px; width: 100%%'>%s</span></p>
-            ''' % (url, standard, standard.upper(), description)
+            ''' % (url, standard, title_short, description)
 
     return BS(overview, 'html.parser')
 
@@ -99,7 +99,7 @@ def create_overview_page(standards, source, destination):
     el_container = html.find(id='leftcolumn')
 
     for standard in standards:
-        overview = create_overview_entry(standard['id'], standard['beschrijving'])
+        overview = create_overview_entry(standard['id'], standard['titel_kort'], standard['beschrijving_kort'])
         el_container.append(overview)
 
     with codecs.open('%s/index.html' % destination, 'w', encoding='utf8') as f:
@@ -231,6 +231,10 @@ def run(status):
     #   environ['TR_RUNNING'] = 'false'
 
 #if __name__ == "__main__":
+
+# TODO: set running to false when script fails
+# TODO: remove working dirs
+# TODO: create a cleanup function to store above actions
 with open('status.json') as f:
     status = load(f)
 
