@@ -54,5 +54,13 @@
         "beschrijving": "",
         "beschrijving_kort": "",
         "url": "https://github.com/Geonovum/imkl"
+    },
+    {
+        "id": "imkad",
+        "titel": "Informatimodel Kadaster",
+        "titel_kort":"IMKAD",
+        "beschrijving": "IMKAD staat voor “Informatiemodel Kadaster”. Dit informatiemodel beschrijft de gegevens die het Kadaster beheert. Het geeft inzicht in de kenmerken van de gegevens en hoe ze onderling samenhangen. IMKAD is de standaard voor het uitwisselen van Kadastergegevens.",
+        "beschrijving_kort": "Informatiemodel Kadaster",
+        "url": "https://github.com/Kadaster/IMKAD"
     }
 ]
