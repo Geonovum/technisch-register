@@ -165,11 +165,11 @@ footer a:active {
 }
 #rightcolumn {
   float: right;
-  width:  55%;
+  width:  50%;
 }
 #leftcolumn {
   float: left;
-  width: 45%;
+  width: 50%;
 }
 #rightcolumn2 {
   float: left;
