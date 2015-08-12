@@ -20,7 +20,7 @@ def create_standard_title(title, description):
     # creation of html and body tags
     return BS(title, 'html.parser')
 
-def create_substandard_title(standard, artifact, title):
+def create_substandard`_title(standard, artifact, title):
     title = '''
         <p><i class="fa fa-file-o"></i>
             <span style='margin-left: 25px'>
@@ -262,3 +262,21 @@ print "Queue: %s" % status['again']
     #   run()
     # elif environ['TR_RUNNING'] == 'true':
     #   environ['TR_AGAIN'] = 'true'
+
+
+
+# pseudo code for staging to production
+
+# read release type from GitHub hook
+# payload = load(stdin)
+# action = payload['action']
+# prerelease = payload['release']['prerelease']
+
+# if action == 'released'
+#     if prerelaease == True:
+#        build staging
+#     elif:
+#        build staging
+#        copy staging to production
+#        TODO: create stock production i.e. copy assets to a different dir
+
