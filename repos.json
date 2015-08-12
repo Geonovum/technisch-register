@@ -49,10 +49,10 @@
     },
     {
         "id": "imkl",
-        "titel": "Informatimodel Kabel en Leidingen",
+        "titel": "Informatimodel Kabels en Leidingen",
         "titel_kort":"IMKL2015",
-        "beschrijving": "",
-        "beschrijving_kort": "",
+        "beschrijving": "dataspecificatie ten behoeve van het berichtenverkeer voor uitwisseling van kabel en leiding informatie van de utiliteitsnetten elektriciteit, gas en chemie, telecom, water, warmte en afvalwater. Dit model is nog in ontwikkeling en is opgesteld in de context van het KLICWIN programma",
+        "beschrijving_kort": "Informatimodel Kabels en Leidingen",
         "url": "https://github.com/Geonovum/imkl"
     },
     {
