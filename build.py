@@ -20,7 +20,7 @@ def create_standard_title(title, description):
     # creation of html and body tags
     return BS(title, 'html.parser')
 
-def create_substandard`_title(standard, artifact, title):
+def create_substandard_title(standard, artifact, title):
     title = '''
         <p><i class="fa fa-file-o"></i>
             <span style='margin-left: 25px'>
