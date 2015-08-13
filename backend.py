@@ -3,6 +3,7 @@ from fs.errors import ResourceNotFoundError
 from subprocess import call
 from webpages import create_standard_webpage
 import codecs
+import time
 
 def remove_source(source):
 	try:
@@ -69,3 +70,21 @@ def create_staging(destination):
 	# call('rm -rf %s' % source, shell=True)
 	call('chmod -R a+rx ../register/staging', shell=True)
 	# root.removedir(source, force=True)
+
+def put_in_production():
+	# backup current register
+	## call('cp ../register ../backups/%s' % time.strftime('%Y-%m-%d'), shell=True)
+
+	#copy staging to parent dir
+	## call('cp ../register/staging ../register-staging', shell=True)
+	## call('cp ../register/staging ../register-staging2', shell=True)
+
+	#rename old register to temp name
+	# call('mv ../register ../register-temp', shell=True)
+	
+	#rename staging to new register
+	# call('mv ../register-staging ../register')
+	#copy staging to new register staging
+
+	# move staging to new register
+	# call('mv ../register-staging2 ../register', shell=True)

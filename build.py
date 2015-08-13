@@ -64,7 +64,10 @@ print "Running sync script..."
 
 if status['running'] == False:
     status['running'] = True
-    run(status)
+    try:
+        run(status)
+    except: 
+        print "An error ocurred, please inspect the logs... "
 
 elif status['running'] == True:
     status['again'] = True
