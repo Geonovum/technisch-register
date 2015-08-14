@@ -5,14 +5,21 @@ from webpages import create_standard_webpage
 import codecs
 import time
 
-def remove_source(source):
+def remove_temp_dirs(source, destination):
+	# OSFS' removedir function cannot deal with protected
+	# files in each repo's .git folder
+
 	try:
-	    print "removing %s" % source
-	    # removedir function cannot deal with protected
-	    # files in each repo's .git folder
-	    call('rm -rf %s' % source, shell=True)
+	    print "removing %s" % source    
+	    call('rm -rf %s' % (source), shell=True)
 	except ResourceNotFoundError: 
-	    print "Failed to remove %s..." % source
+	    print "Failed to remove %s... Folder not found." % source
+
+	try:
+	    print "removing %s" % destination
+	    call('rm -rf %s' % (destination), shell=True)
+	except ResourceNotFoundError: 
+	    print "Failed to remove %s... Folder not found." % destination
 
 def build_folders(source, destination, standards, root):
     print "Building register..."
@@ -47,14 +54,14 @@ def build_folders(source, destination, standards, root):
         with codecs.open('%s/%s/index.html' % (destination, standard['id']), 'w', encoding='utf8') as f:
             f.write(html)
 
-def fetch_repos(root, destination, repos):
+def fetch_repos(root, destination, repos, source):
     print "Fetching repositories..."
 
     for repo in repos:
         print "Cloning %s in repos/%s" % (repo['url'], repo['id'])
         # explicitely create dir as implicit cration fails on server
         root.makedir('%s/%s' % (destination, repo['id']))
-        call('git clone %s repos/%s' % (repo['url'], repo['id']), shell=True)
+        call('git clone %s %s/%s' % (repo['url'], source, repo['id']), shell=True)
 
     #TODO: git pull additions into existing repos, clone new ones
 

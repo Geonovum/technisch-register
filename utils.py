@@ -1,4 +1,5 @@
 import psutil
+from subprocess import call
 
 def run():
 	num_processes = 0
@@ -26,3 +27,19 @@ def set_repeat(action):
 def get_repeat():
 	with open('repeat.txt', 'r') as f:
 		return f.read()
+
+def cleanup(source, destination):
+	# OSFS' removedir function cannot deal with protected
+	# files in each repo's .git folder
+
+	try:
+	    print "removing %s" % source    
+	    call('rm -rf %s' % (source), shell=True)
+	except ResourceNotFoundError: 
+	    print "Failed to remove %s... Folder not found." % source
+
+	try:
+	    print "removing %s" % destination
+	    call('rm -rf %s' % (destination), shell=True)
+	except ResourceNotFoundError: 
+	    print "Failed to remove %s... Folder not found." % destination

@@ -2,7 +2,7 @@
 
 from fs.osfs import OSFS
 from json import load, dumps, loads
-from utils import run, set_repeat, get_repeat
+from utils import run, set_repeat, get_repeat, cleanup
 from sys import stdin
 import codecs
 import time
@@ -13,22 +13,22 @@ def build_staging():
     source = 'repos'
     destination = 'register2'
 
-    # root = OSFS('./') # 'c:\Users\<login name>' on Windows
+    cleanup(source, destination)
+
+    root = OSFS('./') # 'c:\Users\<login name>' on Windows
     # root.makedir(source, allow_recreate=True)
-    # root.makedir(destination, allow_recreate=True)
+    root.makedir(destination, allow_recreate=True)
 
     # TODO: use this approach to include standards that are not managed on GitHub
     #standards = OSFS(source).listdir(dirs_only=True)
     with open('repos.json') as f:
         standards = load(f)
     
-    # backend.remove_source(source)
-    # backend.fetch_repos(root, destination, standards)
-    # backend.build_folders(source, destination, standards, root)
-    # webpages.create_overview_page(standards, source, destination)
-    # backend.create_staging(destination)
-
-    time.sleep(20)
+    backend.fetch_repos(root, destination, standards, source)
+    backend.build_folders(source, destination, standards, root)
+    webpages.create_overview_page(standards, source, destination)
+    backend.create_staging(destination)
+    backend.remove_temp_dirs(source, destination)
 
     repeat = get_repeat()
     print "Repeat:", repeat
