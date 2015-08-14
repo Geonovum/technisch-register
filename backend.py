@@ -71,7 +71,7 @@ def create_staging(destination):
 	call('chmod -R a+rx ../register/staging', shell=True)
 	# root.removedir(source, force=True)
 
-def put_in_production():
+# def put_in_production():
 	# backup current register
 	## call('cp ../register ../backups/%s' % time.strftime('%Y-%m-%d'), shell=True)
 

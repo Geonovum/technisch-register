@@ -1,93 +1,76 @@
 #!/usr/bin/python
 
 from fs.osfs import OSFS
-from json import load, dumps
-from os import chmod, environ
+from json import load, dumps, loads
+from utils import run, set_repeat, get_repeat
+from sys import stdin
 import codecs
 import time
 import webpages
 import backend
 
-def run(status):
-    # environ['TR_RUNNING'] = 'true'
-
-    status['running'] = True
-    with open('status.json', 'w') as f:
-        f.write(dumps(status))
-
+def build_staging():
     source = 'repos'
     destination = 'register2'
 
-    root = OSFS('./') # 'c:\Users\<login name>' on Windows
-
-    root.makedir(source)
-    root.makedir(destination)
+    # root = OSFS('./') # 'c:\Users\<login name>' on Windows
+    # root.makedir(source, allow_recreate=True)
+    # root.makedir(destination, allow_recreate=True)
 
     # TODO: use this approach to include standards that are not managed on GitHub
     #standards = OSFS(source).listdir(dirs_only=True)
     with open('repos.json') as f:
         standards = load(f)
     
-    backend.remove_source(source)
-    backend.fetch_repos(root, destination, standards)
-    backend.build_folders(source, destination, standards, root)
-    webpages.create_overview_page(standards, source, destination)
-    backend.create_staging(destination)
+    # backend.remove_source(source)
+    # backend.fetch_repos(root, destination, standards)
+    # backend.build_folders(source, destination, standards, root)
+    # webpages.create_overview_page(standards, source, destination)
+    # backend.create_staging(destination)
 
-    with open('status.json') as f:
-        status = load(f)
+    time.sleep(20)
 
-    if status['again'] == True:
-        status['again'] = False
+    repeat = get_repeat()
+    print "Repeat:", repeat
+    set_repeat('none')
 
-        with open('status.json', 'w') as f:
-            f.write(dumps(status))
+    if repeat == 'staging':
+        print "Repeating to staging..."
+        build_staging()
 
-        print "Running once more..."
-        run(status)
-    else:
-        status['running'] = False
-        with open('status.json', 'w') as f:
-            f.write(dumps(status))
+    elif repeat == 'production':
+        print "Repeating to production..."
+        build_staging()
+        # put_in_production()
+
+    print "Done!"
 
 #if __name__ == "__main__":
 
 # TODO: set running to false when script fails
 # TODO: remove working dirs
 # TODO: create a cleanup function to store above actions
-with open('status.json') as f:
-    status = load(f)
 
 print "Content-Type: text/html"
 print 
 print "Running sync script..."
 
-if status['running'] == False:
-    status['running'] = True
-    try:
-        run(status)
-    except: 
-        print "An error ocurred, please inspect the logs... "
-
-elif status['running'] == True:
-    status['again'] = True
-
-    with open('status.json', 'w') as f:
-        f.write(dumps(status))
-
-print "Queue: %s" % status['again']
-
-# pseudo code for staging to production
-
 # read release type from GitHub hook
-# payload = load(stdin)
-# action = payload['action']
-# prerelease = payload['release']['prerelease']
+payload = loads(stdin.read())
+action = payload['action']
+prerelease = payload['release']['prerelease']
 
-# if action == 'released'
-#     if prerelaease == True:
-#        build staging
-#     elif:
-#        build staging
-#        copy staging to production
-#        TODO: create stock production i.e. copy assets to a different dir
+if action == 'published':
+    if prerelease == True:
+        if run():
+            print "Building staging..."
+            build_staging()
+        else:
+            set_repeat('staging')
+    else:
+        if run():
+            print "Building production..."
+            build_staging()
+            # put_in_production()
+        else:
+            set_repeat('production')
