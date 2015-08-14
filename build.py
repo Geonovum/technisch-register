@@ -21,15 +21,14 @@ def build_staging():
 
     # TODO: use this approach to include standards that are not managed on GitHub
     #standards = OSFS(source).listdir(dirs_only=True)
-    with open('repos.json') as f:
+    with open('repos-dev.json') as f:
         standards = load(f)
     
     backend.fetch_repos(root, destination, standards, source)
     backend.build_folders(source, destination, standards, root)
     webpages.create_overview_page(standards, source, destination)
     backend.create_staging(destination)
-    backend.remove_temp_dirs(source, destination)
-
+    
     repeat = get_repeat()
     print "Repeat:", repeat
     set_repeat('none')
@@ -41,7 +40,7 @@ def build_staging():
     elif repeat == 'production':
         print "Repeating to production..."
         build_staging()
-        # put_in_production()
+        backend.put_in_production()
 
     print "Done!"
 
@@ -71,6 +70,6 @@ if action == 'published':
         if run():
             print "Building production..."
             build_staging()
-            # put_in_production()
+            backend.put_in_production()
         else:
             set_repeat('production')

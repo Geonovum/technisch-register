@@ -5,22 +5,6 @@ from webpages import create_standard_webpage
 import codecs
 import time
 
-def remove_temp_dirs(source, destination):
-	# OSFS' removedir function cannot deal with protected
-	# files in each repo's .git folder
-
-	try:
-	    print "removing %s" % source    
-	    call('rm -rf %s' % (source), shell=True)
-	except ResourceNotFoundError: 
-	    print "Failed to remove %s... Folder not found." % source
-
-	try:
-	    print "removing %s" % destination
-	    call('rm -rf %s' % (destination), shell=True)
-	except ResourceNotFoundError: 
-	    print "Failed to remove %s... Folder not found." % destination
-
 def build_folders(source, destination, standards, root):
     print "Building register..."
 
@@ -78,20 +62,33 @@ def create_staging(destination):
 	call('chmod -R a+rx ../register/staging', shell=True)
 	# root.removedir(source, force=True)
 
-# def put_in_production():
+def put_in_production():
+	print "!! === !!"
+	print "Putting staging in production"
 	# backup current register
-	## call('cp ../register ../backups/%s' % time.strftime('%Y-%m-%d'), shell=True)
+
+	print "Backing up register..."
+	call('cp -r ../register ../backups/%s' % time.strftime('%Y-%m-%d'))
 
 	#copy staging to parent dir
-	## call('cp ../register/staging ../register-staging', shell=True)
-	## call('cp ../register/staging ../register-staging2', shell=True)
+	print "Preparing staging for launch..."
+	call('cp -r ../register/staging ../register-staging')
+	call('cp -r ../register/staging ../register-staging2')
 
 	#rename old register to temp name
-	# call('mv ../register ../register-temp', shell=True)
+	print "Launching staging into production..."
+	call('mv ../register ../register-old')
 	
 	#rename staging to new register
-	# call('mv ../register-staging ../register')
-	#copy staging to new register staging
+	call('mv ../register-staging ../register')
+	# call('mkdir ../register/r')
+	call('cp -r web/assets ../register/r')
+	print "Staging launched!"
+	
+	# delelete old register
+	print "Removing old register..."
+	call('rm -rf ../register-old')
 
-	# move staging to new register
-	# call('mv ../register-staging2 ../register', shell=True)
+	# move current staging to new register
+	print "Moving current staging to new production..."
+	call('mv ../register-staging2 ../register/staging')
