@@ -5,7 +5,7 @@ from webpages import create_standard_webpage
 import codecs
 import time
 
-def build_folders(source, destination, standards, root):
+def build_folders(source, destination_temp, standards, root):
     print "Building register..."
 
     source_fs = OSFS(source)
@@ -20,69 +20,72 @@ def build_folders(source, destination, standards, root):
         if '.git' in artifacts: artifacts.remove(".git")
 
         for artifact in artifacts:
-            # check whether artifact folder exists in destination 
-            if root.exists('%s/%s' % (destination, artifact)) == False:
-                root.makedir('%s/%s' % (destination, artifact))
+            # check whether artifact folder exists in destination_temp 
+            if root.exists('%s/%s' % (destination_temp, artifact)) == False:
+                root.makedir('%s/%s' % (destination_temp, artifact))
                 
-            # copy standard folders from source to destination in desired structure
-            root.copydir('%s/%s/%s' % (source, standard['id'], artifact),  '%s/%s/%s' % (destination, artifact, standard['id']))
+            # copy standard folders from source to destination_temp in desired structure
+            root.copydir('%s/%s/%s' % (source, standard['id'], artifact),  '%s/%s/%s' % (destination_temp, artifact, standard['id']))
 
         # create standard HTML page
         html = create_standard_webpage(standard, artifacts)
 
         # check whether standard folder exists in register root
-        if root.exists('%s/%s' % (destination, standard['id'])) == False:
-            root.makedir('%s/%s' % (destination, standard['id']))
+        if root.exists('%s/%s' % (destination_temp, standard['id'])) == False:
+            root.makedir('%s/%s' % (destination_temp, standard['id']))
         
         # write standard HTML page to register/standard/index.html
-        with codecs.open('%s/%s/index.html' % (destination, standard['id']), 'w', encoding='utf8') as f:
+        with codecs.open('%s/%s/index.html' % (destination_temp, standard['id']), 'w', encoding='utf8') as f:
             f.write(html)
 
-def fetch_repos(root, destination, repos, source):
+def fetch_repos(root, destination_temp, repos, source):
     print "Fetching repositories..."
 
     for repo in repos:
         print "Cloning %s in repos/%s" % (repo['url'], repo['id'])
         # explicitely create dir as implicit cration fails on server
-        root.makedir('%s/%s' % (destination, repo['id']))
+        root.makedir('%s/%s' % (destination_temp, repo['id']))
         call('git clone %s %s/%s' % (repo['url'], source, repo['id']), shell=True)
 
     #TODO: git pull additions into existing repos, clone new ones
 
-def create_staging(destination):
+def create_staging(destination_temp, destination):
 	print 'Copying register to staging...'
 
-	call('rm -rf ../register/staging', shell=True)
+	call('rm -rf ../%s/staging' % destination, shell=True)
 
-	call('mv %s ../register/staging' % destination, shell=True)
-	# root.copydir(destination, '../register/staging')
-	# root.removedir(destination, force=True)
+	call('mkdir ../%s' % destination)
+
+	print 'Moving new register'
+	call('mv %s ../%s/staging' % (destination_temp, destination), shell=True)
+	# root.copydir(destination_temp, '../register/staging')
+	# root.removedir(destination_temp, force=True)
 	
 	# call('rm -rf %s' % source, shell=True)
 	call('chmod -R a+rx ../register/staging', shell=True)
 	# root.removedir(source, force=True)
 
-def put_in_production():
+def put_in_production(destination):
 	print "!! === !!"
 	print "Putting staging in production"
 	# backup current register
 
 	print "Backing up register..."
-	call('cp -r ../register ../backups/%s' % time.strftime('%Y-%m-%d'))
+	call('cp -r ../%s ../backups/%s' % (destination, time.strftime('%Y-%m-%d')))
 
 	#copy staging to parent dir
 	print "Preparing staging for launch..."
-	call('cp -r ../register/staging ../register-staging')
-	call('cp -r ../register/staging ../register-staging2')
+	call('cp -r ../%s/staging ../register-staging' % destination)
+	call('cp -r ../%s/staging ../register-staging2' % destination)
 
 	#rename old register to temp name
 	print "Launching staging into production..."
-	call('mv ../register ../register-old')
+	call('mv ../%s ../register-old' % destination)
 	
 	#rename staging to new register
-	call('mv ../register-staging ../register')
+	call('mv ../register-staging ../%s' % destination)
 	# call('mkdir ../register/r')
-	call('cp -r web/assets ../register/r')
+	call('cp -r web/assets ../%s/r' % destination)
 	print "Staging launched!"
 	
 	# delelete old register
@@ -91,4 +94,4 @@ def put_in_production():
 
 	# move current staging to new register
 	print "Moving current staging to new production..."
-	call('mv ../register-staging2 ../register/staging')
+	call('mv ../register-staging2 ../%s/staging' % destination)

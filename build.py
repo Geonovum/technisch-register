@@ -9,25 +9,27 @@ import time
 import webpages
 import backend
 
-def build_staging():
-    source = 'repos'
-    destination = 'register2'
+source = 'repos'
+destination_temp = 'register2'
+destination = 'register-dev'
 
-    cleanup(source, destination)
+def build_staging(source, destination_temp, destination):
+
+    cleanup(source, destination_temp)
 
     root = OSFS('./') # 'c:\Users\<login name>' on Windows
     # root.makedir(source, allow_recreate=True)
-    root.makedir(destination, allow_recreate=True)
+    root.makedir(destination_temp, allow_recreate=True)
 
     # TODO: use this approach to include standards that are not managed on GitHub
     #standards = OSFS(source).listdir(dirs_only=True)
     with open('repos-dev.json') as f:
         standards = load(f)
     
-    backend.fetch_repos(root, destination, standards, source)
-    backend.build_folders(source, destination, standards, root)
-    webpages.create_overview_page(standards, source, destination)
-    backend.create_staging(destination)
+    backend.fetch_repos(root, destination_temp, standards, source)
+    backend.build_folders(source, destination_temp, standards, root)
+    webpages.create_overview_page(standards, source, destination_temp)
+    backend.create_staging(destination_temp, destination)
     
     repeat = get_repeat()
     print "Repeat:", repeat
@@ -35,12 +37,12 @@ def build_staging():
 
     if repeat == 'staging':
         print "Repeating to staging..."
-        build_staging()
+        build_staging(source, destination_temp, destination)
 
     elif repeat == 'production':
         print "Repeating to production..."
-        build_staging()
-        backend.put_in_production()
+        build_staging(source, destination_temp, destination)
+        backend.put_in_production(destination)
 
     print "Done!"
 
@@ -63,13 +65,13 @@ if action == 'published':
     if prerelease == True:
         if run():
             print "Building staging..."
-            build_staging()
+            build_staging(source, destination_temp, destination)
         else:
             set_repeat('staging')
     else:
         if run():
             print "Building production..."
-            build_staging()
-            backend.put_in_production()
+            build_staging(source, destination_temp, destination)
+            backend.put_in_production(destination)
         else:
             set_repeat('production')

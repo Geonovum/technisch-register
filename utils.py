@@ -28,7 +28,7 @@ def get_repeat():
 	with open('repeat.txt', 'r') as f:
 		return f.read()
 
-def cleanup(source, destination):
+def cleanup(source, destination_temp):
 	# OSFS' removedir function cannot deal with protected
 	# files in each repo's .git folder
 
@@ -39,7 +39,7 @@ def cleanup(source, destination):
 	    print "Failed to remove %s... Folder not found." % source
 
 	try:
-	    print "removing %s" % destination
-	    call('rm -rf %s' % (destination), shell=True)
+	    print "removing %s" % destination_temp
+	    call('rm -rf %s' % (destination_temp), shell=True)
 	except ResourceNotFoundError: 
-	    print "Failed to remove %s... Folder not found." % destination
+	    print "Failed to remove %s... Folder not found." % destination_temp
