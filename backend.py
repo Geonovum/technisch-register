@@ -54,7 +54,7 @@ def create_staging(destination_temp, destination):
 
 	call('rm -rf ../%s/staging' % destination, shell=True)
 
-	call('mkdir ../%s' % destination)
+	call('mkdir ../%s' % destination, shell=True)
 
 	print 'Moving new register'
 	call('mv %s ../%s/staging' % (destination_temp, destination), shell=True)
@@ -71,27 +71,27 @@ def put_in_production(destination):
 	# backup current register
 
 	print "Backing up register..."
-	call('cp -r ../%s ../backups/%s' % (destination, time.strftime('%Y-%m-%d')))
+	call('cp -r ../%s ../backups/%s' % (destination, time.strftime('%Y-%m-%d')), shell=True)
 
 	#copy staging to parent dir
 	print "Preparing staging for launch..."
-	call('cp -r ../%s/staging ../register-staging' % destination)
-	call('cp -r ../%s/staging ../register-staging2' % destination)
+	call('cp -r ../%s/staging ../register-staging' % destination, shell=True)
+	call('cp -r ../%s/staging ../register-staging2' % destination, shell=True)
 
 	#rename old register to temp name
 	print "Launching staging into production..."
-	call('mv ../%s ../register-old' % destination)
+	call('mv ../%s ../register-old' % destination, shell=True)
 	
 	#rename staging to new register
-	call('mv ../register-staging ../%s' % destination)
+	call('mv ../register-staging ../%s' % destination, shell=True)
 	# call('mkdir ../register/r')
-	call('cp -r web/assets ../%s/r' % destination)
+	call('cp -r web/assets ../%s/r' % destination, shell=True)
 	print "Staging launched!"
 	
 	# delelete old register
 	print "Removing old register..."
-	call('rm -rf ../register-old')
+	call('rm -rf ../register-old', shell=True)
 
 	# move current staging to new register
 	print "Moving current staging to new production..."
-	call('mv ../register-staging2 ../%s/staging' % destination)
+	call('mv ../register-staging2 ../%s/staging' % destination, shell=True)
