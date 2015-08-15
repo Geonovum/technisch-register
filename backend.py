@@ -61,8 +61,7 @@ def create_staging(destination_temp, destination):
 	# root.copydir(destination_temp, '../register/staging')
 	# root.removedir(destination_temp, force=True)
 	
-	# call('rm -rf %s' % source, shell=True)
-	call('chmod -R a+rx ../register/staging', shell=True)
+	# call('chmod -R a+rx ../register/staging', shell=True)
 	# root.removedir(source, force=True)
 
 def put_in_production(destination):
@@ -95,3 +94,6 @@ def put_in_production(destination):
 	# move current staging to new register
 	print "Moving current staging to new production..."
 	call('mv ../register-staging2 ../%s/staging' % destination, shell=True)
+
+	# allow Apache to serve files from this dir
+	call('chmod -R a+rx ../%' % destination, shell=True)
