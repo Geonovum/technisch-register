@@ -1,0 +1,10 @@
+[
+    {
+        "id": "top10nl",
+        "titel": "TOP10NL",
+        "titel_kort":"TOP10NL",
+        "beschrijving": "TOP10NL is het meest gedetailleerde onderdeel van de Basisregistratie Topografie. De mate van detail is zondanig, dat de objecten gebruikt kunnen worden voor een leesbare kaart op schaalniveau 1: 10.000. TOP10NL is gemodelleerd binnen het Informatiemodel BRT (IMBRT).",
+        "beschrijving_kort": "BRT-TOP10NL product, gemodelleerd binnen IMBRT",
+        "url": "https://github.com/Kadaster/TOP10NL"
+    }
+]
