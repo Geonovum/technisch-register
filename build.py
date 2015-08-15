@@ -3,7 +3,7 @@
 from fs.osfs import OSFS
 from json import load, dumps, loads
 from utils import run, set_repeat, get_repeat, cleanup
-from sys import stdin
+from sys import stdin, exit
 import codecs
 import time
 import webpages
@@ -14,6 +14,7 @@ destination_temp = 'register2'
 destination = 'register-dev'
 
 def build_staging(source, destination_temp, destination):
+    set_repeat('none')
 
     cleanup(source, destination_temp)
 
@@ -31,19 +32,6 @@ def build_staging(source, destination_temp, destination):
     webpages.create_overview_page(standards, source, destination_temp)
     backend.create_staging(destination_temp, destination)
     
-    repeat = get_repeat()
-    print "Repeat:", repeat
-    set_repeat('none')
-
-    if repeat == 'staging':
-        print "Repeating to staging..."
-        build_staging(source, destination_temp, destination)
-
-    elif repeat == 'production':
-        print "Repeating to production..."
-        build_staging(source, destination_temp, destination)
-        backend.put_in_production(destination)
-
     print "Done!"
 
 #if __name__ == "__main__":
@@ -67,11 +55,29 @@ if action == 'published':
             print "Building staging..."
             build_staging(source, destination_temp, destination)
         else:
+            print "Script is already running... setting repeat flag to staging..."
             set_repeat('staging')
+            exit()
+
     else:
         if run():
             print "Building production..."
             build_staging(source, destination_temp, destination)
             backend.put_in_production(destination)
         else:
+            print "Script is already running... setting repeat flag to production..."
             set_repeat('production')
+            exit()
+
+repeat = get_repeat()
+
+while repeat != 'none':
+    if repeat == 'staging':
+        print "Repeating staging..."
+        build_staging(source, destination_temp, destination)
+    elif repeat == 'production':
+        print "Repeating production..."
+        build_staging(source, destination_temp, destination)
+        backend.put_in_production(destination)
+
+    repeat = get_repeat()

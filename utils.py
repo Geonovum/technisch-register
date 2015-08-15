@@ -20,7 +20,9 @@ def run():
 		return True
 
 def set_repeat(action):
-	print "Setting repeat to", action
+	# give way to a production call as it will build staging anyway
+	if get_repeat() == 'production' and action == 'staging': action = 'production'
+
 	with open('repeat.txt', 'w') as f:
 		f.write(action)
 
