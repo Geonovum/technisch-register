@@ -51,9 +51,10 @@ def fetch_repos(root, destination_temp, repos, source):
 
 def create_staging(destination_temp, destination):
 	print 'Copying register to staging...'
-
 	call('rm -rf ../%s/staging' % destination, shell=True)
 
+	print 'making new directory'
+	print 'mkdir ../%s' % destination
 	call('mkdir ../%s' % destination, shell=True)
 
 	print 'Moving new register'
@@ -96,4 +97,4 @@ def put_in_production(destination):
 	call('mv ../register-staging2 ../%s/staging' % destination, shell=True)
 
 	# allow Apache to serve files from this dir
-	call('chmod -R a+rx ../%' % destination, shell=True)
+	call('chmod -R a+rx ../%s' % destination, shell=True)
