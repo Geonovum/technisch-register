@@ -28,7 +28,7 @@
         "titel": "Informatiemodel Basisregistratie Topografie",
         "titel_kort":"IMBRT",
         "beschrijving": "Informatiemodel van de BasisRegistratie Topografie (BRT). In IMBRT zijn de BRT producten TOP10NL, TOP50NL opgenomen en zal aangevuld worden met andere producten zoals TOP100NL en TOP250NL. Algemene objectklasses zijn opgenomen in BRT-algemeen. Voor meer informatie zie BRT op de website van het Kadaster.",
-        "beschrijving_kort": "Informatiemodel van de BasisRegistratie Topografie (BRT).",
+        "beschrijving_kort": "Informatiemodel van de BasisRegistratie Topografie (BRT)",
         "url": "https://github.com/Kadaster/IMBRT"
     },
     {
@@ -52,7 +52,7 @@
         "titel": "Informatimodel Kabels en Leidingen",
         "titel_kort":"IMKL2015",
         "beschrijving": "dataspecificatie ten behoeve van het berichtenverkeer voor uitwisseling van kabel en leiding informatie van de utiliteitsnetten elektriciteit, gas en chemie, telecom, water, warmte en afvalwater. Dit model is nog in ontwikkeling en is opgesteld in de context van het KLICWIN programma",
-        "beschrijving_kort": "Informatimodel Kabels en Leidingen",
+        "beschrijving_kort": "Informatiemodel Kabels en Leidingen",
         "url": "https://github.com/Geonovum/imkl"
     },
     {
