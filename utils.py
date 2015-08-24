@@ -2,22 +2,24 @@ import psutil
 from subprocess import call
 
 def run():
-	num_processes = 0
+	return True
 
-	for proc in psutil.process_iter():
-		pinfo = proc.as_dict(attrs=['name'])
+	# num_processes = 0
 
-		if pinfo['name'] == 'python.exe':
-			builder = proc.as_dict(attrs=['cmdline', 'create_time'])
-			if builder['cmdline'][1] == 'build.py':
-				num_processes += 1
+	# for proc in psutil.process_iter():
+	# 	pinfo = proc.as_dict(attrs=['name'])
 
-	# if two intances of build.py are detected 
-	# a new script cannot be launched
-	if num_processes > 1:
-		return False
-	else:
-		return True
+	# 	if pinfo['name'] == 'python.exe':
+	# 		builder = proc.as_dict(attrs=['cmdline', 'create_time'])
+	# 		if builder['cmdline'][1] == 'build.py':
+	# 			num_processes += 1
+
+	# # if two intances of build.py are detected 
+	# # a new script cannot be launched
+	# if num_processes > 1:
+	# 	return False
+	# else:
+	# 	return True
 
 def set_repeat(action):
 	# give way to a production call as it will build staging anyway
