@@ -45,8 +45,14 @@ print
 print "Running sync script..."
 
 # read release type from GitHub hook
-payload = loads(stdin.read())
-action = payload['action']
+# payload = loads(stdin.read())
+payload = load(stdin)
+try: 
+    action = payload['action']
+except KeyError:
+    print 'This payload does not carry a release... aborting.'
+    exit()
+
 prerelease = payload['release']['prerelease']
 
 if action == 'published':
