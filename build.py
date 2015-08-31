@@ -11,7 +11,7 @@ import backend
 
 source = 'repos'
 destination_temp = 'register2'
-destination = 'register-dev'
+destination = 'register'
 
 def build_staging(source, destination_temp, destination):
     set_repeat('none')
@@ -24,7 +24,7 @@ def build_staging(source, destination_temp, destination):
 
     # TODO: use this approach to include standards that are not managed on GitHub
     #standards = OSFS(source).listdir(dirs_only=True)
-    with open('repos-dev.json') as f:
+    with open('repos.json') as f:
         standards = load(f)
     
     backend.fetch_repos(root, destination_temp, standards, source)
@@ -45,8 +45,14 @@ print
 print "Running sync script..."
 
 # read release type from GitHub hook
-payload = loads(stdin.read())
-action = payload['action']
+# payload = loads(stdin.read())
+payload = load(stdin)
+try: 
+    action = payload['action']
+except KeyError:
+    print 'This payload does not carry a release... aborting.'
+    exit()
+
 prerelease = payload['release']['prerelease']
 
 if action == 'published':

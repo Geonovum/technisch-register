@@ -29,7 +29,7 @@
       "type": "User",
       "site_admin": false
     },
-    "prerelease": true,
+    "prerelease": false,
     "created_at": "2015-06-29T11:34:08Z",
     "published_at": "2015-06-29T11:35:09Z",
     "assets": [
