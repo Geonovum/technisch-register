@@ -11,7 +11,7 @@ import backend
 
 source = 'repos'
 destination_temp = 'register2'
-destination = 'register-dev'
+destination = 'register'
 
 def build_staging(source, destination_temp, destination):
     set_repeat('none')

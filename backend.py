@@ -53,9 +53,9 @@ def create_staging(destination_temp, destination):
 	print 'Copying register to staging...'
 	call('rm -rf ../%s/staging' % destination, shell=True)
 
-	print 'making new directory'
-	print 'mkdir ../%s' % destination
-	call('mkdir ../%s' % destination, shell=True)
+	# print 'making new directory'
+	# print 'mkdir ../%s' % destination
+	# call('mkdir ../%s' % destination, shell=True)
 
 	print 'Moving new register'
 	call('mv %s ../%s/staging' % (destination_temp, destination), shell=True)
