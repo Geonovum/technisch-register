@@ -24,7 +24,7 @@ def build_staging(source, destination_temp, destination):
 
     # TODO: use this approach to include standards that are not managed on GitHub
     #standards = OSFS(source).listdir(dirs_only=True)
-    with open('repos-dev.json') as f:
+    with open('repos.json') as f:
         standards = load(f)
     
     backend.fetch_repos(root, destination_temp, standards, source)
