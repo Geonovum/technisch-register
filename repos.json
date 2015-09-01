@@ -43,13 +43,29 @@
         "id": "stri",
         "titel": "Standaard Toegankelijkheid Ruimtelijke Instrumenten",
         "titel_kort":"STRI",
-        "beschrijving": "",
+        "beschrijving": "Ieder ruimtelijk instrument is opgebouwd uit een samenhangende set bronbestanden. Voor verschillende typen instrumenten is dit een andere set. De STRI2012 geeft de vereisten voor beschikbaarstelling voor de in het IMRO gedefinieerde plannen, visies, besluiten e.d..",
         "beschrijving_kort": "",
         "url": "https://github.com/Geonovum/stri"
     },
     {
+        "id": "pcp",
+        "titel": "Praktijkrichtlijn Plancontour en PDF",
+        "titel_kort":"PCP",
+        "beschrijving": "Het op basis van de objectgerichte plancontour toegang hebben tot de gescande planonderdelen wordt ook wel aangeduid als 'Plancontour & PDF'. Hiermee zijn oude ruimtelijke plannen van gemeenten, provincies en het rijk 'plat' digitaal beschikbaar en te benaderen vanuit de correcte geografische ligging van het gebied.",
+        "beschrijving_kort": "Standaard voor digitaal beschikbaar stellen van ‘analoge’ bestemmingsplannen",
+        "url": "https://github.com/Geonovum/pcp"
+    },
+    {
+        "id": "imro",
+        "titel": "Informatiemodel Ruimtelijke Ordening",
+        "titel_kort":"IMRO",
+        "beschrijving": "IMRO is het informatiemodel voor het opstellen en uitwisselen van digitale plannen, visies en besluiten voor de ruimtelijke ordening (omgevingsinstrumenten). Het gaat hierbij om instrumenten zoals die voor de ruimtelijke ordening in de Wro en Wabo gedefinieerd zijn en op de verschillende administratieve niveaus gemaakt worden: gemeentelijk, provinciaal en nationaal.",
+        "beschrijving_kort": "Standaard voor de ruimtelijke ordening waarin de plannen, visies, besluiten e.d. met hun objecten zijn gedefinieerd.",
+        "url": "https://github.com/Geonovum/imro"
+    },
+    {
         "id": "imkl",
-        "titel": "Informatimodel Kabels en Leidingen",
+        "titel": "Informatiemodel Kabels en Leidingen",
         "titel_kort":"IMKL2015",
         "beschrijving": "dataspecificatie ten behoeve van het berichtenverkeer voor uitwisseling van kabel en leiding informatie van de utiliteitsnetten elektriciteit, gas en chemie, telecom, water, warmte en afvalwater. Dit model is nog in ontwikkeling en is opgesteld in de context van het KLICWIN programma",
         "beschrijving_kort": "Informatiemodel Kabels en Leidingen",
@@ -57,7 +73,7 @@
     },
     {
         "id": "imkad",
-        "titel": "Informatimodel Kadaster",
+        "titel": "Informatiemodel Kadaster",
         "titel_kort":"IMKAD",
         "beschrijving": "IMKAD staat voor “Informatiemodel Kadaster”. Dit informatiemodel beschrijft de gegevens die het Kadaster beheert. Het geeft inzicht in de kenmerken van de gegevens en hoe ze onderling samenhangen. IMKAD is de standaard voor het uitwisselen van Kadastergegevens.",
         "beschrijving_kort": "Informatiemodel Kadaster",
