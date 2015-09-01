@@ -48,8 +48,24 @@
         "url": "https://github.com/Geonovum/stri"
     },
     {
+        "id": "pcp",
+        "titel": "",
+        "titel_kort":"PCP",
+        "beschrijving": "",
+        "beschrijving_kort": "",
+        "url": "https://github.com/Geonovum/pcp"
+    },
+    {
+        "id": "imro",
+        "titel": "Informatie Model Ruimtelijke Ordening",
+        "titel_kort":"IMRO",
+        "beschrijving": "",
+        "beschrijving_kort": "",
+        "url": "https://github.com/Geonovum/imro"
+    },
+    {
         "id": "imkl",
-        "titel": "Informatimodel Kabels en Leidingen",
+        "titel": "Informatiemodel Kabels en Leidingen",
         "titel_kort":"IMKL2015",
         "beschrijving": "dataspecificatie ten behoeve van het berichtenverkeer voor uitwisseling van kabel en leiding informatie van de utiliteitsnetten elektriciteit, gas en chemie, telecom, water, warmte en afvalwater. Dit model is nog in ontwikkeling en is opgesteld in de context van het KLICWIN programma",
         "beschrijving_kort": "Informatiemodel Kabels en Leidingen",
@@ -57,7 +73,7 @@
     },
     {
         "id": "imkad",
-        "titel": "Informatimodel Kadaster",
+        "titel": "Informatiemodel Kadaster",
         "titel_kort":"IMKAD",
         "beschrijving": "IMKAD staat voor “Informatiemodel Kadaster”. Dit informatiemodel beschrijft de gegevens die het Kadaster beheert. Het geeft inzicht in de kenmerken van de gegevens en hoe ze onderling samenhangen. IMKAD is de standaard voor het uitwisselen van Kadastergegevens.",
         "beschrijving_kort": "Informatiemodel Kadaster",
