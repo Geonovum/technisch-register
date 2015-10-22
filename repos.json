@@ -26,15 +26,15 @@
         "beschrijving": "TOP250NL is een onderdeel van de Basisregistratie Topografie en is afgeleid van TOP10NL. TOP250NL is vooral bedoeld voor het vervaardigen van een leesbare topografische kaart op schaalniveau 1: 250.000. TOP250NL is gemodelleerd binnen het Informatiemodel BRT (IMBRT).", 
         "beschrijving_kort": "BRT-TOP250NL product, gemodelleerd binnen IMBRT", 
         "url": "https://github.com/Kadaster/TOP250NL" 
-	}, 
-	{ 
+    }, 
+    { 
         "id": "top500nl, 
         "title": "TOP500NL", 
         "beschrijving": "TOP500NL is een onderdeel van de Basisregistratie Topografie en is afgeleid van TOP10NL. TOP500NL is vooral bedoeld voor het vervaardigen van een leesbare topografische kaart op schaalniveau 1: 250.000. TOP250NL is gemodelleerd binnen het Informatiemodel BRT (IMBRT).", 
         "beschrijving_kort": "BRT-TOP500NL product, gemodelleerd binnen IMBRT", 
         "url": "https://github.com/Kadaster/TOP500NL" 
-	}, 
-	{
+    }, 
+    {
         "id": "brt-algemeen",
         "title": "BRT-algemeen",
         "beschrijving": "Algemene klasses binnen het Informatiemodel BRT (IMBRT). TOP10NL, TOP50NL en andere BRT producten refereren naar deze algemene klasses.",
