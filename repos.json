@@ -23,6 +23,27 @@
         "beschrijving_kort": "BRT-TOP50NL product, gemodelleerd binnen IMBRT",
         "url": "https://github.com/Kadaster/TOP50NL"
     },
+    { 
+        "id": "top100nl", 
+        "title": "TOP100NL", 
+        "beschrijving": "TOP100NL is een onderdeel van de Basisregistratie Topografie en is afgeleid van TOP10NL. TOP100NL is vooral bedoeld voor het vervaardigen van een leesbare topografische kaart op schaalniveau 1: 100.000. TOP100NL is gemodelleerd binnen het Informatiemodel BRT (IMBRT).", 
+        "beschrijving_kort": "BRT-TOP50NL product, gemodelleerd binnen IMBRT", 
+        "url": "https://github.com/Kadaster/TOP100NL" 
+    }, 
+    { 
+        "id": "top250nl", 
+        "title": "TOP250NL", 
+        "beschrijving": "TOP250NL is een onderdeel van de Basisregistratie Topografie en is afgeleid van TOP10NL. TOP250NL is vooral bedoeld voor het vervaardigen van een leesbare topografische kaart op schaalniveau 1: 250.000. TOP250NL is gemodelleerd binnen het Informatiemodel BRT (IMBRT).", 
+        "beschrijving_kort": "BRT-TOP250NL product, gemodelleerd binnen IMBRT", 
+        "url": "https://github.com/Kadaster/TOP250NL" 
+    }, 
+    { 
+        "id": "top500nl, 
+        "title": "TOP500NL", 
+        "beschrijving": "TOP500NL is een onderdeel van de Basisregistratie Topografie en is afgeleid van TOP10NL. TOP500NL is vooral bedoeld voor het vervaardigen van een leesbare topografische kaart op schaalniveau 1: 250.000. TOP250NL is gemodelleerd binnen het Informatiemodel BRT (IMBRT).", 
+        "beschrijving_kort": "BRT-TOP500NL product, gemodelleerd binnen IMBRT", 
+        "url": "https://github.com/Kadaster/TOP500NL" 
+    }, 
     {
         "id": "brt-algemeen",
         "titel": "BRT-algemeen",
@@ -33,10 +54,16 @@
     },
     {
         "id": "imbrt",
+<<<<<<< HEAD
         "titel": "Informatiemodel Basisregistratie Topografie",
         "titel_kort":"IMBRT",
         "beschrijving": "Informatiemodel van de BasisRegistratie Topografie (BRT). In IMBRT zijn de BRT producten TOP10NL, TOP50NL opgenomen en zal aangevuld worden met andere producten zoals TOP100NL en TOP250NL. Algemene objectklasses zijn opgenomen in BRT-algemeen. Voor meer informatie zie BRT op de website van het Kadaster.",
         "beschrijving_kort": "Informatiemodel van de BasisRegistratie Topografie (BRT)",
+=======
+        "title": "Informatiemodel BasisRegistratie Topografie",
+        "beschrijving": "Informatiemodel van de BasisRegistratie Topografie (BRT). In IMBRT zijn de BRT producten TOP10NL, TOP50NL, TOP100NL en TOP250NL opgenomen en zal aangevuld worden met andere producten zoals TOP500NL en TOP1000NL. Algemene objectklasses zijn opgenomen in BRT-algemeen. Voor meer informatie zie BRT op de website van het Kadaster.",
+        "beschrijving_kort": "Informatiemodel van de BasisRegistratie Topografie (BRT).",
+>>>>>>> refs/heads/pr/20
         "url": "https://github.com/Kadaster/IMBRT"
     },
     {
