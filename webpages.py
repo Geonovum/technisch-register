@@ -14,7 +14,7 @@ def create_standard_title(title, description):
     # creation of html and body tags
     return BS(title, 'html.parser')
 
-def create_substandard_title(standard, artifact, title):
+def create_artifact_title(standard, artifact, title):
     title = '''
         <p><i class="fa fa-file-o"></i>
             <span style='margin-left: 25px'>
@@ -24,12 +24,12 @@ def create_substandard_title(standard, artifact, title):
 
     return BS(title, 'html.parser')
 
-def create_substandard_description(substandard):
+def create_artifact_description(artifact):
     summary ='''
         <p>
             <span style='margin-left:37px; width: 100%%'>%s</span>
         </p>
-        ''' % substandard['beschrijving']
+        ''' % artifact['beschrijving']
 
     return BS(summary, 'html.parser')
 
@@ -59,11 +59,11 @@ def create_standard_webpage(standard, artifacts):
     # iterate over all artifacts i.e. informatiemodel, gmlapplicatieschema, regels, etc.
     for artifact in artifacts:
         # create title of each artifact
-        title = create_substandard_title(standard['id'], artifact, descriptions[artifact]['titel'])
+        title = create_artifact_title(standard['id'], artifact, descriptions[artifact]['titel'])
         el_container.append(title)
 
         # create description of each standard
-        description = create_substandard_description(descriptions[artifact])
+        description = create_artifact_description(descriptions[artifact])
         el_container.append(description)
 
     return html.prettify()
