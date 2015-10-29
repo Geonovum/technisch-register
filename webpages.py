@@ -34,8 +34,9 @@ def create_substandard_description(substandard):
     return BS(summary, 'html.parser')
 
 def create_standard_webpage(standard, artifacts):
-    # builds each standard's overview page
-    # e.g. http://register.geostandaarden.nl/imgeo/
+    """Build a standard's overview page
+    e.g. http://register.geostandaarden.nl/imgeo/
+    """
 
     # load standard HTML template
     with open('web/templates/standard.html', 'r') as f:
@@ -44,13 +45,12 @@ def create_standard_webpage(standard, artifacts):
     # construct title
     title = create_standard_title(standard['titel'], standard['beschrijving'])
     
-    # add to #title div
     el_title = html.find(id="title")
 
     # fetch #container from template
     el_container = html.find(id="container")
 
-    # append title
+    # append title to #title div
     el_title.append(title)
 
     with codecs.open('descriptions.json', encoding='utf8') as f:
@@ -58,7 +58,7 @@ def create_standard_webpage(standard, artifacts):
 
     # iterate over all artifacts i.e. informatiemodel, gmlapplicatieschema, regels, etc.
     for artifact in artifacts:
-        # create title of each sub standard
+        # create title of each artifact
         title = create_substandard_title(standard['id'], artifact, descriptions[artifact]['titel'])
         el_container.append(title)
 

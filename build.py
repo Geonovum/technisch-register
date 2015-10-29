@@ -18,17 +18,18 @@ def build_staging(source, destination_temp, destination):
 
     cleanup(source, destination_temp)
 
-    root = OSFS('./') # 'c:\Users\<login name>' on Windows
-    # root.makedir(source, allow_recreate=True)
+    root = OSFS('./')
     root.makedir(destination_temp, allow_recreate=True)
 
     # TODO: use this approach to include standards that are not managed on GitHub
     #standards = OSFS(source).listdir(dirs_only=True)
+    
     with open('repos.json') as f:
         standards = load(f)
     
     backend.fetch_repos(root, destination_temp, standards, source)
     backend.build_folders(source, destination_temp, standards, root)
+    # TODO: webpages.create_standard_page()
     webpages.create_overview_page(standards, source, destination_temp)
     backend.create_staging(destination_temp, destination)
     
@@ -36,27 +37,29 @@ def build_staging(source, destination_temp, destination):
 
 #if __name__ == "__main__":
 
-# TODO: set running to false when script fails
-# TODO: remove working dirs
-# TODO: create a cleanup function to store above actions
-
 print "Content-Type: text/html"
 print 
 print "Running sync script..."
 
-# read release type from GitHub hook
-# payload = loads(stdin.read())
+# read GitHub's JSON payload from stdin
+# see ./github-payload.json for an example
 payload = load(stdin)
-try: 
+
+try:
+    # published GitHub releases contain an 'action' key, try to retrieve it
     action = payload['action']
+
 except KeyError:
     print 'This payload does not carry a release... aborting.'
     exit()
 
+# extract the release type: release or prerelease
 prerelease = payload['release']['prerelease']
 
 if action == 'published':
     if prerelease == True:
+        # check whether we can start the build.py script
+        # i.e. whether another instance isn't already running
         if run():
             print "Building staging..."
             build_staging(source, destination_temp, destination)
@@ -64,7 +67,6 @@ if action == 'published':
             print "Script is already running... setting repeat flag to staging..."
             set_repeat('staging')
             exit()
-
     else:
         if run():
             print "Building production..."
@@ -75,6 +77,7 @@ if action == 'published':
             set_repeat('production')
             exit()
 
+# check whether we need to run script once more
 repeat = get_repeat()
 
 while repeat != 'none':

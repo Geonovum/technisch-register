@@ -2,6 +2,10 @@ import psutil
 from subprocess import call
 
 def run():
+	""" Check if the build.py script is already running.
+	Return True if it is not i.e. a new instance may be started.
+	Return False if it is i.e. a new instance cannot be started.
+	"""
 	num_processes = 0
 
 	for proc in psutil.process_iter():
@@ -31,9 +35,10 @@ def get_repeat():
 		return f.read()
 
 def cleanup(source, destination_temp):
-	# OSFS' removedir function cannot deal with protected
-	# files in each repo's .git folder
+	"""Remove the source and temporary destination folders."""
 
+	# We call the system's rm function because OSFS' removedir function cannot
+	# deal with the protected files in each repo's .git folder
 	try:
 	    print "removing %s" % source    
 	    call('rm -rf %s' % (source), shell=True)

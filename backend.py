@@ -6,6 +6,10 @@ import codecs
 import time
 
 def build_folders(source, destination_temp, standards, root):
+    """Transform the repos' folder structure to that of the register
+    and build HTML pages for each standard.
+    """
+
     print "Building register..."
 
     source_fs = OSFS(source)
@@ -15,7 +19,7 @@ def build_folders(source, destination_temp, standards, root):
         print "Processing %s ... " % standard['id']
         standard_fs = source_fs.opendir(standard['id'])
 
-        # list all sub standards of a standard
+        # list all artifacts of a standard
         artifacts = standard_fs.listdir(dirs_only=True)
         if '.git' in artifacts: artifacts.remove(".git")
 
@@ -23,10 +27,11 @@ def build_folders(source, destination_temp, standards, root):
             # check whether artifact folder exists in destination_temp 
             if root.exists('%s/%s' % (destination_temp, artifact)) == False:
                 root.makedir('%s/%s' % (destination_temp, artifact))
-                
+
             # copy standard folders from source to destination_temp in desired structure
             root.copydir('%s/%s/%s' % (source, standard['id'], artifact),  '%s/%s/%s' % (destination_temp, artifact, standard['id']))
 
+    	# TODO: put in own function
         # create standard HTML page
         html = create_standard_webpage(standard, artifacts)
 
@@ -39,17 +44,26 @@ def build_folders(source, destination_temp, standards, root):
             f.write(html)
 
 def fetch_repos(root, destination_temp, repos, source):
+	"""Clone repos from GitHub to source folder."""
+    
     print "Fetching repositories..."
 
     for repo in repos:
         print "Cloning %s in repos/%s" % (repo['url'], repo['id'])
-        # explicitely create dir as implicit cration fails on server
+        
+        # explicitely create dir as implicit creation fails on server
+        # NOTE: possible duplicate with line 34!
         root.makedir('%s/%s' % (destination_temp, repo['id']))
+        
         call('git clone %s %s/%s' % (repo['url'], source, repo['id']), shell=True)
 
-    #TODO: git pull additions into existing repos, clone new ones
+    #TODO: use git pull instead of git clone to fetch updates
 
 def create_staging(destination_temp, destination):
+	"""Create a staging version of the register hosted at
+	register.geostandaarden.nl/staging
+	"""
+
 	print 'Copying register to staging...'
 	call('rm -rf ../%s/staging' % destination, shell=True)
 
@@ -66,10 +80,14 @@ def create_staging(destination_temp, destination):
 	# root.removedir(source, force=True)
 
 def put_in_production(destination):
+	"""Put the staging version to production hosted at 
+	register.geostandaarden.nl
+	"""
+
 	print "!! === !!"
 	print "Putting staging in production"
+	
 	# backup current register
-
 	print "Backing up register..."
 	call('cp -r ../%s ../backups/%s' % (destination, time.strftime('%Y-%m-%d')), shell=True)
 
