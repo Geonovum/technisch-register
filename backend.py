@@ -59,27 +59,28 @@ def fetch_repos(root, destination_temp, repos, source):
 
     #TODO: use git pull instead of git clone to fetch updates
 
-def create_staging(destination_temp, destination):
+def create_staging(destination_temp, destination, root):
     """Create a staging version of the register hosted at
     register.geostandaarden.nl/staging
     """
 
     print 'Copying register to staging...'
-    call('rm -rf ../%s/staging' % destination, shell=True)
+    call('rm -rf %s/staging' % destination, shell=True)
 
-    # print 'making new directory'
-    # print 'mkdir ../%s' % destination
-    # call('mkdir ../%s' % destination, shell=True)
+    print 'making new directory'
+    print 'mkdir %s' % destination
+    if root.exists('%s' % destination) == False: 
+        root.makedir('%s' % destination)
 
     print 'Moving new register'
-    call('mv %s ../%s/staging' % (destination_temp, destination), shell=True)
+    call('mv %s %s/staging' % (destination_temp, destination), shell=True)
     # root.copydir(destination_temp, '../register/staging')
     # root.removedir(destination_temp, force=True)
     
-    call('chmod -R a+rx ../%s' % destination, shell=True)
+    call('chmod -R a+rx %s' % destination, shell=True)
     # root.removedir(source, force=True)
 
-def put_in_production(destination):
+def put_in_production(destination, backups, root, regstage, regstage2, regold):
     """Put the staging version to production hosted at 
     register.geostandaarden.nl
     """
@@ -88,31 +89,43 @@ def put_in_production(destination):
     print "Putting staging in production"
     
     # backup current register
+    print 'mkdir %s' % backups
+    if root.exists('%s' % backups) == False: 
+        root.makedir('%s' % backups)
+    
     print "Backing up register..."
-    call('cp -r ../%s ../backups/%s' % (destination, time.strftime('%Y-%m-%d')), shell=True)
+    call('cp -r %s backups/%s' % (destination, time.strftime('%Y-%m-%d')), shell=True)
 
     #copy staging to parent dir
+    print 'mkdir %s' % regstage
+    if root.exists('%s' % regstage) == False: 
+        root.makedir('%s' % regstage) 
+        
+    print 'mkdir %s' % regstage2
+    if root.exists('%s' % regstage2) == False: 
+        root.makedir('%s' % regstage2)
+
     print "Preparing staging for launch..."
-    call('cp -r ../%s/staging ../register-staging' % destination, shell=True)
-    call('cp -r ../%s/staging ../register-staging2' % destination, shell=True)
+    call('cp -r %s/staging register_staging' % destination, shell=True)
+    call('cp -r %s/staging register_staging2' % destination, shell=True)
 
     #rename old register to temp name
     print "Launching staging into production..."
-    call('mv ../%s ../register-old' % destination, shell=True)
+    call('mv %s register_old' % destination, shell=True)
     
     #rename staging to new register
-    call('mv ../register-staging ../%s' % destination, shell=True)
+    call('mv register_staging %s' % destination, shell=True)
     # call('mkdir ../register/r')
-    call('cp -r web/assets ../%s/r' % destination, shell=True)
+    call('cp -r web/assets %s/r' % destination, shell=True)
     print "Staging launched!"
     
     # delelete old register
     print "Removing old register..."
-    call('rm -rf ../register-old', shell=True)
+    call('rm -rf register_old', shell=True)
 
     # move current staging to new register
     print "Moving current staging to new production..."
-    call('mv ../register-staging2 ../%s/staging' % destination, shell=True)
+    call('mv register_staging2 %s/staging' % destination, shell=True)
 
     # allow Apache to serve files from this dir
     # call('chmod -R a+rx ../%s' % destination, shell=True)
