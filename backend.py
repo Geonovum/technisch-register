@@ -64,21 +64,20 @@ def create_staging(destination_temp, destination, root):
     register.geostandaarden.nl/staging
     """
 
-    print 'Copying register to staging...'
-    call('rm -rf %s/staging' % destination, shell=True)
+    # TODO invoke build_folders from here
 
-    print 'making new directory'
-    print 'mkdir %s' % destination
-    if root.exists('%s' % destination) == False: 
-        root.makedir('%s' % destination)
+    # staging moet een dir hoger zitten om op  
+    # register.geostandaarden.nl/staging
+    # beshickbaar te zijn    
 
-    print 'Moving new register'
-    call('mv %s %s/staging' % (destination_temp, destination), shell=True)
-    # root.copydir(destination_temp, '../register/staging')
-    # root.removedir(destination_temp, force=True)
+    print "Removing current staging..."
+    call('rm -rf ../staging', shell=True)
+
+    print 'Moving new register to staging...'
+    call('mv %s staging' % destination_temp, shell=True)
+    call('mv staging ../', shell=True)
     
-    call('chmod -R a+rx %s' % destination, shell=True)
-    # root.removedir(source, force=True)
+    call('chmod -R a+rx ../staging', shell=True)
 
 def put_in_production(destination, backups, root, regstage, regstage2, regold):
     """Put the staging version to production hosted at 
