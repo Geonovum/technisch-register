@@ -59,7 +59,7 @@ def fetch_repos(root, destination_temp, repos, source):
 
     #TODO: use git pull instead of git clone to fetch updates
 
-def create_staging(destination_temp, destination, root):
+def create_staging(staging_build):
     """Create a staging version of the register hosted at
     register.geostandaarden.nl/staging
     """
@@ -71,13 +71,14 @@ def create_staging(destination_temp, destination, root):
     # beshickbaar te zijn    
 
     print "Removing current staging..."
-    call('rm -rf ../staging', shell=True)
+    call('rm -rf ../%s' % staging_build, shell=True)
 
     print 'Moving new register to staging...'
-    call('mv %s staging' % destination_temp, shell=True)
-    call('mv staging ../', shell=True)
+    # TODO rename destination_temp to staging_build
+    # call('mv %s staging' % staging_build, shell=True)
+    call('mv %s ../' % staging_build, shell=True)
     
-    call('chmod -R a+rx ../staging', shell=True)
+    call('chmod -R a+rx ../%s' % staging_build, shell=True)
 
 def put_in_production(destination, backups, root, regstage, regstage2, regold):
     """Put the staging version to production hosted at 
