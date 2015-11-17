@@ -80,52 +80,23 @@ def create_staging(staging_build):
     
     call('chmod -R a+rx ../%s' % staging_build, shell=True)
 
-def put_in_production(destination, backups, root, regstage, regstage2, regold):
+def create_production(build_dir, backups):
     """Put the staging version to production hosted at 
     register.geostandaarden.nl
     """
 
-    print "!! === !!"
-    print "Putting staging in production"
+    print "Building production..."
+
+    deploy = OSFS('..')
     
-    # backup current register
-    print 'mkdir %s' % backups
-    if root.exists('%s' % backups) == False: 
-        root.makedir('%s' % backups)
-    
-    print "Backing up register..."
-    call('cp -r %s backups/%s' % (destination, time.strftime('%Y-%m-%d')), shell=True)
+    if deploy.exists(backups) == False:
+        deploy.makedir(backups)
 
-    #copy staging to parent dir
-    print 'mkdir %s' % regstage
-    if root.exists('%s' % regstage) == False: 
-        root.makedir('%s' % regstage) 
-        
-    print 'mkdir %s' % regstage2
-    if root.exists('%s' % regstage2) == False: 
-        root.makedir('%s' % regstage2)
+    deploy.movedir('technisch-register/%s' % build_dir, 'register-new', overwrite=True)
 
-    print "Preparing staging for launch..."
-    call('cp -r %s/staging register_staging' % destination, shell=True)
-    call('cp -r %s/staging register_staging2' % destination, shell=True)
+    if deploy.exists('register') == True:
+        deploy.copydir('register', 'backups/%s' % time.strftime('%Y-%m-%d'), overwrite=True)
+        deploy.movedir('register', 'register-old', overwrite=True)
 
-    #rename old register to temp name
-    print "Launching staging into production..."
-    call('mv %s register_old' % destination, shell=True)
-    
-    #rename staging to new register
-    call('mv register_staging %s' % destination, shell=True)
-    # call('mkdir ../register/r')
-    call('cp -r web/assets %s/r' % destination, shell=True)
-    print "Staging launched!"
-    
-    # delelete old register
-    print "Removing old register..."
-    call('rm -rf register_old', shell=True)
-
-    # move current staging to new register
-    print "Moving current staging to new production..."
-    call('mv register_staging2 %s/staging' % destination, shell=True)
-
-    # allow Apache to serve files from this dir
-    # call('chmod -R a+rx ../%s' % destination, shell=True)
+    deploy.movedir('register-new', 'register', overwrite=True)
+    deploy.removedir('register-old', force=True)

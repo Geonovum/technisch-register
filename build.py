@@ -8,15 +8,13 @@ import codecs
 import time
 import webpages
 import backend
+from settings import repo_path 
 
 root = OSFS('./')
 source = 'repos'
 staging_build = 'staging'
-destination = 'register'
+production_build = 'register'
 backups = 'backups'
-regstage = 'register_staging'
-regstage2 = 'register_staging2'
-regold = 'register_old'
 
 def build(source, build_dir, root):
     set_repeat('none')
@@ -27,8 +25,7 @@ def build(source, build_dir, root):
     # TODO: use this approach to include standards that are not managed on GitHub
     #standards = OSFS(source).listdir(dirs_only=True)
     
-    with open('repos-dev.json') as f:
-    # with open('repos.json') as f:
+    with open(repo_path) as f:
         standards = load(f)
     
     backend.fetch_repos(root, build_dir, standards, source)
@@ -73,8 +70,8 @@ if action == 'published':
     else:
         if run():
             print "Building production..."
-            build(source, staging_build, root)
-            backend.put_in_production(destination, backups, root, regstage, regstage2, regold)
+            build(source, production_build, root)
+            backend.create_production(production_build, backups)
         else:
             print "Script is already running... setting repeat flag to production..."
             set_repeat('production')
@@ -90,7 +87,7 @@ while repeat != 'none':
         backend.create_staging(staging_build)
     elif repeat == 'production':
         print "Repeating production..."
-        build(source, staging_build, root)
-        backend.put_in_production(destination, backups, root, regstage, regstage2, regold)
+        build(source, production_build, root)
+        backend.create_production(production_build, backups)
 
     repeat = get_repeat()
