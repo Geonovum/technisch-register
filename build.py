@@ -9,16 +9,20 @@ import time
 import webpages
 import backend
 
+root = OSFS('./')
 source = 'repos'
 destination_temp = 'register2'
 destination = 'register'
+backups = 'backups'
+regstage = 'register_staging'
+regstage2 = 'register_staging2'
+regold = 'register_old'
 
-def build_staging(source, destination_temp, destination):
+def build_staging(source, destination_temp, destination, root):
     set_repeat('none')
 
     cleanup(source, destination_temp)
 
-    root = OSFS('./')
     root.makedir(destination_temp, allow_recreate=True)
 
     # TODO: use this approach to include standards that are not managed on GitHub
@@ -31,14 +35,13 @@ def build_staging(source, destination_temp, destination):
     backend.build_folders(source, destination_temp, standards, root)
     # TODO: webpages.create_standard_page()
     webpages.create_overview_page(standards, source, destination_temp)
-    backend.create_staging(destination_temp, destination)
+    backend.create_staging(destination_temp, destination, root)
     
     print "Done!"
 
 #if __name__ == "__main__":
 
 print "Content-Type: text/html"
-print 
 print "Running sync script..."
 
 # read GitHub's JSON payload from stdin
@@ -62,7 +65,7 @@ if action == 'published':
         # i.e. whether another instance isn't already running
         if run():
             print "Building staging..."
-            build_staging(source, destination_temp, destination)
+            build_staging(source, destination_temp, destination, root)
         else:
             print "Script is already running... setting repeat flag to staging..."
             set_repeat('staging')
@@ -70,8 +73,8 @@ if action == 'published':
     else:
         if run():
             print "Building production..."
-            build_staging(source, destination_temp, destination)
-            backend.put_in_production(destination)
+            build_staging(source, destination_temp, destination, root)
+            backend.put_in_production(destination, backups, root, regstage, regstage2, regold)
         else:
             print "Script is already running... setting repeat flag to production..."
             set_repeat('production')
@@ -87,6 +90,6 @@ while repeat != 'none':
     elif repeat == 'production':
         print "Repeating production..."
         build_staging(source, destination_temp, destination)
-        backend.put_in_production(destination)
+        backend.put_in_production(destination, backups, root, regstage, regstage2, regold)
 
     repeat = get_repeat()
