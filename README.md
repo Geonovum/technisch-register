@@ -13,13 +13,15 @@ Install the Python modules through e.g. `easy_install`. Open your shell and ente
 
     easy_install fs beautifulsoup4 psutil
 
+Rename `settings-example.py` to `settings.py`. 
+
 #### running
 
-On the server the script reads the JSON payload that GitHub sends from `stdin`. To use it locally run `build.py` as
+On the server the script reads GitHub's JSON payload from `stdin`. To use it locally run `build.py` as
 
     cat github-payload.json | python build.py
 
-Line 32 of `github-payload.json` determines whether the script builds the `staging` or `production` release. Change `prerelease` to `false` to build `production` and vice versa.
+Line 32 of `github-payload.json` determines what the script (`staging` or `production`) should build. Change `prerelease` to `false` to build `production` and vice versa.
 
 #### developing and testing
 
