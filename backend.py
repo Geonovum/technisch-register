@@ -112,3 +112,5 @@ def create_production(build_dir, backups):
         deploy.removedir('register-old', force=True)
     except fs.errors.ResourceNotFoundError:
         pass
+
+    call('chmod -R a+rx register', shell=True)
