@@ -105,7 +105,7 @@ def create_production(build_dir, backups):
         
         try:
             deploy.movedir('register', 'register-old', overwrite=True)
-        except fs.errors.ResourceNotFoundError:
+        except ResourceNotFoundError:
             pass
 
     deploy.movedir('register-new', 'register', overwrite=True)
@@ -117,7 +117,7 @@ def create_production(build_dir, backups):
     
     try:
         deploy.removedir('register-old', force=True)
-    except fs.errors.ResourceNotFoundError:
+    except ResourceNotFoundError:
         pass
 
     call('chmod -R a+rx ../register', shell=True)
