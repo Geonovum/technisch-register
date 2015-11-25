@@ -55,6 +55,8 @@ def fetch_repos(root, destination_temp, repos, source):
         # NOTE: possible duplicate with line 34!
         root.makedir('%s/%s' % (destination_temp, repo['id']))
         
+        #TODO: change into git pull
+
         call('git clone %s %s/%s' % (repo['url'], source, repo['id']), shell=True)
 
     #TODO: use git pull instead of git clone to fetch updates
@@ -69,6 +71,8 @@ def create_staging(staging_build):
     # staging moet een dir hoger zitten om op  
     # register.geostandaarden.nl/staging
     # beshickbaar te zijn    
+
+    # TODO: user OSFS like in create_production
 
     print "Removing current staging..."
     call('rm -rf ../%s' % staging_build, shell=True)
@@ -96,7 +100,15 @@ def create_production(build_dir, backups):
 
     if deploy.exists('register') == True:
         deploy.copydir('register', 'backups/%s' % time.strftime('%Y-%m-%d'), overwrite=True)
-        deploy.movedir('register', 'register-old', overwrite=True)
+        
+        try:
+            deploy.movedir('register', 'register-old', overwrite=True)
+        except fs.errors.ResourceNotFoundError:
+            continue
 
     deploy.movedir('register-new', 'register', overwrite=True)
-    deploy.removedir('register-old', force=True)
+    
+    try:
+        deploy.removedir('register-old', force=True)
+    except fs.errors.ResourceNotFoundError:
+        continue
