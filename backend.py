@@ -113,4 +113,4 @@ def create_production(build_dir, backups):
     except fs.errors.ResourceNotFoundError:
         pass
 
-    call('chmod -R a+rx register', shell=True)
+    call('chmod -R a+rx ../register', shell=True)
