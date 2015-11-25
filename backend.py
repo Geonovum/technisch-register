@@ -2,8 +2,10 @@ from fs.osfs import OSFS
 from fs.errors import ResourceNotFoundError
 from subprocess import call
 from webpages import create_standard_webpage
+from os import symlink
 import codecs
 import time
+
 
 def build_folders(source, destination_temp, standards, root):
     """Transform the repos' folder structure to that of the register
@@ -107,6 +109,11 @@ def create_production(build_dir, backups):
             pass
 
     deploy.movedir('register-new', 'register', overwrite=True)
+
+    # create symbolic link to standalone staging directory
+    # fails if production is built first...
+    deploy.makedir('register/staging')
+    call('cd ../register/staging; ln -s ../../staging', shell=True)
     
     try:
         deploy.removedir('register-old', force=True)
