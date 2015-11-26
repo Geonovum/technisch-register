@@ -2,8 +2,10 @@ from fs.osfs import OSFS
 from fs.errors import ResourceNotFoundError
 from subprocess import call
 from webpages import create_standard_webpage
+from os import symlink
 import codecs
 import time
+
 
 def build_folders(source, destination_temp, standards, root):
     """Transform the repos' folder structure to that of the register
@@ -55,77 +57,67 @@ def fetch_repos(root, destination_temp, repos, source):
         # NOTE: possible duplicate with line 34!
         root.makedir('%s/%s' % (destination_temp, repo['id']))
         
+        #TODO: change into git pull
+
         call('git clone %s %s/%s' % (repo['url'], source, repo['id']), shell=True)
 
     #TODO: use git pull instead of git clone to fetch updates
 
-def create_staging(destination_temp, destination, root):
+def create_staging(staging_build):
     """Create a staging version of the register hosted at
     register.geostandaarden.nl/staging
     """
 
-    print 'Copying register to staging...'
-    call('rm -rf %s/staging' % destination, shell=True)
+    # TODO invoke build_folders from here
 
-    print 'making new directory'
-    print 'mkdir %s' % destination
-    if root.exists('%s' % destination) == False: 
-        root.makedir('%s' % destination)
+    # staging moet een dir hoger zitten om op  
+    # register.geostandaarden.nl/staging
+    # beshickbaar te zijn    
 
-    print 'Moving new register'
-    call('mv %s %s/staging' % (destination_temp, destination), shell=True)
-    # root.copydir(destination_temp, '../register/staging')
-    # root.removedir(destination_temp, force=True)
+    # TODO: user OSFS like in create_production
+
+    print "Removing current staging..."
+    call('rm -rf ../%s' % staging_build, shell=True)
+
+    print 'Moving new register to staging...'
+    # TODO rename destination_temp to staging_build
+    # call('mv %s staging' % staging_build, shell=True)
+    call('mv %s ../' % staging_build, shell=True)
     
-    call('chmod -R a+rx %s' % destination, shell=True)
-    # root.removedir(source, force=True)
+    call('chmod -R a+rx ../%s' % staging_build, shell=True)
 
-def put_in_production(destination, backups, root, regstage, regstage2, regold):
+def create_production(build_dir, backups):
     """Put the staging version to production hosted at 
     register.geostandaarden.nl
     """
 
-    print "!! === !!"
-    print "Putting staging in production"
-    
-    # backup current register
-    print 'mkdir %s' % backups
-    if root.exists('%s' % backups) == False: 
-        root.makedir('%s' % backups)
-    
-    print "Backing up register..."
-    call('cp -r %s backups/%s' % (destination, time.strftime('%Y-%m-%d')), shell=True)
+    print "Building production..."
 
-    #copy staging to parent dir
-    print 'mkdir %s' % regstage
-    if root.exists('%s' % regstage) == False: 
-        root.makedir('%s' % regstage) 
+    deploy = OSFS('..')
+    
+    if deploy.exists(backups) == False:
+        deploy.makedir(backups)
+
+    deploy.movedir('technisch-register/%s' % build_dir, 'register-new', overwrite=True)
+
+    if deploy.exists('register') == True:
+        deploy.copydir('register', 'backups/%s' % time.strftime('%Y-%m-%d'), overwrite=True)
         
-    print 'mkdir %s' % regstage2
-    if root.exists('%s' % regstage2) == False: 
-        root.makedir('%s' % regstage2)
+        try:
+            deploy.movedir('register', 'register-old', overwrite=True)
+        except ResourceNotFoundError:
+            pass
 
-    print "Preparing staging for launch..."
-    call('cp -r %s/staging register_staging' % destination, shell=True)
-    call('cp -r %s/staging register_staging2' % destination, shell=True)
+    deploy.movedir('register-new', 'register', overwrite=True)
 
-    #rename old register to temp name
-    print "Launching staging into production..."
-    call('mv %s register_old' % destination, shell=True)
+    # create symbolic link to standalone staging directory
+    # fails if production is built first...
+    deploy.makedir('register/staging')
+    call('cd ../register/staging; ln -s ../../staging', shell=True)
     
-    #rename staging to new register
-    call('mv register_staging %s' % destination, shell=True)
-    # call('mkdir ../register/r')
-    call('cp -r web/assets %s/r' % destination, shell=True)
-    print "Staging launched!"
-    
-    # delelete old register
-    print "Removing old register..."
-    call('rm -rf register_old', shell=True)
+    try:
+        deploy.removedir('register-old', force=True)
+    except ResourceNotFoundError:
+        pass
 
-    # move current staging to new register
-    print "Moving current staging to new production..."
-    call('mv register_staging2 %s/staging' % destination, shell=True)
-
-    # allow Apache to serve files from this dir
-    # call('chmod -R a+rx ../%s' % destination, shell=True)
+    call('chmod -R a+rx ../register', shell=True)

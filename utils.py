@@ -6,12 +6,18 @@ def run():
 	Return True if it is not i.e. a new instance may be started.
 	Return False if it is i.e. a new instance cannot be started.
 	"""
+
+	print "Checking whether somethings is running... "
+
 	num_processes = 0
+
+
+	# pudb.set_trace()
 
 	for proc in psutil.process_iter():
 		pinfo = proc.as_dict(attrs=['name'])
 
-		if pinfo['name'] == 'python.exe':
+		if pinfo['name'] == 'python.exe' or pinfo['name'] == 'Python':
 			builder = proc.as_dict(attrs=['cmdline', 'create_time'])
 			if builder['cmdline'][1] == 'build.py':
 				num_processes += 1
@@ -50,3 +56,7 @@ def cleanup(source, destination_temp):
 	    call('rm -rf %s' % (destination_temp), shell=True)
 	except ResourceNotFoundError: 
 	    print "Failed to remove %s... Folder not found." % destination_temp
+
+
+if __name__ == "__main__":
+	run()
