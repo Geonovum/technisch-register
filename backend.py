@@ -87,7 +87,7 @@ def create_staging(staging_build):
     
     call('chmod -R a+rx ../%s' % staging_build, shell=True)
 
-def create_production(build_dir, backups):
+def create_production(build_dir, backups, current_dir):
     """Put the staging version to production hosted at 
     register.geostandaarden.nl
     """
@@ -99,7 +99,7 @@ def create_production(build_dir, backups):
     if deploy.exists(backups) == False:
         deploy.makedir(backups)
 
-    deploy.movedir('technisch-register/%s' % build_dir, 'register-new', overwrite=True)
+    deploy.movedir('%s/%s' % (current_dir, build_dir), 'register-new', overwrite=True)
 
     if deploy.exists('register') == True:
         # server refuses to recursively remove register/staging

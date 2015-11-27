@@ -1,2 +1,2 @@
 repo_path = 'repos.json'
-# repo_path = 'repos-dev.json'
+script_dir = 'cgi-bin'

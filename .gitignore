@@ -1,5 +1,6 @@
 repos/
 register/
+settings.py
 
 # Windows image file caches
 Thumbs.db

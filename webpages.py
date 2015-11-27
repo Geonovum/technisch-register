@@ -10,8 +10,8 @@ def create_standard_title(title, description):
         <p>%s</p>
         ''' % (title, description)
 
-    # use python's built-in parser which skips
-    # creation of html and body tags
+    # use python's built-in parser since
+    # it does not create html and body tags
     return BS(title, 'html.parser')
 
 def create_artifact_title(standard, artifact, title):
@@ -40,7 +40,7 @@ def create_standard_webpage(standard, artifacts):
 
     # load standard HTML template
     with open('web/templates/standard.html', 'r') as f:
-        html = BS(f)
+        html = BS(f, 'lxml')
     
     # fetch title element from template
     el_title = html.find(id="title")
@@ -94,7 +94,7 @@ def create_overview_page(standards, source, destination_temp):
 
     # open overview page template
     with codecs.open('web/templates/overview.html', 'r', encoding='utf8') as f:
-        html = BS(f)
+        html = BS(f, 'lxml')
 
     el_container = html.find(id='leftcolumn')
 

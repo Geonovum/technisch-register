@@ -8,7 +8,7 @@ import codecs
 import time
 import webpages
 import backend
-from settings import repo_path 
+from settings import repo_path, script_dir
 
 root = OSFS('./')
 source = 'repos'
@@ -71,7 +71,7 @@ if action == 'published':
         if run():
             print "Building production..."
             build(source, production_build, root)
-            backend.create_production(production_build, backups)
+            backend.create_production(production_build, backups, script_dir)
         else:
             print "Script is already running... setting repeat flag to production..."
             set_repeat('production')
@@ -88,6 +88,6 @@ while repeat != 'none':
     elif repeat == 'production':
         print "Repeating production..."
         build(source, production_build, root)
-        backend.create_production(production_build, backups)
+        backend.create_production(production_build, backups, script_dir)
 
     repeat = get_repeat()
