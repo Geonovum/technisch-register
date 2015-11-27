@@ -33,8 +33,6 @@ def build_folders(source, destination_temp, standards, root):
             # copy standard folders from source to destination_temp in desired structure
             root.copydir('%s/%s/%s' % (source, standard['id'], artifact),  '%s/%s/%s' % (destination_temp, artifact, standard['id']))
 
-        # TODO: put in own function
-        # create standard HTML page
         html = create_standard_webpage(standard, artifacts)
 
         # check whether standard folder exists in register root
@@ -44,6 +42,9 @@ def build_folders(source, destination_temp, standards, root):
         # write standard HTML page to register/standard/index.html
         with codecs.open('%s/%s/index.html' % (destination_temp, standard['id']), 'w', encoding='utf8') as f:
             f.write(html)
+
+    # copy web assets
+    root.copydir('web/assets', '%s/r' % destination_temp)
 
 def fetch_repos(root, destination_temp, repos, source):
     """Clone repos from GitHub to source folder."""
@@ -101,6 +102,10 @@ def create_production(build_dir, backups):
     deploy.movedir('technisch-register/%s' % build_dir, 'register-new', overwrite=True)
 
     if deploy.exists('register') == True:
+        # server refuses to recursively remove register/staging
+        # hence we excplicitly remove symbolic link to staging
+        deploy.remove('register/staging/staging')
+        deploy.removedir('register/staging'
         deploy.copydir('register', 'backups/%s' % time.strftime('%Y-%m-%d'), overwrite=True)
         
         try:
