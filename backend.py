@@ -60,7 +60,8 @@ def fetch_repos(root, destination_temp, repos, source):
         
         #TODO: change into git pull
 
-        call('git clone %s %s/%s' % (repo['url'], source, repo['id']), shell=True)
+        # call('git clone %s %s/%s ' % (repo['url'], source, repo['id']), shell=True)
+        call('git clone %s %s/%s > /dev/null 2>&1' % (repo['url'], source, repo['id']), shell=True)
 
     #TODO: use git pull instead of git clone to fetch updates
 
@@ -87,7 +88,7 @@ def create_staging(staging_build):
     
     call('chmod -R a+rx ../%s' % staging_build, shell=True)
 
-def create_production(build_dir, backups, current_dir):
+def create_production(build_dir, backups, script_dir):
     """Put the staging version to production hosted at 
     register.geostandaarden.nl
     """
@@ -99,14 +100,20 @@ def create_production(build_dir, backups, current_dir):
     if deploy.exists(backups) == False:
         deploy.makedir(backups)
 
-    deploy.movedir('%s/%s' % (current_dir, build_dir), 'register-new', overwrite=True)
+    deploy.movedir('%s/%s' % (script_dir, build_dir), 'register-new', overwrite=True)
 
     if deploy.exists('register') == True:
         # server refuses to recursively remove register/staging
         # hence we excplicitly remove symbolic link to staging
         deploy.remove('register/staging/staging')
         deploy.removedir('register/staging')
-        deploy.copydir('register', 'backups/%s' % time.strftime('%Y-%m-%d'), overwrite=True)
+        
+        backup_dir = time.strftime('%Y-%m-%d-%H-%M-%S')
+
+        # if deploy.exists('backups/%s' % backup_dir): 
+        #     deploy.removedir('backups/%s' % backup_dir, force=True)
+        
+        deploy.copydir('register', 'backups/%s' % backup_dir, overwrite=True)
         
         try:
             deploy.movedir('register', 'register-old', overwrite=True)
