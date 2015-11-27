@@ -105,7 +105,7 @@ def create_production(build_dir, backups):
         # server refuses to recursively remove register/staging
         # hence we excplicitly remove symbolic link to staging
         deploy.remove('register/staging/staging')
-        deploy.removedir('register/staging'
+        deploy.removedir('register/staging')
         deploy.copydir('register', 'backups/%s' % time.strftime('%Y-%m-%d'), overwrite=True)
         
         try:
