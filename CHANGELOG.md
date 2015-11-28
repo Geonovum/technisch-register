@@ -1,7 +1,7 @@
 # 2015-11-28
 
 - fix a timeout issue that prevented production/staging builds from finishing. The repo queue has grown significantly and the script takes longer to execute than GitHub will wait for a response (30 sec). Instead of letting the script finish Apache terminates it and the register never gets built. Solution is to execute script through `subprocess.Popen()` and drown all output so that a response can be sent quickly to GitHub.
-- fix #27
+- fix issue #27 "breadcrumbs always point to IMGeo"
 - each build is backed up separately versus the latest of the day
 
 # 2015-11-17 
