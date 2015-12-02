@@ -41,14 +41,15 @@ def create_standard_webpage(standard, artifacts):
     # load standard HTML template
     with open('web/templates/standard.html', 'r') as f:
         html = BS(f)
+    
+    # fetch title element from template
+    el_title = html.find(id="title")
+
+    # fetch #container element from template
+    el_container = html.find(id="container")
 
     # construct title
     title = create_standard_title(standard['titel'], standard['beschrijving'])
-    
-    el_title = html.find(id="title")
-
-    # fetch #container from template
-    el_container = html.find(id="container")
 
     # append title to #title div
     el_title.append(title)
@@ -65,6 +66,11 @@ def create_standard_webpage(standard, artifacts):
         # create description of each standard
         description = create_artifact_description(descriptions[artifact])
         el_container.append(description)
+
+    informatiemodel_link = html.find(id="breadctxt").findAll('a')[-1]
+    standard_title = standard['titel_kort']
+    informatiemodel_link['href'] = "http://register.geostandaarden.nl/" + standard_title.lower()
+    informatiemodel_link.string = standard_title
 
     return html.prettify()
 
