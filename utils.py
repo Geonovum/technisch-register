@@ -7,7 +7,7 @@ def run():
 	Return False if it is i.e. a new instance cannot be started.
 	"""
 
-	print "Checking whether somethings is running... "
+	print "Checking whether script is running... "
 
 	num_processes = 0
 

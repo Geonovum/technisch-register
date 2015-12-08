@@ -40,7 +40,7 @@ def create_standard_webpage(standard, artifacts):
 
     # load standard HTML template
     with open('web/templates/standard.html', 'r') as f:
-        html = BS(f, 'lxml')
+        html = BS(f, 'html.parser')
     
     # fetch title element from template
     el_title = html.find(id="title")
@@ -94,7 +94,7 @@ def create_overview_page(standards, source, destination_temp):
 
     # open overview page template
     with codecs.open('web/templates/overview.html', 'r', encoding='utf8') as f:
-        html = BS(f, 'lxml')
+        html = BS(f, 'html.parser')
 
     el_container = html.find(id='leftcolumn')
 

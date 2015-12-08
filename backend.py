@@ -105,8 +105,15 @@ def create_production(build_dir, backups, script_dir):
     if deploy.exists('register') == True:
         # server refuses to recursively remove register/staging
         # hence we excplicitly remove symbolic link to staging
-        deploy.remove('register/staging/staging')
-        deploy.removedir('register/staging')
+        try:
+            deploy.remove('register/staging/staging')
+        except ResourceNotFoundError:
+            print "Warning, register/staging/staging not found..."
+
+        try:
+            deploy.removedir('register/staging')
+        except ResourceNotFoundError:
+            print "Warning, register/staging not found..."
         
         backup_dir = time.strftime('%Y-%m-%d-%H-%M-%S')
 
@@ -133,3 +140,5 @@ def create_production(build_dir, backups, script_dir):
         pass
 
     call('chmod -R a+rx ../register', shell=True)
+
+    print "Done building production..."
