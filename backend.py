@@ -138,6 +138,7 @@ def create_production(build_dir, backups, script_dir):
     # fails if production is built first...
     deploy.makedir('register/staging')
     call('cd ../register/staging; ln -s ../../staging', shell=True)
+    call('cd ../register; ln -s ../cgi-bin/log.txt', shell=True)
     
     try:
         deploy.removedir('register-old', force=True)

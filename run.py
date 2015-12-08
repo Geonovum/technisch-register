@@ -45,9 +45,6 @@ def build(source, build_dir, root, initiator):
 
 #if __name__ == "__main__":
 
-print "Content-Type: text/html"
-print "Running sync script..."
-
 # read GitHub's JSON payload from stdin
 # see ./github-payload.json for an example
 payload = load(stdin)
