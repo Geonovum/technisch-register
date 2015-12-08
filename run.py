@@ -2,7 +2,7 @@
 
 from fs.osfs import OSFS
 from json import load, dumps, loads
-from utils import run, set_repeat, get_repeat, cleanup
+from utils import run, cleanup
 from sys import stdin, exit
 import codecs
 import time
@@ -10,6 +10,7 @@ import webpages
 import backend
 import logging
 from settings import repo_path, script_dir
+from queue import FifoSQLiteQueue
 
 root = OSFS('./')
 source = 'repos'
@@ -22,7 +23,7 @@ logging.basicConfig(filename='log.txt', level=logging.DEBUG, format='%(asctime)s
 def build(source, build_dir, root, initiator):
     logging.info("Sync script started by %s...", initiator)
 
-    set_repeat('none')
+    # set_repeat('none')
 
     cleanup(source, build_dir)
     root.makedir(build_dir, allow_recreate=True)
@@ -61,6 +62,8 @@ except KeyError:
 prerelease = payload['release']['prerelease']
 initiator = payload['repository']['full_name']
 
+queue = FifoSQLiteQueue('queue.db')
+
 if action == 'published':
     if prerelease == True:
         # check whether we can start the build.py script
@@ -71,7 +74,8 @@ if action == 'published':
             backend.create_staging(staging_build)
         else:
             print "Script is already running... setting repeat flag to staging..."
-            set_repeat('staging')
+            # set_repeat('staging')
+            queue.push(initiator, prerelease)
             exit()
     else:
         if run():
@@ -80,20 +84,26 @@ if action == 'published':
             backend.create_production(production_build, backups, script_dir)
         else:
             print "Script is already running... setting repeat flag to production..."
-            set_repeat('production')
+            # set_repeat('production')
+            queue.push(initiator, prerelease)
             exit()
 
 # check whether we need to run script once more
-repeat = get_repeat()
+# repeat = get_repeat()
 
-while repeat != 'none':
-    if repeat == 'staging':
+# while repeat != 'none':
+
+while len(queue) > 0:
+    initiator, prerelease = queue.pop()
+
+    if prerelease == True:
         print "Repeating staging..."
         build(source, staging_build, root, initiator)
         backend.create_staging(staging_build)
-    elif repeat == 'production':
+    else:
         print "Repeating production..."
         build(source, production_build, root, initiator)
         backend.create_production(production_build, backups, script_dir)
 
-    repeat = get_repeat()
+    # repeat = get_repeat()
+queue.close()

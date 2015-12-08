@@ -29,16 +29,16 @@ def run():
 	else:
 		return True
 
-def set_repeat(action):
-	# give way to a production call as it will build staging anyway
-	if get_repeat() == 'production' and action == 'staging': action = 'production'
+# def set_repeat(action):
+# 	# give way to a production call as it will build staging anyway
+# 	if get_repeat() == 'production' and action == 'staging': action = 'production'
 
-	with open('repeat.txt', 'w') as f:
-		f.write(action)
+# 	with open('repeat.txt', 'w') as f:
+# 		f.write(action)
 
-def get_repeat():
-	with open('repeat.txt', 'r') as f:
-		return f.read()
+# def get_repeat():
+# 	with open('repeat.txt', 'r') as f:
+# 		return f.read()
 
 def cleanup(source, destination_temp):
 	"""Remove the source and temporary destination folders."""
@@ -56,6 +56,7 @@ def cleanup(source, destination_temp):
 	    call('rm -rf %s' % (destination_temp), shell=True)
 	except ResourceNotFoundError: 
 	    print "Failed to remove %s... Folder not found." % destination_temp
+
 
 
 if __name__ == "__main__":
