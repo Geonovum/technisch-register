@@ -8,6 +8,7 @@ import codecs
 import time
 import webpages
 import backend
+import logging
 from settings import repo_path, script_dir
 
 root = OSFS('./')
@@ -16,7 +17,11 @@ staging_build = 'staging'
 production_build = 'register'
 backups = 'backups'
 
-def build(source, build_dir, root):
+logging.basicConfig(filename='log.txt', level=logging.DEBUG, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+
+def build(source, build_dir, root, initiator):
+    logging.info("Sync script started by %s...", initiator)
+
     set_repeat('none')
 
     cleanup(source, build_dir)
@@ -28,9 +33,12 @@ def build(source, build_dir, root):
     with open(repo_path) as f:
         standards = load(f)
     
+    logging.info("Fetching repos...")
     backend.fetch_repos(root, build_dir, standards, source)
+    logging.info("Building folders...")
     backend.build_folders(source, build_dir, standards, root)
     # TODO: webpages.create_standard_page()
+    logging.info("Creating overview page...")
     webpages.create_overview_page(standards, source, build_dir)
 
     print "Done!"
@@ -54,6 +62,7 @@ except KeyError:
 
 # extract the release type: release or prerelease
 prerelease = payload['release']['prerelease']
+initiator = payload['repository']['full_name']
 
 if action == 'published':
     if prerelease == True:
@@ -61,7 +70,7 @@ if action == 'published':
         # i.e. whether another instance isn't already running
         if run():
             print "Building staging..."
-            build(source, staging_build, root)
+            build(source, staging_build, root, initiator)
             backend.create_staging(staging_build)
         else:
             print "Script is already running... setting repeat flag to staging..."
@@ -70,7 +79,7 @@ if action == 'published':
     else:
         if run():
             print "Building production..."
-            build(source, production_build, root)
+            build(source, production_build, root, initiator)
             backend.create_production(production_build, backups, script_dir)
         else:
             print "Script is already running... setting repeat flag to production..."
@@ -83,11 +92,11 @@ repeat = get_repeat()
 while repeat != 'none':
     if repeat == 'staging':
         print "Repeating staging..."
-        build(source, staging_build, root)
+        build(source, staging_build, root, initiator)
         backend.create_staging(staging_build)
     elif repeat == 'production':
         print "Repeating production..."
-        build(source, production_build, root)
+        build(source, production_build, root, initiator)
         backend.create_production(production_build, backups, script_dir)
 
     repeat = get_repeat()

@@ -19,7 +19,7 @@ def run():
 
 		if pinfo['name'] == 'python.exe' or pinfo['name'] == 'Python':
 			builder = proc.as_dict(attrs=['cmdline', 'create_time'])
-			if builder['cmdline'][1] == 'build.py':
+			if builder['cmdline'][1] == 'run.py':
 				num_processes += 1
 
 	# if two intances of build.py are detected 

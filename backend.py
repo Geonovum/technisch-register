@@ -5,7 +5,7 @@ from webpages import create_standard_webpage
 from os import symlink
 import codecs
 import time
-
+import logging
 
 def build_folders(source, destination_temp, standards, root):
     """Transform the repos' folder structure to that of the register
@@ -70,6 +70,8 @@ def create_staging(staging_build):
     register.geostandaarden.nl/staging
     """
 
+    logging.info("Building staging...")
+
     # TODO invoke build_folders from here
 
     # staging moet een dir hoger zitten om op  
@@ -88,12 +90,15 @@ def create_staging(staging_build):
     
     call('chmod -R a+rx ../%s' % staging_build, shell=True)
 
+    logging.info("Staging built successfully!")
+
 def create_production(build_dir, backups, script_dir):
     """Put the staging version to production hosted at 
     register.geostandaarden.nl
     """
 
     print "Building production..."
+    logging.info("Building production...")
 
     deploy = OSFS('..')
     
@@ -142,3 +147,4 @@ def create_production(build_dir, backups, script_dir):
     call('chmod -R a+rx ../register', shell=True)
 
     print "Done building production..."
+    logging.info("Production built successfully!")
