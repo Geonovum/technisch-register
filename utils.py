@@ -1,6 +1,7 @@
 import psutil
 from subprocess import call
 from fs.osfs import OSFS
+from fs.errors import ResourceNotFoundError
 
 def run():
 	""" Check if the build.py script is already running.
@@ -35,7 +36,11 @@ def run():
 def cleanup(source, destination_temp, standard):
 	"""Remove the source and temporary destination folders."""
 
-	source_fs = OSFS('%s/%s' % (source, standard))
+	try:
+		source_fs = OSFS('%s/%s' % (source, standard))
+	except ResourceNotFoundError:
+		return None
+
 	destination_fs = OSFS(destination_temp)
 
 	artifacts = source_fs.listdir(dirs_only=True)
