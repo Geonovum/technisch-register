@@ -25,36 +25,16 @@ def run():
 				print 'found it'
 				num_processes += 1
 
-	# if two intances of build.py are detected 
+	# if more than one intance of build.py is detected 
 	# a new script cannot be launched
 	if num_processes > 1:
 		return False
 	else:
 		return True
 
-# def set_repeat(action):
-# 	# give way to a production call as it will build staging anyway
-# 	if get_repeat() == 'production' and action == 'staging': action = 'production'
-
-# 	with open('repeat.txt', 'w') as f:
-# 		f.write(action)
-
-# def get_repeat():
-# 	with open('repeat.txt', 'r') as f:
-# 		return f.read()
-
 def cleanup(source, destination_temp, standard):
 	"""Remove the source and temporary destination folders."""
 
-	# We call the system's rm function because OSFS' removedir function cannot
-	# deal with the protected files in each repo's .git folder
-		# try:
-		#     print "removing %s" % source    
-		#     call('rm -rf %s' % (source), shell=True)
-		# except ResourceNotFoundError: 
-		#     print "Failed to remove %s... Folder not found." % source
-
-	# 
 	source_fs = OSFS('%s/%s' % (source, standard))
 	destination_fs = OSFS(destination_temp)
 
@@ -67,12 +47,6 @@ def cleanup(source, destination_temp, standard):
 			destination_fs.removedir(path, force=True)
 
 	if destination_fs.exists(standard): destination_fs.removedir(standard, force=True)
-
-	# try:
-	#     print "removing %s" % destination_temp
-	#     call('rm -rf %s' % (destination_temp), shell=True)
-	# except ResourceNotFoundError: 
-	#     print "Failed to remove %s... Folder not found." % destination_temp
 
 if __name__ == "__main__":
 	run()

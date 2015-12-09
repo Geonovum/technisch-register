@@ -33,6 +33,7 @@ def build(source, build_dir, root, initiator):
     # TODO: use this approach to include standards that are not managed on GitHub
     #standards = OSFS(source).listdir(dirs_only=True)
         
+    # check if initiator is present in repos.json
     if initiator in standards_id.keys():
         cleanup(source, build_dir, initiator)
 

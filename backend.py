@@ -12,12 +12,8 @@ def build_folders(source, destination_temp, standard, root):
     and build HTML pages for each standard.
     """
 
-    print "Building register..."
-
     source_fs = OSFS(source)
 
-    # iterate over all standards in source directory
-    # for standard in standards:
     print "Processing %s ... " % standard['id']
     standard_fs = source_fs.opendir(standard['id'])
 
@@ -46,7 +42,6 @@ def build_folders(source, destination_temp, standard, root):
     # copy web assets
     root.copydir('web/assets', '%s/r' % destination_temp, overwrite=True)
 
-# def fetch_repo(root, destination_temp, repos, source):
 def fetch_repo(root, repo, url):
     """Clone repos from GitHub to source folder."""
 
