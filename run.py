@@ -18,29 +18,37 @@ staging_build = 'staging'
 production_build = 'register'
 backups = 'backups'
 
-logging.basicConfig(filename='log.txt', level=logging.DEBUG, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+standards_id = {}
+with open(repo_path) as f:
+    standards = load(f)
+
+    for standard in standards:
+        standards_id[standard['id']] = standard
+
+logging.basicConfig(filename='log.txt', level=logging.DEBUG, format='%(asctime)s %(levelname)s: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 
 def build(source, build_dir, root, initiator):
     logging.info("Sync script started by %s...", initiator)
 
-    # set_repeat('none')
-
-    cleanup(source, build_dir)
-    root.makedir(build_dir, allow_recreate=True)
-
     # TODO: use this approach to include standards that are not managed on GitHub
     #standards = OSFS(source).listdir(dirs_only=True)
-    
-    with open(repo_path) as f:
-        standards = load(f)
-    
-    logging.info("Fetching repos...")
-    backend.fetch_repos(root, build_dir, standards, source)
-    logging.info("Building folders...")
-    backend.build_folders(source, build_dir, standards, root)
-    # TODO: webpages.create_standard_page()
-    logging.info("Creating overview page...")
-    webpages.create_overview_page(standards, source, build_dir)
+        
+    if initiator in standards_id.keys():
+        cleanup(source, build_dir, initiator)
+
+        logging.info("Fetching repo %s..." % initiator)
+        backend.fetch_repo(root, initiator, standards_id[initiator]['url'])
+        
+        logging.info("Building folders...")
+        backend.build_folders(source, build_dir, standards_id[initiator], root)
+        
+        logging.info("Creating overview page...")
+        webpages.create_overview_page(standards, source, build_dir)
+    else:
+        print "%s is not listed in repos.json... aborting." % initiator
+        logging.error("%s is not listed in repos.json... aborting" % initiator)
+        exit()
+        #TODO: check if repo needs to be removed from repos/
 
     print "Done!"
 
@@ -53,14 +61,14 @@ payload = load(stdin)
 try:
     # published GitHub releases contain an 'action' key, try to retrieve it
     action = payload['action']
-
 except KeyError:
-    print 'This payload does not carry a release... aborting.'
+    print 
+    logging.error("This payload does not carry a release... aborting.")
     exit()
 
 # extract the release type: release or prerelease
 prerelease = payload['release']['prerelease']
-initiator = payload['repository']['full_name']
+initiator = payload['repository']['name']
 
 queue = FifoSQLiteQueue('queue.db')
 
