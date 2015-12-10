@@ -3,7 +3,7 @@
         "id": "nen3610",
         "titel": "NEN3610",
         "titel_kort":"NEN3610",
-        "beschrijving": "Het Basismodel Geo-informatie (NEN3610)  bevat de gemeenschappelijke basis van de verschillende onderliggende sectorale informatiemodellen zoals IMGeo, IMRO, en IMKL. Voor meer informatie zie NEN3610 op de website van Geonovum",
+        "beschrijving": "Het Basismodel Geo-informatie (NEN3610)  bevat de gemeenschappelijke basis van de verschillende onderliggende sectorale informatiemodellen zoals IMBRT, IMGeo, IMRO, en IMKL. Voor meer informatie zie NEN3610 op de website van Geonovum",
         "beschrijving_kort": "Basismodel Geo-informatie",
         "url": "https://github.com/Geonovum/NEN3610"
     },
