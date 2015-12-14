@@ -42,7 +42,7 @@ def build_folders(source, destination_temp, standard, root):
     # copy web assets
     root.copydir('web/assets', '%s/r' % destination_temp, overwrite=True)
 
-def fetch_repo(root, repo, url):
+def fetch_repo(root, repo, url, destination_temp):
     """Clone repos from GitHub to source folder."""
 
     print "Fetching %s from %s" % (repo, url)
@@ -54,8 +54,8 @@ def fetch_repo(root, repo, url):
         print "Repo %s does not exist, issuing a git clone..." % repo
 
         # explicitely create dir as implicit creation fails on server
-        root.makedir('%s/%s' % (destination_temp, repo['id']))
-        call('cd repos; git clone %s' % url, shell=True)
+        root.makedir('%s/%s' % (destination_temp, repo))
+        call('cd repos; git clone %s %s' % (url, repo), shell=True)
         # call('git clone %s %s/%s > /dev/null 2>&1' % (repo['url'], source, repo['id']), shell=True)
 
 def create_staging(staging_build):
@@ -133,7 +133,7 @@ def create_production(build_dir, backups, script_dir):
     # fails if production is built first...
     deploy.makedir('register/staging')
     call('cd ../register/staging; ln -s ../../staging', shell=True)
-    call('cd ../register; ln -s ../cgi-bin/log.txt', shell=True)
+    call('cd ../register; ln -s ../%s/log.txt' % script_dir  , shell=True)
     
     try:
         deploy.removedir('register-old', force=True)

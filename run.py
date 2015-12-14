@@ -38,7 +38,7 @@ def build(source, build_dir, root, initiator):
         cleanup(source, build_dir, initiator)
 
         logging.info("Fetching repo %s..." % initiator)
-        backend.fetch_repo(root, initiator, standards_id[initiator]['url'])
+        backend.fetch_repo(root, initiator, standards_id[initiator]['url'], build_dir)
         
         logging.info("Building folders...")
         backend.build_folders(source, build_dir, standards_id[initiator], root)
