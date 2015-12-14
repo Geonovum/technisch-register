@@ -100,7 +100,7 @@ def create_production(build_dir, backups, script_dir):
     if deploy.exists(backups) == False:
         deploy.makedir(backups)
 
-    deploy.movedir('%s/%s' % (script_dir, build_dir), 'register-new', overwrite=True)
+    deploy.copydir('%s/%s' % (script_dir, build_dir), 'register-new', overwrite=True)
 
     if deploy.exists('register') == True:
         # server refuses to recursively remove register/staging
