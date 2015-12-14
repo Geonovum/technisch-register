@@ -69,7 +69,7 @@ except KeyError:
 
 # extract the release type: release or prerelease
 prerelease = payload['release']['prerelease']
-initiator = payload['repository']['name']
+initiator = payload['repository']['name'].lower()
 
 queue = FifoSQLiteQueue('queue.db')
 
