@@ -1,6 +1,13 @@
 repos/
 register/
+staging/
+backups/
+
+
 settings.py
+log.txt
+*.pyc
+
 
 # Windows image file caches
 Thumbs.db
