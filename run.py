@@ -31,7 +31,7 @@ with open(cluster_path) as f:
 
     for cluster in clusters:
         clusters_id[cluster['id']] = cluster
-		
+        
 logging.basicConfig(filename='log.txt', level=logging.DEBUG, format='%(asctime)s %(levelname)s: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 
 def build(source, build_dir, root, initiator):
@@ -42,18 +42,18 @@ def build(source, build_dir, root, initiator):
         
     # check if initiator is present in repos.json
     if initiator in standards_id.keys():
-		cleanup(source, build_dir, initiator)
+        cleanup(source, build_dir, initiator)
 
-		logging.info("Fetching repo %s..." % initiator)
-		backend.fetch_repo(root, initiator, standards_id[initiator]['url'], build_dir)
+        logging.info("Fetching repo %s..." % initiator)
+        backend.fetch_repo(root, initiator, standards_id[initiator]['url'], build_dir)
         
-		logging.info("Building folders...")
-		backend.build_folders(source, build_dir, standards_id[initiator], root, standards_id[initiator]['cluster'])
+        logging.info("Building folders...")
+        backend.build_folders(source, build_dir, standards_id[initiator], root, standards_id[initiator]['cluster'])
         
-		logging.info("Creating overview page...")
-		webpages.create_overview_clusters(clusters, source, build_dir)
-		if standards_id[initiator]['cluster'] != "":
-			webpages.create_overview_standards(standards, source, build_dir, standards_id[initiator]['cluster'], root)
+        logging.info("Creating overview page...")
+        webpages.create_overview_clusters(clusters, source, build_dir)
+        if standards_id[initiator]['cluster'] != "":
+            webpages.create_overview_standards(standards, source, build_dir, standards_id[initiator]['cluster'], root)
     else:
         print "%s is not listed in repos.json... aborting." % initiator
         logging.error("%s is not listed in repos.json... aborting" % initiator)
