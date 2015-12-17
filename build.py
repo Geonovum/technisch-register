@@ -4,7 +4,7 @@ from subprocess import Popen, STDOUT
 from sys import stdin, exit, argv
 from os import devnull
 
-VERSION = 0.5.0
+VERSION = '0.5.0'
 
 print "Content-Type: text/html"
 print 
