@@ -89,7 +89,30 @@ def create_overview_entry(standard, title_short, description):
 
     return BS(overview, 'html.parser')
 
-def create_overview_page(standards, source, destination_temp):
+def create_overview_standards(standards, source, destination_temp, repoCluster, root):
+	print 'Creating overview page submodels...'
+	
+    # open overview page template
+	with codecs.open('web/templates/overview.html', 'r', encoding='utf8') as f:
+		html = BS(f, 'html.parser')
+		
+	el_container = html.find(id='leftcolumn')
+	
+	
+	for standard in standards:
+			
+		if standard['cluster'] == repoCluster:
+			overview = create_overview_entry(standard['id'], standard['titel_kort'], standard['beschrijving_kort'])
+			el_container.append(overview)
+
+	with codecs.open('%s/%s/index.html' % (destination_temp, repoCluster), 'w', encoding='utf8') as f:
+		f.write(html.prettify())
+        #OSFS('./').copydir('../web/assets', '%s/assets' % destination_temp)
+        # call('cp -r web/assets %s/assets' % destination_temp, shell=True)
+
+	print 'Done!'
+		
+def create_overview_clusters(clusters, source, destination_temp):
     print 'Creating overview page...'
 
     # open overview page template
@@ -98,8 +121,8 @@ def create_overview_page(standards, source, destination_temp):
 
     el_container = html.find(id='leftcolumn')
 
-    for standard in standards:
-        overview = create_overview_entry(standard['id'], standard['titel_kort'], standard['beschrijving_kort'])
+    for cluster in clusters:
+        overview = create_overview_entry(cluster['id'], cluster['titel_kort'], cluster['beschrijving_kort'])
         el_container.append(overview)
 
     with codecs.open('%s/index.html' % destination_temp, 'w', encoding='utf8') as f:
