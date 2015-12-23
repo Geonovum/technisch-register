@@ -2,7 +2,7 @@
 
 from fs.osfs import OSFS
 from json import load, dumps, loads
-from utils import run, cleanup
+from utils import run, cleanup, load_repos
 from sys import stdin, exit
 import codecs
 import time
@@ -18,12 +18,12 @@ staging_build = 'staging'
 production_build = 'register'
 backups = 'backups'
 
-standards_id = {}
-with open(repo_path) as f:
-    standards = load(f)
+standards_id = load_repos()
+# with open(repo_path) as f:
+#     standards = load(f)
 
-    for standard in standards:
-        standards_id[standard['id']] = standard
+#     for standard in standards:
+#         standards_id[standard['id']] = standard
 
 clusters_id = {}
 with open(cluster_path) as f:

@@ -2,6 +2,7 @@ import psutil
 from subprocess import call
 from fs.osfs import OSFS
 from fs.errors import ResourceNotFoundError
+from json import load
 
 def run():
 	""" Check if the build.py script is already running.
@@ -52,6 +53,17 @@ def cleanup(source, destination_temp, standard):
 			destination_fs.removedir(path, force=True)
 
 	if destination_fs.exists(standard): destination_fs.removedir(standard, force=True)
+
+def load_repos(path):
+	standards_id = {}
+
+	with open(path) as f:
+	    standards = load(f)
+
+	    for standard in standards:
+	        standards_id[standard['id']] = standard
+
+	return standards_id
 
 if __name__ == "__main__":
 	run()

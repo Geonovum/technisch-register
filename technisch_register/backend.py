@@ -2,6 +2,7 @@ from fs.osfs import OSFS
 from fs.errors import ResourceNotFoundError
 from subprocess import call
 from webpages import create_standard_webpage
+from settings import deploy_path
 import codecs
 import time
 import logging
@@ -55,20 +56,21 @@ def build_folders(source, destination_temp, standard, root, repoCluster):
     # copy web assets
     root.copydir('web/assets', '%s/r' % destination_temp, overwrite=True)
 
-def fetch_repo(root, repo, url, destination_temp):
+def fetch_repo(root, source, repo, url):
     """Clone repos from GitHub to source folder."""
 
     print "Fetching %s from %s" % (repo, url)
 
     if root.exists('repos/%s' % repo):
         print "Repo %s exists, issuing a git pull..." % repo
-        call('cd repos/%s; git pull' % repo, shell=True)
+        call('cd %s/%s/%s; git pull' % (root.getsysypath('.'), source, repo), shell=True)
     else:
         print "Repo %s does not exist, issuing a git clone..." % repo
 
         # explicitely create dir as implicit creation fails on server
-        root.makedir('%s/%s' % (destination_temp, repo))
-        call('cd repos; git clone %s %s' % (url, repo), shell=True)
+        # root.makedir('%s/%s' % (destination_temp, repo))
+        # call('cd repos; git clone %s %s' % (url, repo), shell=True)
+        call('git clone %s %s/%s/%s' % (url, root.getsyspath('.'), source, repo), shell=True)
         # call('git clone %s %s/%s > /dev/null 2>&1' % (repo['url'], source, repo['id']), shell=True)
 
 def create_staging(staging_build):
@@ -108,7 +110,8 @@ def create_production(build_dir, backups, script_dir):
     print "Building production..."
     logging.info("Building production...")
 
-    deploy = OSFS('..')
+    deploy = OSFS(deploy_path)
+    # deploy = OSFS('..')
     
     if deploy.exists(backups) == False:
         deploy.makedir(backups)
