@@ -2,6 +2,7 @@ import pytest
 from fs.osfs import OSFS
 from technisch_register.backend import fetch_repo
 from technisch_register.settings import sources_path, register_path, build_path
+from os import path as ospath
 
 # install technisch-register to be able to test with 
 # pip install -e . in root dir (where setup.py) resides 
@@ -9,28 +10,24 @@ from technisch_register.settings import sources_path, register_path, build_path
 
 class TestBackend:
 
-    @pytest.fixture
-    def parameters(self):
-        return 'imkl2015', 'https://www.github.com/Geonovum/imkl2015'
+    @pytest.fixture(scope='session')
+    def parameters(self, tmpdir_factory):
+        return 'imkl2015', 'https://www.github.com/Geonovum/imkl2015', tmpdir_factory
 
-    def test_fetch_repo_clone(self, tmpdir, parameters):
-        root = OSFS(str(tmpdir))
-        initiator, url = parameters
+    def test_fetch_repo_clone(self, parameters):
+        initiator, url, tmpdir = parameters
 
+        root = OSFS(str(tmpdir.getbasetemp()))        
         root.makedir(sources_path)
-        root.makedir(register_path)
 
-        fetch_repo(root, sources_path, initiator, url)
+        assert fetch_repo(root, sources_path, initiator, url, build_path) == 'clone'
 
-        assert initiator in root.listdir(sources_path, dirs_only=True)
+        assert initiator in root.listdir(ospath.join(build_path, sources_path), dirs_only=True)
 
-    # def test_fetch_repo_pull(self, tmpdir, parameters):
-    #     root = OSFS(str(tmpdir))
+    def test_fetch_repo_pull(self, parameters):
+        initiator, url, tmpdir = parameters
 
-    #     source, production_build, initiator, url = parameters
+        root = OSFS(str(tmpdir.getbasetemp()))
 
-    #     root.makedir('%s/%s' % (source, initiator), recursive=True)
-    #     root.makedir(production_build)
-
-    #     assert fetch_repo(source, root, initiator, url, production_build) == 0
+        assert fetch_repo(root, sources_path, initiator, url, build_path) == 'pull'
 
