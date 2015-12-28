@@ -11,11 +11,16 @@ from os import path as ospath
 class TestBackend:
 
     @pytest.fixture(scope='session')
-    def parameters(self, tmpdir_factory):
-        return 'imkl2015', 'https://www.github.com/Geonovum/imkl2015', tmpdir_factory
+    def root_directory(self, tmpdir_factory):
+        return tmpdir_factory
 
-    def test_fetch_repo_clone(self, parameters):
-        initiator, url, tmpdir = parameters
+    @pytest.fixture(scope='session')
+    def fetch_repo_parameters(self):
+        return 'imkl2015', 'https://www.github.com/Geonovum/imkl2015'
+
+    def test_fetch_repo_clone(self, fetch_repo_parameters, root_directory):
+        initiator, url = fetch_repo_parameters
+        tmpdir = root_directory
 
         root = OSFS(str(tmpdir.getbasetemp()))        
         root.makedir(sources_path)
@@ -24,10 +29,12 @@ class TestBackend:
 
         assert initiator in root.listdir(ospath.join(build_path, sources_path), dirs_only=True)
 
-    def test_fetch_repo_pull(self, parameters):
-        initiator, url, tmpdir = parameters
+    def test_fetch_repo_pull(self, fetch_repo_parameters, root_directory):
+        initiator, url = fetch_repo_parameters
+        tmpdir = root_directory
 
         root = OSFS(str(tmpdir.getbasetemp()))
 
         assert fetch_repo(root, sources_path, initiator, url, build_path) == 'pull'
+
 
