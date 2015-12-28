@@ -57,7 +57,7 @@ def build_folders(sources_path, destination_temp, standard, root, repo_cluster):
     # copy web assets
     root.copydir(ospath.join('web', 'assets'), ospath.join(build_path, destination_temp, 'r'), overwrite=True)
 
-def fetch_repo(root, source, repo, url):
+def fetch_repo(root, source, repo, url, build_path):
     """Clone repos from GitHub to source folder."""
 
     print "Fetching %s from %s" % (repo, url)
@@ -65,11 +65,14 @@ def fetch_repo(root, source, repo, url):
     if root.exists(ospath.join(build_path, source, repo)):
         print "Repo %s exists, issuing a git pull..." % repo
         call('cd %s; git pull' % ospath.join(root.getsyspath('.'), build_path, source, repo), shell=True)
+        return 'pull'
     else:
         print "Repo %s does not exist, issuing a git clone..." % repo
 
         call ('git clone %s %s' % (url, ospath.join(root.getsyspath('.'), build_path, source, repo)), shell=True)
         # call('git clone %s %s/%s > /dev/null 2>&1' % (repo['url'], source, repo['id']), shell=True)
+
+        return 'clone'
 
 def create_staging(staging_path, production_path, build_path, script_dir):
     """Create a staging version of the register hosted at
