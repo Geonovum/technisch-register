@@ -101,7 +101,7 @@ if action == 'published':
         if run():
             print "Building production..."
             build(source, register_path, root, initiator)
-            backend.create_production(register_path, register_path, backups, script_dir, production_path)
+            backend.create_production(register_path, backups, script_dir, production_path)
         else:
             print "Script is already running... setting repeat flag to production..."
             # set_repeat('production')
@@ -123,7 +123,7 @@ while len(queue) > 0:
     else:
         print "Repeating production..."
         build(source, register_path, root, initiator)
-        backend.create_production(register_path, register_path, backups, script_dir, production_path)
+        backend.create_production(register_path, backups, script_dir, production_path)
 
     # repeat = get_repeat()
 queue.close()
