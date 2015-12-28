@@ -7,64 +7,64 @@ from settings import build_path
 from json import load
 
 def run():
-	""" Check if the build.py script is already running.
-	Return True if it is not i.e. a new instance may be started.
-	Return False if it is i.e. a new instance cannot be started.
-	"""
+    """ Check if the build.py script is already running.
+    Return True if it is not i.e. a new instance may be started.
+    Return False if it is i.e. a new instance cannot be started.
+    """
 
-	print "Checking whether script is running... "
+    print "Checking whether script is running... "
 
-	num_processes = 0
+    num_processes = 0
 
-	# pudb.set_trace()
+    # pudb.set_trace()
 
-	for proc in psutil.process_iter():
-		p_info = proc.as_dict(attrs=['name'])
+    for proc in psutil.process_iter():
+        p_info = proc.as_dict(attrs=['name'])
 
-		p_name = p_info['name']
-		if p_name == 'python.exe' or p_name == 'Python' or p_name == 'python':
-			builder = proc.as_dict(attrs=['cmdline', 'create_time'])
-			if builder['cmdline'][1] == 'run.py':
-				print 'found it'
-				num_processes += 1
+        p_name = p_info['name']
+        if p_name == 'python.exe' or p_name == 'Python' or p_name == 'python':
+            builder = proc.as_dict(attrs=['cmdline', 'create_time'])
+            if builder['cmdline'][1] == 'run.py':
+                print 'found it'
+                num_processes += 1
 
-	# if more than one intance of build.py is detected 
-	# a new script cannot be launched
-	if num_processes > 1:
-		return False
-	else:
-		return True
+    # if more than one intance of build.py is detected 
+    # a new script cannot be launched
+    if num_processes > 1:
+        return False
+    else:
+        return True
 
 def cleanup(build_path, source, destination_temp, standard):
-	"""Remove the source and temporary destination folders."""
+    """Remove the source and temporary destination folders."""
 
-	try:
-		source_fs = OSFS(ospath.join(build_path, source, standard))
-	except ResourceNotFoundError:
-		return None
+    try:
+        source_fs = OSFS(ospath.join(build_path, source, standard))
+    except ResourceNotFoundError:
+        return None
 
-	destination_fs = OSFS(ospath.join(build_path, destination_temp))
+    destination_fs = OSFS(ospath.join(build_path, destination_temp))
 
-	artifacts = source_fs.listdir(dirs_only=True)
-	if '.git' in artifacts: artifacts.remove('.git')
+    artifacts = source_fs.listdir(dirs_only=True)
+    if '.git' in artifacts: artifacts.remove('.git')
 
-	for artifact in artifacts:
-		path = ospath.join(artifact, standard)
-		if destination_fs.exists(path):
-			destination_fs.removedir(path, force=True)
+    for artifact in artifacts:
+        path = ospath.join(artifact, standard)
+        if destination_fs.exists(path):
+            destination_fs.removedir(path, force=True)
 
-	if destination_fs.exists(standard): destination_fs.removedir(standard, force=True)
+    if destination_fs.exists(standard): destination_fs.removedir(standard, force=True)
 
 def load_repos(path):
-	standards_id = {}
+    standards_id = {}
 
-	with open(path) as f:
-	    standards = load(f)
+    with open(path) as f:
+        standards = load(f)
 
-	    for standard in standards:
-	        standards_id[standard['id']] = standard
+        for standard in standards:
+            standards_id[standard['id']] = standard
 
-	return standards_id
+    return standards_id
 
 if __name__ == "__main__":
-	run()
+    run()
