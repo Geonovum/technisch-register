@@ -86,13 +86,13 @@ def create_staging(staging_path, production_path, build_path, script_dir):
     print 'Moving new register to staging...'
 
     # OSFS cannot copy to arbitrary locations
-    call('cp %s %s' % (ospath.join(build_path, staging_path), production_path), shell=True)
+    call('cp -r %s %s' % (ospath.join(build_path, staging_path), production_path), shell=True)
     
     call('chmod -R a+rx %s' % (ospath.join(production_path, staging_path)), shell=True)
 
     logging.info("Staging built successfully!")
 
-def create_production(destination, register_path, backups, script_dir, production_path):
+def create_production(destination, backups, script_dir, production_path):
     """Put the staging version to production hosted at 
     register.geostandaarden.nl
     """
@@ -109,7 +109,8 @@ def create_production(destination, register_path, backups, script_dir, productio
 
     # copy newly baked register/staging to production directory
     # NOTE: only build paths within script_dir are currently supported
-    production.copydir('%s/%s/%s' % (script_dir, build_path, register_path), destination + '-new', overwrite=True)
+    call ('cp -r %s %s' % (ospath.join(build_path, destination), ospath.join(production_path, destination + '-new')), shell=True)
+    # production.copydir('%s/%s/%s' % (script_dir, build_path, destination), destination + '-new', overwrite=True)
 
     if production.exists(destination) == True:
         # server refuses to recursively remove register/staging
