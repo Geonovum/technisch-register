@@ -2,17 +2,18 @@ from fs.osfs import OSFS
 from fs.errors import ResourceNotFoundError
 from subprocess import call
 from webpages import create_standard_webpage
-from settings import deploy_path
+from settings import build_path
+from os import path as ospath
 import codecs
 import time
 import logging
 
-def build_folders(source, destination_temp, standard, root, repoCluster):
+def build_folders(sources_path, destination_temp, standard, root, repo_cluster):
     """Transform the repos' folder structure to that of the register
     and build HTML pages for each standard.
     """
 
-    source_fs = OSFS(source)
+    source_fs = OSFS(ospath.join(build_path, sources_path))
 
     print "Processing %s ... " % standard['id']
     standard_fs = source_fs.opendir(standard['id'])
@@ -23,140 +24,133 @@ def build_folders(source, destination_temp, standard, root, repoCluster):
 
     for artifact in artifacts:
         # check whether artifact folder exists in destination_temp 
-        if root.exists('%s/%s' % (destination_temp, artifact)) == False:
-            root.makedir('%s/%s' % (destination_temp, artifact))
+        if (root.exists(ospath.join(build_path, destination_temp, artifact))) == False:
+            root.makedir(ospath.join(build_path, destination_temp, artifact))
 
         # copy standard folders from source to destination_temp in desired structure
-        root.copydir('%s/%s/%s' % (source, standard['id'], artifact),  '%s/%s/%s' % (destination_temp, artifact, standard['id']))
+        root.copydir(ospath.join(build_path, sources_path, standard['id'], artifact), ospath.join(build_path, destination_temp, artifact, standard['id']))
 
     html = create_standard_webpage(standard, artifacts)
 
     # check whether model is part of a cluster
-    if repoCluster == "":
+    if repo_cluster == "":
         # check whether register/standard exists
-        if root.exists('%s/%s' % (destination_temp, standard['id'])) == False:
-            root.makedir('%s/%s' % (destination_temp, standard['id']))
+
+        if root.exists(ospath.join(build_path, destination_temp, standard['id'])) == False:
+            root.makedir(ospath.join(build_path, destination_temp, standard['id']))
         # write standard HTML page to register/standard/index.html
-        with codecs.open('%s/%s/index.html' % (destination_temp, standard['id']), 'w', encoding='utf8') as f:
-            f.write(html)       
-        
-    
+        with codecs.open(ospath.join(build_path, destination_temp, standard['id'], 'index.html'), 'w', encoding='utf8') as f:
+            f.write(html)
     else:
         # check whether register/cluster/exists
-        if root.exists('%s/%s' % (destination_temp, repoCluster)) == False:
-            root.makedir('%s/%s' % (destination_temp, repoCluster))
+        if root.exists(ospath.join(build_path, destination_temp, repo_cluster)) == False:
+            root.makedir(ospath.join(build_path, destination_temp, repo_cluster))
+
         # check whether register/cluster/standard exists
-        if root.exists('%s/%s/%s' % (destination_temp, repoCluster, standard['id'])) == False:
-            root.makedir('%s/%s/%s' % (destination_temp, repoCluster, standard['id']))
+        if root.exists(ospath.join(build_path, destination_temp, repo_cluster, standard['id'])) == False:
+            root.makedir(ospath.join(build_path, destination_temp, repo_cluster, standard['id']))
     
         # write standard HTML page to register/cluster/standard/index.html
-        with codecs.open('%s/%s/%s/index.html' % (destination_temp, repoCluster, standard['id']), 'w', encoding='utf8') as f:
+        with codecs.open(ospath.join(build_path, destination_temp, repo_cluster, standard['id']), 'w', encoding='utf8') as f:
             f.write(html)
 
     # copy web assets
-    root.copydir('web/assets', '%s/r' % destination_temp, overwrite=True)
+    root.copydir(ospath.join('web', 'assets'), ospath.join(build_path, destination_temp, 'r'), overwrite=True)
 
 def fetch_repo(root, source, repo, url):
     """Clone repos from GitHub to source folder."""
 
     print "Fetching %s from %s" % (repo, url)
 
-    if root.exists('repos/%s' % repo):
+    if root.exists(ospath.join(build_path, source, repo)):
         print "Repo %s exists, issuing a git pull..." % repo
-        call('cd %s/%s/%s; git pull' % (root.getsysypath('.'), source, repo), shell=True)
+        call('cd %s; git pull' % ospath.join(root.getsyspath('.'), build_path, source, repo), shell=True)
     else:
         print "Repo %s does not exist, issuing a git clone..." % repo
 
-        # explicitely create dir as implicit creation fails on server
-        # root.makedir('%s/%s' % (destination_temp, repo))
-        # call('cd repos; git clone %s %s' % (url, repo), shell=True)
-        call('git clone %s %s/%s/%s' % (url, root.getsyspath('.'), source, repo), shell=True)
+        call ('git clone %s %s' % (url, ospath.join(root.getsyspath('.'), build_path, source, repo)), shell=True)
         # call('git clone %s %s/%s > /dev/null 2>&1' % (repo['url'], source, repo['id']), shell=True)
 
-def create_staging(staging_build):
+def create_staging(staging_path, production_path, build_path, script_dir):
     """Create a staging version of the register hosted at
     register.geostandaarden.nl/staging
     """
 
     logging.info("Building staging...")
 
-    # TODO invoke build_folders from here
-
-    # staging moet een dir hoger zitten om op  
-    # register.geostandaarden.nl/staging
-    # beshickbaar te zijn    
-
-    # TODO: user OSFS like in create_production
+    production = OSFS(production_path)
 
     print "Removing current staging..."
-    call('rm -rf ../%s' % staging_build, shell=True)
+    production.removedir(staging_path, force=True)
 
     print 'Moving new register to staging...'
-    # TODO rename destination_temp to staging_build
-    # call('mv %s staging' % staging_build, shell=True)
+
+    # OSFS cannot copy to arbitrary locations
+    call('cp %s %s' % (ospath.join(build_path, staging_path), production_path), shell=True)
     
-    # call('mv %s ../' % staging_build, shell=True)
-    call('cp -r %s ../' % staging_build, shell=True)
-    
-    call('chmod -R a+rx ../%s' % staging_build, shell=True)
+    call('chmod -R a+rx %s' % (ospath.join(production_path, staging_path)), shell=True)
 
     logging.info("Staging built successfully!")
 
-def create_production(build_dir, backups, script_dir):
+def create_production(destination, register_path, backups, script_dir, production_path):
     """Put the staging version to production hosted at 
     register.geostandaarden.nl
     """
 
+    ## TODO: feed this function absolute paths
+
     print "Building production..."
     logging.info("Building production...")
 
-    deploy = OSFS(deploy_path)
-    # deploy = OSFS('..')
+    production = OSFS(production_path)
     
-    if deploy.exists(backups) == False:
-        deploy.makedir(backups)
+    if production.exists(backups) == False:
+        production.makedir(backups)
 
-    deploy.copydir('%s/%s' % (script_dir, build_dir), 'register-new', overwrite=True)
+    # copy newly baked register/staging to production directory
+    # NOTE: only build paths within script_dir are currently supported
+    production.copydir('%s/%s/%s' % (script_dir, build_path, register_path), destination + '-new', overwrite=True)
 
-    if deploy.exists('register') == True:
+    if production.exists(destination) == True:
         # server refuses to recursively remove register/staging
         # hence we excplicitly remove symbolic link to staging
         try:
-            deploy.remove('register/staging/staging')
+            production.remove('%s/staging/staging' % destination)
         except ResourceNotFoundError:
-            print "Warning, register/staging/staging not found..."
+            print "Warning, %s/staging/staging not found..." % destination
 
         try:
-            deploy.removedir('register/staging')
+            production.removedir('%s/staging' % destination)
         except ResourceNotFoundError:
-            print "Warning, register/staging not found..."
+            print "Warning, %s/staging not found..." % destination
         
         backup_dir = time.strftime('%Y-%m-%d-%H-%M-%S')
 
-        # if deploy.exists('backups/%s' % backup_dir): 
-        #     deploy.removedir('backups/%s' % backup_dir, force=True)
+        # if production.exists('backups/%s' % backup_dir): 
+        #     production.removedir('backups/%s' % backup_dir, force=True)
         
-        deploy.copydir('register', 'backups/%s' % backup_dir, overwrite=True)
+        production.copydir(destination, '%s/%s' % (backups, backup_dir), overwrite=True)
         
         try:
-            deploy.movedir('register', 'register-old', overwrite=True)
+            production.movedir(destination, destination + '-old', overwrite=True)
         except ResourceNotFoundError:
             pass
 
-    deploy.movedir('register-new', 'register', overwrite=True)
+    production.movedir(destination + '-new', destination, overwrite=True)
 
     # create symbolic link to standalone staging directory
     # fails if production is built first...
-    deploy.makedir('register/staging')
-    call('cd ../register/staging; ln -s ../../staging', shell=True)
-    call('cd ../register; ln -s ../%s/log.txt' % script_dir  , shell=True)
+    production.makedir('%s/staging' % destination)
+    
+    call('cd %s/%s/staging; ln -s %s/staging' % (production_path, destination, production_path), shell=True)
+    call('cd %s/register; ln -s %s/%s/log.txt' % (production_path, production_path, script_dir), shell=True)
     
     try:
-        deploy.removedir('register-old', force=True)
+        production.removedir(destination + '-old', force=True)
     except ResourceNotFoundError:
         pass
 
-    call('chmod -R a+rx ../register', shell=True)
+    call('chmod -R a+rx %s/%s' % (production_path, destination), shell=True)
 
     print "Done building production..."
     logging.info("Production built successfully!")

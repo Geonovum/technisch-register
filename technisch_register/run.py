@@ -4,29 +4,30 @@ from fs.osfs import OSFS
 from json import load, dumps, loads
 from utils import run, cleanup, load_repos
 from sys import stdin, exit
+from os import path as ospath
 import codecs
 import time
 import webpages
 import backend
 import logging
-from settings import repo_path, script_dir, cluster_path
+import settings
 from queue import FifoSQLiteQueue
 
-root = OSFS('./')
-source = 'repos'
-staging_build = 'staging'
-production_build = 'register'
-backups = 'backups'
+root_path = settings.root_path
+root = OSFS(root_path)
+repos_path = settings.repos_path
+source = settings.sources_path
+staging_build = settings.staging_path
+backups = settings.backups_path
+build_path = settings.build_path
+register_path = settings.register_path
+script_dir = settings.script_dir
+production_path = settings.production_path
 
-standards_id = load_repos()
-# with open(repo_path) as f:
-#     standards = load(f)
-
-#     for standard in standards:
-#         standards_id[standard['id']] = standard
+standards_id = load_repos(repos_path)
 
 clusters_id = {}
-with open(cluster_path) as f:
+with open(settings.cluster_path) as f:
     clusters = load(f)
 
     for cluster in clusters:
@@ -35,23 +36,24 @@ with open(cluster_path) as f:
 logging.basicConfig(filename='log.txt', level=logging.DEBUG, format='%(asctime)s %(levelname)s: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 
 def build(source, build_dir, root, initiator):
-    logging.info("Sync script started by %s...", initiator)
+    logging.info("Snc script started by %s...", initiator)
 
     # TODO: use this approach to include standards that are not managed on GitHub
     #standards = OSFS(source).listdir(dirs_only=True)
         
     # check if initiator is present in repos.json
     if initiator in standards_id.keys():
-        cleanup(source, build_dir, initiator)
+        cleanup(build_path, source, build_dir, initiator)
 
         logging.info("Fetching repo %s..." % initiator)
-        backend.fetch_repo(root, initiator, standards_id[initiator]['url'], build_dir)
+        backend.fetch_repo(root, source, initiator, standards_id[initiator]['url'])
         
         logging.info("Building folders...")
         backend.build_folders(source, build_dir, standards_id[initiator], root, standards_id[initiator]['cluster'])
         
         logging.info("Creating overview page...")
         webpages.create_overview_clusters(clusters, source, build_dir)
+        
         if standards_id[initiator]['cluster'] != "":
             webpages.create_overview_standards(standards, source, build_dir, standards_id[initiator]['cluster'], root)
     else:
@@ -89,7 +91,7 @@ if action == 'published':
         if run():
             print "Building staging..."
             build(source, staging_build, root, initiator)
-            backend.create_staging(staging_build)
+            backend.create_staging(staging_build, production_path, build_path, script_dir)
         else:
             print "Script is already running... setting repeat flag to staging..."
             # set_repeat('staging')
@@ -98,8 +100,8 @@ if action == 'published':
     else:
         if run():
             print "Building production..."
-            build(source, production_build, root, initiator)
-            backend.create_production(production_build, backups, script_dir)
+            build(source, register_path, root, initiator)
+            backend.create_production(register_path, register_path, backups, script_dir, production_path)
         else:
             print "Script is already running... setting repeat flag to production..."
             # set_repeat('production')
@@ -117,11 +119,11 @@ while len(queue) > 0:
     if prerelease == True:
         print "Repeating staging..."
         build(source, staging_build, root, initiator)
-        backend.create_staging(staging_build)
+        backend.create_staging(staging_build, production_path, build_path, script_dir)
     else:
         print "Repeating production..."
-        build(source, production_build, root, initiator)
-        backend.create_production(production_build, backups, script_dir)
+        build(source, register_path, root, initiator)
+        backend.create_production(register_path, register_path, backups, script_dir, production_path)
 
     # repeat = get_repeat()
 queue.close()
