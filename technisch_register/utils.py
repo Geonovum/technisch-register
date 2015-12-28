@@ -2,6 +2,8 @@ import psutil
 from subprocess import call
 from fs.osfs import OSFS
 from fs.errors import ResourceNotFoundError
+from os import path as ospath
+from settings import build_path
 from json import load
 
 def run():
@@ -13,7 +15,6 @@ def run():
 	print "Checking whether script is running... "
 
 	num_processes = 0
-
 
 	# pudb.set_trace()
 
@@ -34,21 +35,21 @@ def run():
 	else:
 		return True
 
-def cleanup(source, destination_temp, standard):
+def cleanup(build_path, source, destination_temp, standard):
 	"""Remove the source and temporary destination folders."""
 
 	try:
-		source_fs = OSFS('%s/%s' % (source, standard))
+		source_fs = OSFS(ospath.join(build_path, source, standard))
 	except ResourceNotFoundError:
 		return None
 
-	destination_fs = OSFS(destination_temp)
+	destination_fs = OSFS(ospath.join(build_path, destination_temp))
 
 	artifacts = source_fs.listdir(dirs_only=True)
 	if '.git' in artifacts: artifacts.remove('.git')
 
 	for artifact in artifacts:
-		path = '%s/%s' % (artifact, standard)
+		path = ospath.join(artifact, standard)
 		if destination_fs.exists(path):
 			destination_fs.removedir(path, force=True)
 
