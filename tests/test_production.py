@@ -1,28 +1,28 @@
-import pytest
-from fs.osfs import OSFS
-from technisch_register.backend import fetch_repo
-from technisch_register.settings import sources_path, register_path, build_path
-from os import path as ospath
-
-# install technisch-register to be able to test with 
+# install technisch-register to be able to test 
 # pip install -e . in root dir (where setup.py) resides 
 
+import pytest
+from fs.osfs import OSFS
+from technisch_register.backend import fetch_repo, build_folders, create_webpage
+from technisch_register.settings import assets_path, sources_path, register_path, build_path, staging_path, root_path, repos_path
+from os import path as ospath
+from subprocess import call
+from technisch_register.utils import load_repos
 
 class TestBackend:
 
     @pytest.fixture(scope='session')
     def root_directory(self, tmpdir_factory):
-        return tmpdir_factory
+        return OSFS(str(tmpdir_factory.getbasetemp()))
 
     @pytest.fixture(scope='session')
     def fetch_repo_parameters(self):
-        return 'imkl2015', 'https://www.github.com/Geonovum/imkl2015'
+        return 'nen3610', 'https://www.github.com/Geonovum/nen3610'
 
     def test_fetch_repo_clone(self, fetch_repo_parameters, root_directory):
         initiator, url = fetch_repo_parameters
-        tmpdir = root_directory
 
-        root = OSFS(str(tmpdir.getbasetemp()))        
+        root = root_directory
         root.makedir(sources_path)
 
         assert fetch_repo(root, sources_path, initiator, url, build_path) == 'clone'
@@ -31,10 +31,25 @@ class TestBackend:
 
     def test_fetch_repo_pull(self, fetch_repo_parameters, root_directory):
         initiator, url = fetch_repo_parameters
-        tmpdir = root_directory
 
-        root = OSFS(str(tmpdir.getbasetemp()))
+        root = root_directory
 
         assert fetch_repo(root, sources_path, initiator, url, build_path) == 'pull'
 
+    # @pytest.mark.current
+    def test_build_folders_staging(self, root_directory):
+        root = root_directory
+        standard = load_repos(ospath.join(root_path, repos_path))['nen3610']
 
+        build_folders(sources_path, staging_path, standard, root, '', build_path)
+
+        assert root.exists(ospath.join(build_path, staging_path, 'informatiemodel', 'nen3610'))
+
+    def test_create_webpage_staging(self, root_directory):
+        root = root_directory
+
+        standard = load_repos(ospath.join(root_path, repos_path))['nen3610']
+
+        create_webpage(root, sources_path, assets_path, build_path, staging_path, '', standard)
+
+        assert root.exists(ospath.join(build_path, staging_path, 'nen3610', 'index.html'))
