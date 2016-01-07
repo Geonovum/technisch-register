@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup as BS
 from settings import build_path
 from json import load
 from subprocess import call
+from os import path as ospath
 import codecs
 
 
@@ -34,13 +35,13 @@ def create_artifact_description(artifact):
 
     return BS(summary, 'html.parser')
 
-def create_standard_webpage(standard, artifacts):
+def create_standard_webpage(standard, artifacts, assets_path):
     """Build a standard's overview page
     e.g. http://register.geostandaarden.nl/imgeo/
     """
 
     # load standard HTML template
-    with open('web/templates/standard.html', 'r') as f:
+    with open(ospath.join(assets_path, 'web', 'templates', 'standard.html'), 'r') as f:
         html = BS(f, 'html.parser')
     
     # fetch title element from template
@@ -55,7 +56,7 @@ def create_standard_webpage(standard, artifacts):
     # append title to #title div
     el_title.append(title)
 
-    with codecs.open('descriptions.json', encoding='utf8') as f:
+    with codecs.open(ospath.join(assets_path, 'descriptions.json'), encoding='utf8') as f:
         descriptions = load(f)
 
     # iterate over all artifacts i.e. informatiemodel, gmlapplicatieschema, regels, etc.
