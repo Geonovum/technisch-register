@@ -4,33 +4,29 @@ from subprocess import call
 from webpages import create_standard_webpage
 from settings import build_path
 from os import path as ospath
+from utils import get_artifacts
 import codecs
 import time
 import logging
 
-def build_folders(sources_path, destination_temp, standard, root, repo_cluster):
+def build_folders(sources_path, destination_temp, standard, root, repo_cluster, build_path):
     """Transform the repos' folder structure to that of the register
     and build HTML pages for each standard.
     """
-
-    source_fs = OSFS(ospath.join(build_path, sources_path))
-
-    print "Processing %s ... " % standard['id']
-    standard_fs = source_fs.opendir(standard['id'])
-
-    # list all artifacts of a standard
-    artifacts = standard_fs.listdir(dirs_only=True)
-    if '.git' in artifacts: artifacts.remove(".git")
+    artifacts = get_artifacts(root, build_path, sources_path, standard)
 
     for artifact in artifacts:
         # check whether artifact folder exists in destination_temp 
         if (root.exists(ospath.join(build_path, destination_temp, artifact))) == False:
-            root.makedir(ospath.join(build_path, destination_temp, artifact))
+            root.makedir(ospath.join(build_path, destination_temp, artifact), recursive=True)
 
         # copy standard folders from source to destination_temp in desired structure
         root.copydir(ospath.join(build_path, sources_path, standard['id'], artifact), ospath.join(build_path, destination_temp, artifact, standard['id']))
 
-    html = create_standard_webpage(standard, artifacts)
+def create_webpage(root, sources_path, assets_path, build_path, destination_temp, repo_cluster, standard):
+    artifacts = get_artifacts(root, build_path, sources_path, standard)
+
+    html = create_standard_webpage(standard, artifacts, assets_path)
 
     # check whether model is part of a cluster
     if repo_cluster == "":
@@ -39,7 +35,7 @@ def build_folders(sources_path, destination_temp, standard, root, repo_cluster):
         if root.exists(ospath.join(build_path, destination_temp, standard['id'])) == False:
             root.makedir(ospath.join(build_path, destination_temp, standard['id']))
         # write standard HTML page to register/standard/index.html
-        with codecs.open(ospath.join(build_path, destination_temp, standard['id'], 'index.html'), 'w', encoding='utf8') as f:
+        with codecs.open(ospath.join(root.getsyspath('.'), build_path, destination_temp, standard['id'], 'index.html'), 'w', encoding='utf8') as f:
             f.write(html)
     else:
         # check whether register/cluster/exists
@@ -55,7 +51,8 @@ def build_folders(sources_path, destination_temp, standard, root, repo_cluster):
             f.write(html)
 
     # copy web assets
-    root.copydir(ospath.join('web', 'assets'), ospath.join(build_path, destination_temp, 'r'), overwrite=True)
+    # root.copydir(ospath.join(assets_path, 'web', 'assets'), ospath.join(build_path, destination_temp, 'r'), overwrite=True)
+    call('cp -r %s %s' % (ospath.join(assets_path, 'web', 'assets'), ospath.join(root.getsyspath('.'), build_path, destination_temp, 'r')), shell=True)
 
 def fetch_repo(root, source, repo, url, build_path):
     """Clone repos from GitHub to source folder."""
