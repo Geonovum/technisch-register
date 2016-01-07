@@ -23,6 +23,7 @@ build_path = settings.build_path
 register_path = settings.register_path
 script_dir = settings.script_dir
 production_path = settings.production_path
+assets_path = settings.assets_path
 
 standards_id = load_repos(repos_path)
 
@@ -37,19 +38,17 @@ logging.basicConfig(filename='log.txt', level=logging.DEBUG, format='%(asctime)s
 
 def build(source, build_dir, root, initiator):
     logging.info("Snc script started by %s...", initiator)
-
-    # TODO: use this approach to include standards that are not managed on GitHub
-    #standards = OSFS(source).listdir(dirs_only=True)
         
     # check if initiator is present in repos.json
     if initiator in standards_id.keys():
         cleanup(build_path, source, build_dir, initiator)
 
         logging.info("Fetching repo %s..." % initiator)
-        backend.fetch_repo(root, source, initiator, standards_id[initiator]['url'])
+        backend.fetch_repo(root, source, initiator, standards_id[initiator]['url'], build_path)
         
         logging.info("Building folders...")
-        backend.build_folders(source, build_dir, standards_id[initiator], root, standards_id[initiator]['cluster'])
+        backend.build_folders(source, build_dir, standards_id[initiator], root, standards_id[initiator]['cluster'], build_path)
+        backend.create_webpage(root, source, assets_path, build_path, build_dir, standards_id[initiator]['cluster'], standards_id[initiator]) 
         
         logging.info("Creating overview page...")
         webpages.create_overview_clusters(clusters, source, build_dir)
