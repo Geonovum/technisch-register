@@ -66,5 +66,15 @@ def load_repos(path):
 
     return standards_id
 
+def get_artifacts(root, build_path, sources_path, standard):
+    source_fs = OSFS(ospath.join(root.getsyspath('.'),  build_path, sources_path))
+
+    # print "Processing %s ... " % standard['id']
+    standard_fs = source_fs.opendir(standard['id'])
+    artifacts = standard_fs.listdir(dirs_only=True)
+    if '.git' in artifacts: artifacts.remove(".git")
+
+    return artifacts
+
 if __name__ == "__main__":
     run()
