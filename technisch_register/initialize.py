@@ -25,5 +25,3 @@ for repo in load_repos(s.repos_path)[0].values():
     build(s.sources_path, s.register_path, root_fs, repo['id'])
 
 create_production(s.register_path, s.backups_path, s.script_dir, s.production_path)
-
-# TODO: build the register once
