@@ -121,7 +121,8 @@ def create_staging(staging_path, production_path, build_path):
     production = OSFS(production_path)
 
     print "Removing current staging..."
-    production.removedir(staging_path, force=True)
+    if production.exists(staging_path):
+        production.removedir(staging_path, force=True)
 
     print 'Moving new register to staging...'
 
