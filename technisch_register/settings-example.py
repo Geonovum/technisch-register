@@ -10,7 +10,7 @@ script_dir = 'cgi'
 # path to build directory in which staging and register are built
 build_path = '_build'
 # path to cloned/pulled GitHub repositories
-source_path = 'repos'
+sources_path = 'repos'
 
 production_path = '/var/www/technisch-register/'
 # path to register within build_path and production_path
