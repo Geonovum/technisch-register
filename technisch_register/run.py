@@ -90,7 +90,7 @@ if action == 'published':
         if run():
             print "Building staging..."
             build(source, staging_build, root, initiator)
-            backend.create_staging(staging_build, production_path, build_path, script_dir)
+            backend.create_staging(staging_build, production_path, build_path)
         else:
             print "Script is already running... setting repeat flag to staging..."
             # set_repeat('staging')
@@ -118,7 +118,7 @@ while len(queue) > 0:
     if prerelease == True:
         print "Repeating staging..."
         build(source, staging_build, root, initiator)
-        backend.create_staging(staging_build, production_path, build_path, script_dir)
+        backend.create_staging(staging_build, production_path, build_path)
     else:
         print "Repeating production..."
         build(source, register_path, root, initiator)

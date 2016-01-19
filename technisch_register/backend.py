@@ -71,7 +71,7 @@ def fetch_repo(root, source, repo, url, build_path):
 
         return 'clone'
 
-def create_staging(staging_path, production_path, build_path, script_dir):
+def create_staging(staging_path, production_path, build_path):
     """Create a staging version of the register hosted at
     register.geostandaarden.nl/staging
     """
