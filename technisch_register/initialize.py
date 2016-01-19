@@ -10,5 +10,9 @@ build.makedir(staging_path)
 build.makedir(register_path)
 build.makedir(backups_path)
 
+# TODO: make the production folder if does not exist
+
 for repo in load_repos(repos_path).values(): 
     fetch_repo(root, sources_path, repo['id'], repo['url'])
+
+# TODO: build the register once
