@@ -55,6 +55,7 @@ def cleanup(build_path, source, destination_temp, standard):
 
     if destination_fs.exists(standard): destination_fs.removedir(standard, force=True)
 
+# candidate for removal as it is used only once
 def load_repos(path):
     standards_id = {}
 
@@ -64,7 +65,7 @@ def load_repos(path):
         for standard in standards:
             standards_id[standard['id']] = standard
 
-    return standards_id
+    return standards_id, standards
 
 def get_artifacts(root, build_path, sources_path, standard):
     source_fs = OSFS(ospath.join(root.getsyspath('.'),  build_path, sources_path))
