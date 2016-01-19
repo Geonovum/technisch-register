@@ -62,6 +62,7 @@ def create_standard_webpage(standard, artifacts, assets_path):
     # iterate over all artifacts i.e. informatiemodel, gmlapplicatieschema, regels, etc.
     for artifact in artifacts:
         # create title of each artifact
+        print artifact
         title = create_artifact_title(standard['id'], artifact, descriptions[artifact]['titel'])
         el_container.append(title)
 
@@ -91,23 +92,22 @@ def create_overview_entry(standard, title_short, description):
 
     return BS(overview, 'html.parser')
 
-def create_overview_standards(standards, source, destination_temp, repoCluster, root):
+def create_overview_standards(standards, source, destination_temp, repoCluster, root, assets_path):
     print 'Creating overview page submodels...'
     
     # open overview page template
-    with codecs.open('web/templates/overview.html', 'r', encoding='utf8') as f:
+    with codecs.open(ospath.join(assets_path, 'web', 'templates', 'overview.html'), 'r', encoding='utf8') as f:
         html = BS(f, 'html.parser')
         
     el_container = html.find(id='leftcolumn')
-    
-    
+
     for standard in standards:
             
         if standard['cluster'] == repoCluster:
             overview = create_overview_entry(standard['id'], standard['titel_kort'], standard['beschrijving_kort'])
             el_container.append(overview)
 
-    with codecs.open('%s/%s/index.html' % (destination_temp, repoCluster), 'w', encoding='utf8') as f:
+    with codecs.open(ospath.join(build_path, destination_temp, repoCluster, 'index.html'), 'w', encoding='utf8') as f:
             f.write(html.prettify())
         #OSFS('./').copydir('../web/assets', '%s/assets' % destination_temp)
         # call('cp -r web/assets %s/assets' % destination_temp, shell=True)
@@ -127,7 +127,7 @@ def create_overview_clusters(clusters, source, destination_temp):
         overview = create_overview_entry(cluster['id'], cluster['titel_kort'], cluster['beschrijving_kort'])
         el_container.append(overview)
 
-    with codecs.open('%s/%s/index.html' % (build_path, destination_temp), 'w', encoding='utf8') as f:
+    with codecs.open(ospath.join(build_path, destination_temp, 'index.html'), 'w', encoding='utf8') as f:
         f.write(html.prettify())
         #OSFS('./').copydir('../web/assets', '%s/assets' % destination_temp)
         # call('cp -r web/assets %s/assets' % destination_temp, shell=True)
