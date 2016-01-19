@@ -1,13 +1,53 @@
 from fs.osfs import OSFS
 from fs.errors import ResourceNotFoundError
 from subprocess import call
-from webpages import create_standard_webpage
-from settings import build_path
+# from webpages import create_standard_webpage
+import webpages
+from settings import build_path, repos_path, assets_path, cluster_path
 from os import path as ospath
-from utils import get_artifacts
+from utils import get_artifacts, load_repos, cleanup
 import codecs
 import time
 import logging
+from json import load
+
+def build(source, build_dir, root, initiator):
+    logging.info("Sync script started by %s...", initiator)
+
+    # canditate for removal as this is only place it is used
+    standards_id, standards = load_repos(repos_path)
+
+    clusters_id = {}
+    with open(cluster_path) as f:
+        clusters = load(f)
+
+        for cluster in clusters:
+            clusters_id[cluster['id']] = cluster
+
+    # check if initiator is present in repos.json
+    if initiator in standards_id.keys():
+        cleanup(build_path, source, build_dir, initiator)
+
+        logging.info("Fetching repo %s..." % initiator)
+        fetch_repo(root, source, initiator, standards_id[initiator]['url'], build_path)
+
+        logging.info("Building folders...")
+        build_folders(source, build_dir, standards_id[initiator], root, standards_id[initiator]['cluster'], build_path)
+        create_webpage(root, source, assets_path, build_path, build_dir, standards_id[initiator]['cluster'], standards_id[initiator])
+
+        logging.info("Creating overview page...")
+        webpages.create_overview_clusters(clusters, source, build_dir)
+
+        if standards_id[initiator]['cluster'] != "":
+            webpages.create_overview_standards(standards, source, build_dir, standards_id[initiator]['cluster'], root, assets_path)
+    else:
+        print "%s is not listed in repos.json... aborting." % initiator
+        logging.error("%s is not listed in repos.json... aborting" % initiator)
+        exit()
+        #TODO: check if repo needs to be removed from repos/
+
+    print "Done!"
+
 
 def build_folders(sources_path, destination_temp, standard, root, repo_cluster, build_path):
     """Transform the repos' folder structure to that of the register
@@ -26,7 +66,7 @@ def build_folders(sources_path, destination_temp, standard, root, repo_cluster, 
 def create_webpage(root, sources_path, assets_path, build_path, destination_temp, repo_cluster, standard):
     artifacts = get_artifacts(root, build_path, sources_path, standard)
 
-    html = create_standard_webpage(standard, artifacts, assets_path)
+    html = webpages.create_standard_webpage(standard, artifacts, assets_path)
 
     # check whether model is part of a cluster
     if repo_cluster == "":
@@ -47,7 +87,7 @@ def create_webpage(root, sources_path, assets_path, build_path, destination_temp
             root.makedir(ospath.join(build_path, destination_temp, repo_cluster, standard['id']))
     
         # write standard HTML page to register/cluster/standard/index.html
-        with codecs.open(ospath.join(build_path, destination_temp, repo_cluster, standard['id']), 'w', encoding='utf8') as f:
+        with codecs.open(ospath.join(build_path, destination_temp, repo_cluster, standard['id'], 'index.html'), 'w', encoding='utf8') as f:
             f.write(html)
 
     # copy web assets

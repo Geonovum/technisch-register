@@ -25,43 +25,7 @@ script_dir = settings.script_dir
 production_path = settings.production_path
 assets_path = settings.assets_path
 
-standards_id = load_repos(repos_path)
-
-clusters_id = {}
-with open(settings.cluster_path) as f:
-    clusters = load(f)
-
-    for cluster in clusters:
-        clusters_id[cluster['id']] = cluster
-        
 logging.basicConfig(filename='log.txt', level=logging.DEBUG, format='%(asctime)s %(levelname)s: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
-
-def build(source, build_dir, root, initiator):
-    logging.info("Snc script started by %s...", initiator)
-        
-    # check if initiator is present in repos.json
-    if initiator in standards_id.keys():
-        cleanup(build_path, source, build_dir, initiator)
-
-        logging.info("Fetching repo %s..." % initiator)
-        backend.fetch_repo(root, source, initiator, standards_id[initiator]['url'], build_path)
-        
-        logging.info("Building folders...")
-        backend.build_folders(source, build_dir, standards_id[initiator], root, standards_id[initiator]['cluster'], build_path)
-        backend.create_webpage(root, source, assets_path, build_path, build_dir, standards_id[initiator]['cluster'], standards_id[initiator]) 
-        
-        logging.info("Creating overview page...")
-        webpages.create_overview_clusters(clusters, source, build_dir)
-        
-        if standards_id[initiator]['cluster'] != "":
-            webpages.create_overview_standards(standards, source, build_dir, standards_id[initiator]['cluster'], root)
-    else:
-        print "%s is not listed in repos.json... aborting." % initiator
-        logging.error("%s is not listed in repos.json... aborting" % initiator)
-        exit()
-        #TODO: check if repo needs to be removed from repos/
-
-    print "Done!"
 
 #if __name__ == "__main__":
 
@@ -89,7 +53,7 @@ if action == 'published':
         # i.e. whether another instance isn't already running
         if run():
             print "Building staging..."
-            build(source, staging_build, root, initiator)
+            backend.build(source, staging_build, root, initiator)
             backend.create_staging(staging_build, production_path, build_path)
         else:
             print "Script is already running... setting repeat flag to staging..."
@@ -99,7 +63,7 @@ if action == 'published':
     else:
         if run():
             print "Building production..."
-            build(source, register_path, root, initiator)
+            backend.build(source, register_path, root, initiator)
             backend.create_production(register_path, backups, script_dir, production_path)
         else:
             print "Script is already running... setting repeat flag to production..."
@@ -117,11 +81,11 @@ while len(queue) > 0:
 
     if prerelease == True:
         print "Repeating staging..."
-        build(source, staging_build, root, initiator)
+        backend.build(source, staging_build, root, initiator)
         backend.create_staging(staging_build, production_path, build_path)
     else:
         print "Repeating production..."
-        build(source, register_path, root, initiator)
+        backend.build(source, register_path, root, initiator)
         backend.create_production(register_path, backups, script_dir, production_path)
 
     # repeat = get_repeat()
