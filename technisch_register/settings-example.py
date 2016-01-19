@@ -1,12 +1,21 @@
 root_path = '/home/username/technisch-register/technisch_register'
+# location of the assets folder (in this case web/)
+assets_path =  '/home/username/technisch-register/technisch_register'
 
 repos_path = 'repos.json'
-script_dir = 'technisch-register'
 cluster_path = 'cluster.json'
+
+# path to build.py, used to link to log.txt
+script_dir = 'cgi'
+# path to build directory in which staging and register are built
 build_path = '_build'
+# path to cloned/pulled GitHub repositories
+source_path = 'repos'
 
 production_path = '/var/www/technisch-register/'
-sources_path = 'repos'
-staging_path = 'staging'
+# path to register within build_path and production_path
 register_path = 'register'
+# path to stagin within build_path and production_path
+staging_path = 'staging'
+# path to backups directory relative to production_path 
 backups_path = 'backups'
