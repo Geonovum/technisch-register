@@ -145,8 +145,8 @@ def create_production(destination, backups, script_entry_path, production_path):
 
     production = OSFS(production_path)
     
-    if production.exists(backups) == False:
-        production.makedir(backups)
+    # if production.exists(backups) == False:
+    #     production.makedir(backups)
 
     # copy newly baked register/staging to production directory
     # NOTE: only build paths within script_dir are currently supported
@@ -185,7 +185,7 @@ def create_production(destination, backups, script_entry_path, production_path):
     production.makedir('%s/staging' % destination)
     
     call('cd %s; ln -s %s' % (ospath.join(production_path, destination, 'staging'), ospath.join(production_path, 'staging')), shell=True)
-    call('cd %s; ln -s %s' % (ospath.join(production_path, 'register'), ospath.join(script_entry_path, 'log.txt')), shell=True)
+    call('cd %s; ln -s %s' % (ospath.join(production_path, destination), ospath.join(script_entry_path, 'log.txt')), shell=True)
     
     try:
         production.removedir(destination + '-old', force=True)

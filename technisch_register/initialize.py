@@ -19,7 +19,7 @@ except ResourceNotFoundError:
     print path
     production_fs = OSFS(s.production_path[:len(s.production_path) - (len(path) + 1)]).makedir(path)
 
-if not build_fs.exists(s.backups_path):
+if production_fs.exists(s.backups_path) == False:
     production_fs.makedir(s.backups_path)
 
 # fetch repos from GitHub
