@@ -9,14 +9,18 @@ build_fs = root_fs.makeopendir(s.build_path)
 build_fs.makedir(s.sources_path)
 build_fs.makedir(s.staging_path)
 build_fs.makedir(s.register_path)
-build_fs.makedir(s.backups_path)
 
-# create production directory
+# create production directory if needed
 try:
-    OSFS(s.production_path)
+    production_fs = OSFS(s.production_path)
 except ResourceNotFoundError:
+    # grap production dir's parent dir
     path = s.production_path.split('/')[-2]
-    OSFS(s.production_path[:len(s.production_path) - (len(path) + 1)]).makedir(path)
+    print path
+    production_fs = OSFS(s.production_path[:len(s.production_path) - (len(path) + 1)]).makedir(path)
+
+if not build_fs.exists(s.backups_path):
+    production_fs.makedir(s.backups_path)
 
 # fetch repos from GitHub
 for repo in load_repos(s.repos_path)[0].values():
