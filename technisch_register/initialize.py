@@ -24,4 +24,4 @@ for repo in load_repos(s.repos_path)[0].values():
     fetch_repo(root_fs, s.sources_path, repo['id'], repo['url'], s.build_path)
     build(s.sources_path, s.register_path, root_fs, repo['id'])
 
-create_production(s.register_path, s.backups_path, s.script_dir, s.production_path)
+create_production(s.register_path, s.backups_path, s.script_entry_path, s.production_path)

@@ -3,7 +3,7 @@ from fs.errors import ResourceNotFoundError
 from subprocess import call
 # from webpages import create_standard_webpage
 import webpages
-from settings import build_path, repos_path, assets_path, cluster_path
+from settings import build_path, repos_path, assets_path, cluster_path, script_entry_path
 from os import path as ospath
 from utils import get_artifacts, load_repos, cleanup
 import codecs
@@ -185,7 +185,7 @@ def create_production(destination, backups, script_dir, production_path):
     production.makedir('%s/staging' % destination)
     
     call('cd %s; ln -s %s' % (ospath.join(production_path, destination, 'staging'), ospath.join(production_path, 'staging')), shell=True)
-    call('cd %s; ln -s %s' % (ospath.join(production_path, 'register'), ospath.join(production_path, script_dir, 'log.txt')), shell=True)
+    call('cd %s; ln -s %s' % (ospath.join(production_path, 'register'), ospath.join(script_entry_path, 'log.txt')), shell=True)
     
     try:
         production.removedir(destination + '-old', force=True)
