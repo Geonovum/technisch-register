@@ -1,6 +1,8 @@
 from bs4 import BeautifulSoup as BS
+from settings import build_path
 from json import load
 from subprocess import call
+from os import path as ospath
 import codecs
 
 
@@ -33,13 +35,13 @@ def create_artifact_description(artifact):
 
     return BS(summary, 'html.parser')
 
-def create_standard_webpage(standard, artifacts):
+def create_standard_webpage(standard, artifacts, assets_path):
     """Build a standard's overview page
     e.g. http://register.geostandaarden.nl/imgeo/
     """
 
     # load standard HTML template
-    with open('web/templates/standard.html', 'r') as f:
+    with open(ospath.join(assets_path, 'web', 'templates', 'standard.html'), 'r') as f:
         html = BS(f, 'html.parser')
     
     # fetch title element from template
@@ -54,12 +56,13 @@ def create_standard_webpage(standard, artifacts):
     # append title to #title div
     el_title.append(title)
 
-    with codecs.open('descriptions.json', encoding='utf8') as f:
+    with codecs.open(ospath.join(assets_path, 'descriptions.json'), encoding='utf8') as f:
         descriptions = load(f)
 
     # iterate over all artifacts i.e. informatiemodel, gmlapplicatieschema, regels, etc.
     for artifact in artifacts:
         # create title of each artifact
+        print artifact
         title = create_artifact_title(standard['id'], artifact, descriptions[artifact]['titel'])
         el_container.append(title)
 
@@ -89,32 +92,31 @@ def create_overview_entry(standard, title_short, description):
 
     return BS(overview, 'html.parser')
 
-def create_overview_standards(standards, source, destination_temp, repoCluster, root):
-	print 'Creating overview page submodels...'
-	
+def create_overview_standards(standards, source, destination_temp, repoCluster, root, assets_path):
+    print 'Creating overview page submodels...'
+    
     # open overview page template
-	with codecs.open('web/templates/overview.html', 'r', encoding='utf8') as f:
-		html = BS(f, 'html.parser')
-		
-	el_container = html.find(id='leftcolumn')
-	
-	
-	for standard in standards:
-			
-		if standard['cluster'] == repoCluster:
-			overview = create_overview_entry(standard['id'], standard['titel_kort'], standard['beschrijving_kort'])
-			el_container.append(overview)
+    with codecs.open(ospath.join(assets_path, 'web', 'templates', 'overview.html'), 'r', encoding='utf8') as f:
+        html = BS(f, 'html.parser')
+        
+    el_container = html.find(id='leftcolumn')
 
-	with codecs.open('%s/%s/index.html' % (destination_temp, repoCluster), 'w', encoding='utf8') as f:
-		f.write(html.prettify())
+    for standard in standards:
+            
+        if standard['cluster'] == repoCluster:
+            overview = create_overview_entry(standard['id'], standard['titel_kort'], standard['beschrijving_kort'])
+            el_container.append(overview)
+
+    with codecs.open(ospath.join(build_path, destination_temp, repoCluster, 'index.html'), 'w', encoding='utf8') as f:
+            f.write(html.prettify())
         #OSFS('./').copydir('../web/assets', '%s/assets' % destination_temp)
         # call('cp -r web/assets %s/assets' % destination_temp, shell=True)
 
-	print 'Done!'
-		
+    print 'Done!'
+        
 def create_overview_clusters(clusters, source, destination_temp):
     print 'Creating overview page...'
-
+    
     # open overview page template
     with codecs.open('web/templates/overview.html', 'r', encoding='utf8') as f:
         html = BS(f, 'html.parser')
@@ -125,7 +127,7 @@ def create_overview_clusters(clusters, source, destination_temp):
         overview = create_overview_entry(cluster['id'], cluster['titel_kort'], cluster['beschrijving_kort'])
         el_container.append(overview)
 
-    with codecs.open('%s/index.html' % destination_temp, 'w', encoding='utf8') as f:
+    with codecs.open(ospath.join(build_path, destination_temp, 'index.html'), 'w', encoding='utf8') as f:
         f.write(html.prettify())
         #OSFS('./').copydir('../web/assets', '%s/assets' % destination_temp)
         # call('cp -r web/assets %s/assets' % destination_temp, shell=True)
