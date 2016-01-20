@@ -184,8 +184,8 @@ def create_production(destination, backups, script_dir, production_path):
     # fails if production is built first...
     production.makedir('%s/staging' % destination)
     
-    call('cd %s/%s/staging; ln -s %s/staging' % (production_path, destination, production_path), shell=True)
-    call('cd %s/register; ln -s %s/%s/log.txt' % (production_path, production_path, script_dir), shell=True)
+    call('cd %s; ln -s %s' % (ospath.join(production_path, destination, 'staging'), ospath.join(production_path, 'staging')), shell=True)
+    call('cd %s; ln -s %s' % (ospath.join(production_path, 'register'), ospath.join(production_path, script_dir, 'log.txt')), shell=True)
     
     try:
         production.removedir(destination + '-old', force=True)
