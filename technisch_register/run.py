@@ -21,7 +21,7 @@ staging_build = settings.staging_path
 backups = settings.backups_path
 build_path = settings.build_path
 register_path = settings.register_path
-script_dir = settings.script_dir
+script_entry_path = settings.script_entry_path
 production_path = settings.production_path
 assets_path = settings.assets_path
 
@@ -64,7 +64,7 @@ if action == 'published':
         if run():
             print "Building production..."
             backend.build(source, register_path, root, initiator)
-            backend.create_production(register_path, backups, script_dir, production_path)
+            backend.create_production(register_path, backups, script_entry_path, production_path)
         else:
             print "Script is already running... setting repeat flag to production..."
             # set_repeat('production')
@@ -86,7 +86,7 @@ while len(queue) > 0:
     else:
         print "Repeating production..."
         backend.build(source, register_path, root, initiator)
-        backend.create_production(register_path, backups, script_dir, production_path)
+        backend.create_production(register_path, backups, script_entry_path, production_path)
 
     # repeat = get_repeat()
 queue.close()

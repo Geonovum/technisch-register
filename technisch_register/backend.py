@@ -3,7 +3,7 @@ from fs.errors import ResourceNotFoundError
 from subprocess import call
 # from webpages import create_standard_webpage
 import webpages
-from settings import build_path, repos_path, assets_path, cluster_path, script_entry_path
+from settings import build_path, repos_path, assets_path, cluster_path
 from os import path as ospath
 from utils import get_artifacts, load_repos, cleanup
 import codecs
@@ -133,7 +133,7 @@ def create_staging(staging_path, production_path, build_path):
 
     logging.info("Staging built successfully!")
 
-def create_production(destination, backups, script_dir, production_path):
+def create_production(destination, backups, script_entry_path, production_path):
     """Put the staging version to production hosted at 
     register.geostandaarden.nl
     """
