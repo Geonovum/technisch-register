@@ -6,7 +6,7 @@ You need a Unix shell to run this module. Linux and OS X have one by default. If
 
 #### installing
 
-Clone this repository and install the module in [editable mode](https://pip.pypa.io/en/latest/reference/pip_install/?highlight=editable#editable-installs) with `pip` as
+1. Clone this repository and install the module in [editable mode](https://pip.pypa.io/en/latest/reference/pip_install/?highlight=editable#editable-installs) with `pip` as
 
     git clone https://www.github.com/geonovum/technisch-register
     cd technisch-register
@@ -14,7 +14,12 @@ Clone this repository and install the module in [editable mode](https://pip.pypa
 
 The `-e` flag makes sure that "[any changes you make to the code will immediately apply accross the system](http://stackoverflow.com/a/24000174)". `pip` will automatically install the project's dependencies (see `setup.py`).
 
-Rename `settings-example.py` to `settings.py` and provide the needed paths.
+2. Rename `technisch_register/settings-example.py` to `technisch_register/settings.py` and provide the needed paths.
+
+3. Create the required directories and build the register
+
+    cd technisch_register
+    python initialize.py
 
 #### running
 
