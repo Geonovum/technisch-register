@@ -39,7 +39,7 @@ class TestBackend:
     # @pytest.mark.current
     def test_build_folders_staging(self, root_directory):
         root = root_directory
-        standard = load_repos(ospath.join(root_path, repos_path))['nen3610']
+        standard = load_repos(ospath.join(root_path, repos_path))[0]['nen3610']
 
         build_folders(sources_path, staging_path, standard, root, '', build_path)
 
@@ -48,7 +48,7 @@ class TestBackend:
     def test_create_webpage_staging(self, root_directory):
         root = root_directory
 
-        standard = load_repos(ospath.join(root_path, repos_path))['nen3610']
+        standard = load_repos(ospath.join(root_path, repos_path))[0]['nen3610']
 
         create_webpage(root, sources_path, assets_path, build_path, staging_path, '', standard)
 
