@@ -2,7 +2,7 @@ A module that automatically syncs geographical information standards managed on 
 
 #### dependencies
 
-This module requires a Unix Shell. Linux and OS X have one by default. If you have installed `git` on Windows you can use `Git Bash`. Can't find it? Try [Babun](http://babun.github.io/) instead.
+You need a Unix shell to run this module. Linux and OS X have one by default. If you have installed `git` on Windows you can use `Git Bash`. Can't find it? Try [Babun](http://babun.github.io/) instead.
 
 #### installing
 
@@ -10,9 +10,9 @@ Clone this repository and install the module in [editable mode](https://pip.pypa
 
     git clone https://www.github.com/geonovum/technisch-register
     cd technisch-register
-    pip install ./ -e
+    pip install -e ./
 
-The `-e` flag makes sure that "[any changes you make to the code will immediately apply accross the system](http://stackoverflow.com/a/24000174)". `pip` will automatically install the project's dependencies (see `setup.py`). Installing the module is mandatory if you want to run the tests (see below).
+The `-e` flag makes sure that "[any changes you make to the code will immediately apply accross the system](http://stackoverflow.com/a/24000174)". `pip` will automatically install the project's dependencies (see `setup.py`).
 
 Rename `settings-example.py` to `settings.py` and provide the needed paths.
 
@@ -30,3 +30,7 @@ Install [pytest](http://pytest.org/latest/) and run the tests as
 
     pip install pytest
     py.test tests/
+
+#### notes
+
+The code is written on OS X and deployed on Ubuntu. Windows support is shaky at best. 
