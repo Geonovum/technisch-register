@@ -1,28 +1,33 @@
+This module links GitHub to http://register.geostandaarden.nl
+
+
 #### dependencies
 
-* https://pypi.python.org/pypi/fs/0.5.2
-* BeautifulSoup 4
-* psutil
-* Bash shell
+This module requires a Unix Shell. Linux and OS X have on by default. If you have installed `git` on Windows you can use `Git Bash`. Can't find it? Try http://babun.github.io/ instead.
 
 #### installing
 
-A Bash shell is readily available on Linux and OS X. If you have installed `git` on Windows you can use `Git Bash`. Can't find it? Try http://babun.github.io/ instead.
+Clone this repository and install the `technisch_register` module in [editable mode](https://pip.pypa.io/en/latest/reference/pip_install/?highlight=editable#editable-installs) in your favourite Unix shell through `pip` as
 
-Install the Python modules through e.g. `easy_install`. Open your shell and enter
+    git clone https://www.github.com/geonovum/technisch-register
+    cd technisch-register
+    pip install ./ -e
 
-    easy_install fs beautifulsoup4 psutil
+The `-e` flag makes sure that "[any changes you make to the code will immediately apply accross the system](http://stackoverflow.com/a/24000174)". This is useful when you plan to work on the code and is mandatory if you want to run the tests (see below).
 
-Rename `settings-example.py` to `settings.py`. 
+Rename `settings-example.py` to `settings.py` and provide the needed paths.
 
 #### running
 
-On the server the script reads GitHub's JSON payload from `stdin`. To use it locally run `build.py` as
+The main script is `build.py`. It reads a GitHub JSON payload from `stdin` and builds the register in `staging` or `production` mode. Run `build.py` as
 
     cat github-payload.json | python build.py
 
-Line 32 of `github-payload.json` determines what the script (`staging` or `production`) should build. Change `prerelease` to `false` to build `production` and vice versa.
+Line 32 of `github-payload.json` determines whether the script should build `staging` or  `production`. Change `prerelease` to `false` to build `production` and vice versa.
 
-#### developing and testing
+#### testing
 
-Uncomment `repo_path = 'repos-dev.json'` in `settings.py` to load a shorter list of repositories.
+Install [pytest](http://pytest.org/latest/) and run the tests as
+
+    pip install pytest
+    py.test tests/
