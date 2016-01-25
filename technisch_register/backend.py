@@ -12,11 +12,17 @@ import logging
 from json import load
 
 def build(source, build_dir, root, initiator):
+    """Builds the register in build_dir/source.
+
+    source is either settings.register_path of setting.staging_path
+    """
+
     logging.info("Sync script started by %s...", initiator)
 
     # canditate for removal as this is only place it is used
     standards_id, standards = load_repos(repos_path)
 
+    #TODO: move to utils
     clusters_id = {}
     with open(cluster_path) as f:
         clusters = load(f)
@@ -33,13 +39,13 @@ def build(source, build_dir, root, initiator):
 
         logging.info("Building folders...")
         build_folders(source, build_dir, standards_id[initiator], root, standards_id[initiator]['cluster'], build_path)
-        create_webpage(root, source, assets_path, build_path, build_dir, standards_id[initiator]['cluster'], standards_id[initiator])
+        create_infomodel_homepage(root, source, assets_path, build_path, build_dir, standards_id[initiator]['cluster'], standards_id[initiator])
 
-        logging.info("Creating overview page...")
-        webpages.create_overview_clusters(clusters, source, build_dir)
+        logging.info("Creating homepagepage...")
+        webpages.create_register_homepage(clusters, source, build_dir)
 
         if standards_id[initiator]['cluster'] != "":
-            webpages.create_overview_standards(standards, source, build_dir, standards_id[initiator]['cluster'], root, assets_path)
+            webpages.create_cluster_overview(standards, source, build_dir, standards_id[initiator]['cluster'], root, assets_path)
     else:
         print "%s is not listed in repos.json... aborting." % initiator
         logging.error("%s is not listed in repos.json... aborting" % initiator)
@@ -50,9 +56,11 @@ def build(source, build_dir, root, initiator):
 
 
 def build_folders(sources_path, destination_temp, standard, root, repo_cluster, build_path):
-    """Transform the repos' folder structure to that of the register
-    and build HTML pages for each standard.
+    """Transforms a repo's folder structure to that of the register
+
+    Copies infomodel/artifact/assets to artifact/infomodel/assets
     """
+
     artifacts = get_artifacts(root, build_path, sources_path, standard)
 
     for artifact in artifacts:
@@ -63,15 +71,18 @@ def build_folders(sources_path, destination_temp, standard, root, repo_cluster, 
         # copy standard folders from source to destination_temp in desired structure
         root.copydir(ospath.join(build_path, sources_path, standard['id'], artifact), ospath.join(build_path, destination_temp, artifact, standard['id']))
 
-def create_webpage(root, sources_path, assets_path, build_path, destination_temp, repo_cluster, standard):
+def create_infomodel_homepage(root, sources_path, assets_path, build_path, destination_temp, repo_cluster, standard):
+    """Creates the homepage of an information model and copies to correct location
+
+    e.g. http://register.geostandaarden.nl/brt/top10nl/index.html
+    """
+
     artifacts = get_artifacts(root, build_path, sources_path, standard)
 
     html = webpages.create_standard_webpage(standard, artifacts, assets_path)
 
-    # check whether model is part of a cluster
+    # copy homepage to register/standard exists if part of cluster
     if repo_cluster == "":
-        # check whether register/standard exists
-
         if root.exists(ospath.join(build_path, destination_temp, standard['id'])) == False:
             root.makedir(ospath.join(build_path, destination_temp, standard['id']))
         # write standard HTML page to register/standard/index.html

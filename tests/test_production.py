@@ -3,7 +3,7 @@
 
 import pytest
 from fs.osfs import OSFS
-from technisch_register.backend import fetch_repo, build_folders, create_webpage
+from technisch_register.backend import fetch_repo, build_folders, create_infomodel_homepage
 from technisch_register.settings import assets_path, sources_path, register_path, build_path, staging_path, root_path, repos_path
 from os import path as ospath
 from subprocess import call
@@ -45,11 +45,11 @@ class TestBackend:
 
         assert root.exists(ospath.join(build_path, staging_path, 'informatiemodel', 'nen3610'))
 
-    def test_create_webpage_staging(self, root_directory):
+    def test_create_infomodel_homepage_staging(self, root_directory):
         root = root_directory
 
         standard = load_repos(ospath.join(root_path, repos_path))[0]['nen3610']
 
-        create_webpage(root, sources_path, assets_path, build_path, staging_path, '', standard)
+        create_infomodel_homepage(root, sources_path, assets_path, build_path, staging_path, '', standard)
 
         assert root.exists(ospath.join(build_path, staging_path, 'nen3610', 'index.html'))

@@ -37,6 +37,7 @@ def create_artifact_description(artifact):
 
 def create_standard_webpage(standard, artifacts, assets_path):
     """Build a standard's overview page
+    
     e.g. http://register.geostandaarden.nl/imgeo/
     """
 
@@ -62,7 +63,6 @@ def create_standard_webpage(standard, artifacts, assets_path):
     # iterate over all artifacts i.e. informatiemodel, gmlapplicatieschema, regels, etc.
     for artifact in artifacts:
         # create title of each artifact
-        print artifact
         title = create_artifact_title(standard['id'], artifact, descriptions[artifact]['titel'])
         el_container.append(title)
 
@@ -90,10 +90,16 @@ def create_overview_entry(standard, title_short, description):
         <p><span style='margin-left:37px; width: 100%%'>%s</span></p>
             ''' % (url, standard, title_short, description)
 
+    # print standard
     return BS(overview, 'html.parser')
 
-def create_overview_standards(standards, source, destination_temp, repoCluster, root, assets_path):
-    print 'Creating overview page submodels...'
+def create_cluster_overview(standards, source, destination_temp, repoCluster, root, assets_path):
+    """Creates a cluster's overview page
+
+    e.g.http://register.geostandaarden.nl/brt/index.html
+    """
+
+    print 'Creating cluster overview page...'
     
     # open overview page template
     with codecs.open(ospath.join(assets_path, 'web', 'templates', 'overview.html'), 'r', encoding='utf8') as f:
@@ -102,7 +108,6 @@ def create_overview_standards(standards, source, destination_temp, repoCluster, 
     el_container = html.find(id='leftcolumn')
 
     for standard in standards:
-            
         if standard['cluster'] == repoCluster:
             overview = create_overview_entry(standard['id'], standard['titel_kort'], standard['beschrijving_kort'])
             el_container.append(overview)
@@ -114,7 +119,12 @@ def create_overview_standards(standards, source, destination_temp, repoCluster, 
 
     print 'Done!'
         
-def create_overview_clusters(clusters, source, destination_temp):
+def create_register_homepage(clusters, source, destination_temp):
+    """Creates the register's homepage
+
+    http://register.geostandaarden.nl
+    """
+
     print 'Creating overview page...'
     
     # open overview page template
@@ -124,6 +134,7 @@ def create_overview_clusters(clusters, source, destination_temp):
     el_container = html.find(id='leftcolumn')
 
     for cluster in clusters:
+        # print cluster['id']
         overview = create_overview_entry(cluster['id'], cluster['titel_kort'], cluster['beschrijving_kort'])
         el_container.append(overview)
 
