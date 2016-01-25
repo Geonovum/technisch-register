@@ -17,7 +17,8 @@ except ResourceNotFoundError:
     # grap production dir's parent dir
     path = s.production_path.split('/')[-2]
     print path
-    production_fs = OSFS(s.production_path[:len(s.production_path) - (len(path) + 1)]).makedir(path)
+    production_fs = OSFS(s.production_path[:len(s.production_path) - (len(path) + 1)]).makeopendir(path)
+    print production_fs
 
 if production_fs.exists(s.backups_path) == False:
     production_fs.makedir(s.backups_path)
