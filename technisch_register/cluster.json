@@ -42,7 +42,7 @@
         "beschrijving_kort": "Informatiemodel Ruimtelijke Ordening"
     },
     {
-        "id": "imkl",
+        "id": "imkl2015",
         "titel": "Informatiemodel Kabels en Leidingen",
         "titel_kort":"IMKL2015",
         "beschrijving": "IMKL2015 is ontwikkeld voor de realisatie van digitaal berichtenverkeer rond het thema utiliteitsnetten en de daarin voorkomende kabels, leidingen en leidingelementen voor de realisatie van een aantal wetten en regelingen. Met name de wet WION en de Europese regeling INSPIRE en daarin het thema Utility Networks zijn bepalend. Platform voor opmerkingen en meedenken op:  https://github.com/Geonovum/imkl2015-review",
