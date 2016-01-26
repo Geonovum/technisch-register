@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup as BS
-from technisch_register.settings import build_path
+from settings import build_path
 from json import load
 from subprocess import call
 from os import path as ospath
