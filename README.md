@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/Geonovum/technisch-register.svg?branch=master)](https://travis-ci.org/Geonovum/technisch-register)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Geonovum/technisch-register/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Geonovum/technisch-register/?branch=master)
+
 A module that automatically syncs geographical information standards managed on GitHub to http://register.geostandaarden.nl
 
 #### dependencies
