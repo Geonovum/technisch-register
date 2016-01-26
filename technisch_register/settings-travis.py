@@ -1,6 +1,6 @@
 root_path = '/home/travis/build/Geonovum/technisch-register/technisch_register/'
 # location of the assets folder (in this case web/)
-assets_path =  '/home/travis/build/Geonovum/technisch-registertechnisch_register/'
+assets_path =  '/home/travis/build/Geonovum/technisch-register/technisch_register/'
 
 repos_path = 'repos.json'
 cluster_path = 'cluster.json'
