@@ -74,7 +74,7 @@ def build_folders(sources_path, destination_temp, standard, root, repo_cluster, 
 def create_infomodel_homepage(root, sources_path, assets_path, build_path, destination_temp, repo_cluster, standard):
     """Creates the homepage of an information model and copies to correct location
 
-    e.g. http://register.geostandaarden.nl/brt/top10nl/index.html
+    e.g. https://register.geostandaarden.nl/brt/top10nl/index.html
     """
 
     artifacts = get_artifacts(root, build_path, sources_path, standard)

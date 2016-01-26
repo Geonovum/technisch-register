@@ -20,7 +20,7 @@ def create_artifact_title(standard, artifact, title):
     title = '''
         <p><i class="fa fa-file-o"></i>
             <span style='margin-left: 25px'>
-                <a href="http://register.geostandaarden.nl/%s/%s">%s</a>
+                <a href="https://register.geostandaarden.nl/%s/%s">%s</a>
             </span>
         </p> ''' % (artifact, standard, title)
 
@@ -38,7 +38,7 @@ def create_artifact_description(artifact):
 def create_standard_webpage(standard, artifacts, assets_path):
     """Build a standard's overview page
     
-    e.g. http://register.geostandaarden.nl/imgeo/
+    e.g. https://register.geostandaarden.nl/imgeo/
     """
 
     # load standard HTML template
@@ -72,13 +72,13 @@ def create_standard_webpage(standard, artifacts, assets_path):
 
     informatiemodel_link = html.find(id="breadctxt").findAll('a')[-1]
     standard_title = standard['titel_kort']
-    informatiemodel_link['href'] = "http://register.geostandaarden.nl/" + standard_title.lower()
+    informatiemodel_link['href'] = "https://register.geostandaarden.nl/" + standard_title.lower()
     informatiemodel_link.string = standard_title
 
     return html.prettify()
 
 def create_overview_entry(standard, title_short, description):
-    # url = "http://register.geostandaarden.nl"
+    # url = "https://register.geostandaarden.nl"
     url = "."
     overview = '''
         <p>
@@ -96,7 +96,7 @@ def create_overview_entry(standard, title_short, description):
 def create_cluster_overview(standards, source, destination_temp, repoCluster, root, assets_path):
     """Creates a cluster's overview page
 
-    e.g.http://register.geostandaarden.nl/brt/index.html
+    e.g.https://register.geostandaarden.nl/brt/index.html
     """
 
     print 'Creating cluster overview page...'
@@ -122,7 +122,7 @@ def create_cluster_overview(standards, source, destination_temp, repoCluster, ro
 def create_register_homepage(clusters, source, destination_temp):
     """Creates the register's homepage
 
-    http://register.geostandaarden.nl
+    https://register.geostandaarden.nl
     """
 
     print 'Creating overview page...'
