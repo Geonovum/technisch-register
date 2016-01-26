@@ -11,5 +11,3 @@ pwd
 ls technisch_register
 
 pip install .
-
-py.test

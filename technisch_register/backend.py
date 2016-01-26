@@ -2,7 +2,7 @@ from fs.osfs import OSFS
 from fs.errors import ResourceNotFoundError
 from subprocess import call
 # from webpages import create_standard_webpage
-import technisch_register.webpages
+from technisch_register import webpages
 from settings import build_path, repos_path, assets_path, cluster_path
 from os import path as ospath
 from utils import get_artifacts, load_repos, cleanup
