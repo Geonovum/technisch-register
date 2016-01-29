@@ -5,9 +5,9 @@ A module that automatically syncs geographical information standards managed on 
 
 #### documentation
 
-The [Guide for information model owners and maintainers]()[NL] explains how to add information models to GitHub and offer them for tracking to https://register.geostandaarden.nl
+The [Guide for information model owners and maintainers](https://github.com/Geonovum/technisch-register/blob/master/documentatie/Handleiding%20voor%20beheerders%20informatiemodellen.md) [NL] explains how to add information models to GitHub and offer them for tracking to https://register.geostandaarden.nl
 
-The [Guide for registry maintainers]()[NL] explains how to setup tracking of new information models by the register.
+The [Guide for registry maintainers](https://github.com/Geonovum/technisch-register/blob/master/documentatie/Handleiding%20voor%20beheerders%20technisch%20register.md) [NL] explains how to setup tracking of new information models by the register.
 
 
 #### installing
