@@ -65,11 +65,11 @@ def build_folders(sources_path, destination_temp, standard, root, repo_cluster, 
 
     for artifact in artifacts:
         # check whether artifact folder exists in destination_temp 
-        if (root.exists(ospath.join(build_path, destination_temp, artifact))) == False:
-            root.makedir(ospath.join(build_path, destination_temp, artifact), recursive=True)
+        if (root.exists(ospath.join(build_path, destination_temp, artifact).replace('\\', '/')) == False:
+            root.makedir(ospath.join(build_path, destination_temp, artifact).replace('\\', '/'), recursive=True)
 
         # copy standard folders from source to destination_temp in desired structure
-        root.copydir(ospath.join(build_path, sources_path, standard['id'], artifact), ospath.join(build_path, destination_temp, artifact, standard['id']))
+        root.copydir(ospath.join(build_path, sources_path, standard['id'], artifact).replace('\\', '/'), ospath.join(build_path, destination_temp, artifact, standard['id']).replace('\\', '/'))
 
 def create_infomodel_homepage(root, sources_path, assets_path, build_path, destination_temp, repo_cluster, standard):
     """Creates the homepage of an information model and copies to correct location
@@ -83,22 +83,22 @@ def create_infomodel_homepage(root, sources_path, assets_path, build_path, desti
 
     # copy homepage to register/standard exists if part of cluster
     if repo_cluster == "":
-        if root.exists(ospath.join(build_path, destination_temp, standard['id'])) == False:
-            root.makedir(ospath.join(build_path, destination_temp, standard['id']))
+        if root.exists(ospath.join(build_path, destination_temp, standard['id']).replace('\\', '/')) == False:
+            root.makedir(ospath.join(build_path, destination_temp, standard['id']).replace('\\', '/'))
         # write standard HTML page to register/standard/index.html
-        with codecs.open(ospath.join(root.getsyspath('.'), build_path, destination_temp, standard['id'], 'index.html'), 'w', encoding='utf8') as f:
+        with codecs.open(ospath.join(root.getsyspath('.'), build_path, destination_temp, standard['id'], 'index.html').replace('\\', '/'), 'w', encoding='utf8') as f:
             f.write(html)
     else:
         # check whether register/cluster/exists
-        if root.exists(ospath.join(build_path, destination_temp, repo_cluster)) == False:
-            root.makedir(ospath.join(build_path, destination_temp, repo_cluster))
+        if root.exists(ospath.join(build_path, destination_temp, repo_cluster).replace('\\', '/')) == False:
+            root.makedir(ospath.join(build_path, destination_temp, repo_cluster).replace('\\', '/'))
 
         # check whether register/cluster/standard exists
-        if root.exists(ospath.join(build_path, destination_temp, repo_cluster, standard['id'])) == False:
-            root.makedir(ospath.join(build_path, destination_temp, repo_cluster, standard['id']))
+        if root.exists(ospath.join(build_path, destination_temp, repo_cluster, standard['id']).replace('\\', '/')) == False:
+            root.makedir(ospath.join(build_path, destination_temp, repo_cluster, standard['id']).replace('\\', '/'))
     
         # write standard HTML page to register/cluster/standard/index.html
-        with codecs.open(ospath.join(build_path, destination_temp, repo_cluster, standard['id'], 'index.html'), 'w', encoding='utf8') as f:
+        with codecs.open(ospath.join(build_path, destination_temp, repo_cluster, standard['id'], 'index.html').replace('\\', '/'), 'w', encoding='utf8') as f:
             f.write(html)
 
     # copy web assets
@@ -110,14 +110,14 @@ def fetch_repo(root, source, repo, url, build_path):
 
     print "Fetching %s from %s" % (repo, url)
 
-    if root.exists(ospath.join(build_path, source, repo)):
+    if root.exists(ospath.join(build_path, source, repo).replace('\\', '/')):
         print "Repo %s exists, issuing a git pull..." % repo
-        call('cd %s; git pull' % ospath.join(root.getsyspath('.'), build_path, source, repo), shell=True)
+        call('cd %s; git pull' % ospath.join(root.getsyspath('.'), build_path, source, repo).replace('\\', '/'), shell=True)
         return 'pull'
     else:
         print "Repo %s does not exist, issuing a git clone..." % repo
 
-        call ('git clone %s %s' % (url, ospath.join(root.getsyspath('.'), build_path, source, repo)), shell=True)
+        call ('git clone %s %s' % (url, ospath.join(root.getsyspath('.'), build_path, source, repo).replace('\\', '/')), shell=True)
         # call('git clone %s %s/%s > /dev/null 2>&1' % (repo['url'], source, repo['id']), shell=True)
 
         return 'clone'
@@ -138,9 +138,9 @@ def create_staging(staging_path, production_path, build_path):
     print 'Moving new register to staging...'
 
     # OSFS cannot copy to arbitrary locations
-    call('cp -r %s %s' % (ospath.join(build_path, staging_path), production_path), shell=True)
+    call('cp -r %s %s' % (ospath.join(build_path, staging_path).replace('\\', '/'), production_path), shell=True)
     
-    call('chmod -R a+rx %s' % (ospath.join(production_path, staging_path)), shell=True)
+    call('chmod -R a+rx %s' % (ospath.join(production_path, staging_path).replace('\\', '/')), shell=True)
 
     logging.info("Staging built successfully!")
 
@@ -161,7 +161,7 @@ def create_production(destination, backups, script_entry_path, production_path):
 
     # copy newly baked register/staging to production directory
     # NOTE: only build paths within script_dir are currently supported
-    call ('cp -r %s %s' % (ospath.join(build_path, destination), ospath.join(production_path, destination + '-new')), shell=True)
+    call ('cp -r %s %s' % (ospath.join(build_path, destination).replace('\\', '/'), ospath.join(production_path, destination + '-new').replace('\\', '/')), shell=True)
     # production.copydir('%s/%s/%s' % (script_dir, build_path, destination), destination + '-new', overwrite=True)
 
     if production.exists(destination) == True:
@@ -195,8 +195,8 @@ def create_production(destination, backups, script_entry_path, production_path):
     # fails if production is built first...
     production.makedir('%s/staging' % destination)
     
-    call('cd %s; ln -s %s' % (ospath.join(production_path, destination, 'staging'), ospath.join(production_path, 'staging')), shell=True)
-    call('cd %s; ln -s %s' % (ospath.join(production_path, destination), ospath.join(script_entry_path, 'log.txt')), shell=True)
+    call('cd %s; ln -s %s' % (ospath.join(production_path, destination, 'staging').replace('\\', '/'), ospath.join(production_path, 'staging').replace('\\', '/')), shell=True)
+    call('cd %s; ln -s %s' % (ospath.join(production_path, destination).replace('\\', '/'), ospath.join(script_entry_path, 'log.txt').replace('\\', '/')), shell=True)
     
     try:
         production.removedir(destination + '-old', force=True)

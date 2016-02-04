@@ -50,7 +50,7 @@ def cleanup(build_path, source, destination_temp, standard):
 
     for artifact in artifacts:
         path = ospath.join(artifact, standard)
-        if destination_fs.exists(path):
+        if destination_fs.exists(path.replace('\\', '/')):
             destination_fs.removedir(path, force=True)
 
     if destination_fs.exists(standard): destination_fs.removedir(standard, force=True)
