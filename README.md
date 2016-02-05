@@ -12,7 +12,8 @@ The [Guide for registry maintainers](https://github.com/Geonovum/technisch-regis
 
 #### installing
 
-You need a Unix shell to run this module. Linux and OS X have one by default. If you have installed `git` on Windows you can use `Git Bash`. Can't find it? Try [Babun](http://babun.github.io/) instead.
+You need a Unix shell to run this module. Linux and OS X have one by default. If you have installed `git` on Windows you can use `Git Bash`. When making use of 'Git Bash' on a Windows machine it is important to run 'Git Bash' as an administrator. Can't find 'Git Bash'? Try [Babun](http://babun.github.io/) instead. 
+
 
 1. Clone this repository and install the module in [editable mode](https://pip.pypa.io/en/latest/reference/pip_install/?highlight=editable#editable-installs) with `pip` as
 
@@ -22,7 +23,7 @@ You need a Unix shell to run this module. Linux and OS X have one by default. If
 
     The `-e` flag makes sure that "[any changes you make to the code will immediately apply accross the system](http://stackoverflow.com/a/24000174)". In other words, you don't have to install the module every time you update the code. `pip` will automatically install the project's dependencies (see `setup.py`).
 
-2. Rename `technisch_register/settings-example.py` to `technisch_register/settings.py` and provide the needed paths.
+2. Rename `technisch_register/settings-example.py` to `technisch_register/settings.py` and provide the needed paths. Windows users have to make sure that all directory path settings end with a forward slash.   
 
 3. Create the required directories and build the register
 
