@@ -23,7 +23,7 @@ You need a Unix shell to run this module. Linux and OS X have one by default. If
 
     The `-e` flag makes sure that "[any changes you make to the code will immediately apply accross the system](http://stackoverflow.com/a/24000174)". In other words, you don't have to install the module every time you update the code. `pip` will automatically install the project's dependencies (see `setup.py`).
 
-2. Rename `technisch_register/settings-example.py` to `technisch_register/settings.py` and provide the needed paths. Windows users have to make sure that all directory path settings end with a forward slash.   
+2. Rename `technisch_register/settings-example.py` to `technisch_register/settings.py` and provide the needed paths. Windows users have to make sure that all directory path settings (all paths except for 'repos_path' and 'cluster_path') end with a forward slash.   
 
 3. Create the required directories and build the register
 
