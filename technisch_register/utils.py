@@ -2,7 +2,9 @@ import psutil
 from subprocess import call
 from fs.osfs import OSFS
 from fs.errors import ResourceNotFoundError
-from os import path as ospath
+#from os import path as ospath
+#from os import posixpath as ospath
+import posixpath as ospath
 from settings import build_path
 from json import load
 
@@ -50,6 +52,7 @@ def cleanup(build_path, source, destination_temp, standard):
 
     for artifact in artifacts:
         path = ospath.join(artifact, standard)
+        print path
         if destination_fs.exists(path):
             destination_fs.removedir(path, force=True)
 

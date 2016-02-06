@@ -4,7 +4,8 @@ from subprocess import call
 # from webpages import create_standard_webpage
 from technisch_register import webpages
 from settings import build_path, repos_path, assets_path, cluster_path
-from os import path as ospath
+#from os import path as ospath
+import posixpath as ospath
 from utils import get_artifacts, load_repos, cleanup
 import codecs
 import time
@@ -86,7 +87,7 @@ def create_infomodel_homepage(root, sources_path, assets_path, build_path, desti
         if root.exists(ospath.join(build_path, destination_temp, standard['id'])) == False:
             root.makedir(ospath.join(build_path, destination_temp, standard['id']))
         # write standard HTML page to register/standard/index.html
-        with codecs.open(ospath.join(root.getsyspath('.'), build_path, destination_temp, standard['id'], 'index.html'), 'w', encoding='utf8') as f:
+        with codecs.open(ospath.join(root.getsyspath('.').replace('\\', '/'), build_path, destination_temp, standard['id'], 'index.html'), 'w', encoding='utf8') as f:
             f.write(html)
     else:
         # check whether register/cluster/exists
@@ -161,7 +162,7 @@ def create_production(destination, backups, script_entry_path, production_path):
 
     # copy newly baked register/staging to production directory
     # NOTE: only build paths within script_dir are currently supported
-    call ('cp -r %s %s' % (ospath.join(build_path, destination), ospath.join(production_path, destination + '-new')), shell=True)
+    call ('cp -r %s %s' % (ospath.join(build_path, destination), ospath.join('/c', production_path, destination + '-new')), shell=True)
     # production.copydir('%s/%s/%s' % (script_dir, build_path, destination), destination + '-new', overwrite=True)
 
     if production.exists(destination) == True:

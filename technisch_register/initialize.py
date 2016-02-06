@@ -1,9 +1,12 @@
 from fs.osfs import OSFS
+from fs.opener import fsopendir
 from fs.errors import ResourceNotFoundError
 import settings as s
 from backend import fetch_repo, create_production, build
 from utils import load_repos
 
+print s.root_path
+#root_fs = fsopendir(s.root_path)
 root_fs = OSFS(s.root_path)
 build_fs = root_fs.makeopendir(s.build_path)
 build_fs.makedir(s.sources_path)
