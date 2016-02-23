@@ -76,11 +76,11 @@ def build_folders(sources_path, destination_temp, standard, root, repo_cluster, 
 
     for artifact in artifacts:
         # check whether artifact folder exists in destination_temp 
-        if (root.exists(ospath.join(build_path, destination_temp, artifact)) == False:
+        if (root.exists(ospath.join(build_path, destination_temp, artifact))) == False:
             root.makedir(ospath.join(build_path, destination_temp, artifact), recursive=True)
 
         # copy standard folders from source to destination_temp in desired structure
-        root.copydir(ospath.join(build_path, sources_path, standard['id'], artifact), ospath.join(build_path, destination_temp, artifact, standard['id']).replace('\\', '/'))
+        root.copydir(ospath.join(build_path, sources_path, standard['id'], artifact), ospath.join(build_path, destination_temp, artifact, standard['id']))
 
 def create_infomodel_homepage(root, sources_path, assets_path, build_path, destination_temp, repo_cluster, standard):
     """Creates the homepage of an information model and copies to correct location
@@ -97,7 +97,7 @@ def create_infomodel_homepage(root, sources_path, assets_path, build_path, desti
         if root.exists(ospath.join(build_path, destination_temp, standard['id'])) == False:
             root.makedir(ospath.join(build_path, destination_temp, standard['id']))
         # write standard HTML page to register/standard/index.html
-        with codecs.open(ospath.join(root.getsyspath('.'), build_path, destination_temp, standard['id'], 'index.html').replace('\\', '/'), 'w', encoding='utf8') as f:
+        with codecs.open(ospath.join(root.getsyspath('.'), build_path, destination_temp, standard['id'], 'index.html'), 'w', encoding='utf8') as f:
             f.write(html)
     else:
         # check whether register/cluster/exists
