@@ -1,4 +1,8 @@
 {
+	"zipfile": {
+		"titel": "Zipfile",
+		"beschrijving": "Zipfile met het complete informatiemodel"
+	},
 	"informatiemodel": {
 		"titel": "Informatiemodel",
 		"beschrijving": "UML informatiemodellen (*.EAP of *.XMI). UML modellen worden hier aangeboden voor technische doeleinden zoals het genereren van schema's/code of het hergebruiken van entiteiten uit elkaars informatiemodel."

@@ -10,6 +10,7 @@ import codecs
 import time
 import logging
 from json import load
+import shutil
 
 def build(source, build_dir, root, initiator):
     """Builds the register in build_dir/source.
@@ -32,11 +33,13 @@ def build(source, build_dir, root, initiator):
 
     # check if initiator is present in repos.json
     if initiator in standards_id.keys():
-        cleanup(build_path, source, build_dir, initiator)
+		cleanup(build_path, source, build_dir, initiator)
 
-        logging.info("Fetching repo %s..." % initiator)
-        fetch_repo(root, source, initiator, standards_id[initiator]['url'], build_path)
-
+		logging.info("Fetching repo %s..." % initiator)
+		fetch_repo(root, source, initiator, standards_id[initiator]['url'], build_path)
+		
+		create_zipfile(build_path, source, initiator, root)
+		
         logging.info("Building folders...")
         build_folders(source, build_dir, standards_id[initiator], root, standards_id[initiator]['cluster'], build_path)
         create_infomodel_homepage(root, source, assets_path, build_path, build_dir, standards_id[initiator]['cluster'], standards_id[initiator])
@@ -54,6 +57,14 @@ def build(source, build_dir, root, initiator):
 
     print "Done!"
 
+def create_zipfile(build_path, source, initiator, root)
+   """Create a zipfile with all artifacts of a repository
+
+    """
+	std_path = ospath.join(build_path, source, initiator).replace('\\', '/')
+	root.makedir(ospath.join(build_path, source, initiator, '/zipfile').replace('\\', '/'), recursive=True)
+	zip_path = ospath.join(build_path, source, initiator, '/zipfile').replace('\\', '/')
+	shutil.make_archive(zip_path, 'zip', std_path, std_path)
 
 def build_folders(sources_path, destination_temp, standard, root, repo_cluster, build_path):
     """Transforms a repo's folder structure to that of the register
