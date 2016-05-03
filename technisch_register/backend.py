@@ -11,7 +11,6 @@ import time
 import logging
 from json import load
 import shutil
-import pudb
 
 def build(source, build_dir, root, initiator):
     """Builds the register in build_dir/source.
