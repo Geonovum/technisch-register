@@ -11,6 +11,7 @@ import time
 import logging
 from json import load
 import shutil
+import pudb
 
 def build(source, build_dir, root, initiator):
     """Builds the register in build_dir/source.
@@ -33,13 +34,11 @@ def build(source, build_dir, root, initiator):
 
     # check if initiator is present in repos.json
     if initiator in standards_id.keys():
-		cleanup(build_path, source, build_dir, initiator)
+        cleanup(build_path, source, build_dir, initiator)
+        logging.info("Fetching repo %s..." % initiator)
+        fetch_repo(root, source, initiator, standards_id[initiator]['url'], build_path)
 
-		logging.info("Fetching repo %s..." % initiator)
-		fetch_repo(root, source, initiator, standards_id[initiator]['url'], build_path)
-		
-		create_zipfile(build_path, source, initiator, root)
-		
+        create_zipfile(build_path, source, initiator, root)
         logging.info("Building folders...")
         build_folders(source, build_dir, standards_id[initiator], root, standards_id[initiator]['cluster'], build_path)
         create_infomodel_homepage(root, source, assets_path, build_path, build_dir, standards_id[initiator]['cluster'], standards_id[initiator])
@@ -57,14 +56,28 @@ def build(source, build_dir, root, initiator):
 
     print "Done!"
 
-def create_zipfile(build_path, source, initiator, root)
-   """Create a zipfile with all artifacts of a repository
+def create_zipfile(build_path, source, initiator, root):
+    """Create a zipfile with all artifacts of a repository
 
     """
-	std_path = ospath.join(build_path, source, initiator)
-	root.makedir(ospath.join(build_path, source, initiator, '/zipfile'), recursive=True)
-	zip_path = ospath.join(build_path, source, initiator, '/zipfile')
-	shutil.make_archive(zip_path, 'zip', std_path, std_path)
+    path = ospath.join(build_path, source, initiator)
+    print path
+
+    # temporary dir for storing ZIPs
+    # needed since make_acrhive adds an empty archive 
+    # when to-be zipped dir is used as destination dir  
+    path_temp = ospath.join(build_path, 'temp')
+    root.makedir(ospath.join(path_temp), allow_recreate=True)
+
+    path_temp_zip = ospath.join(path_temp, initiator)
+    
+    # use explicit absolute paths, needed for tests
+    shutil.make_archive(root.getsyspath('.') + path_temp_zip, 'zip', root.getsyspath('.') + path)
+
+    # create the ZIP artefact
+    # by moving it from temp dir to zipfile dir
+    root.makedir(ospath.join(path, 'zipfile'), recursive=True)
+    root.move(path_temp_zip + '.zip', ospath.join(path, 'zipfile', initiator + '.zip'))
 
 def build_folders(sources_path, destination_temp, standard, root, repo_cluster, build_path):
     """Transforms a repo's folder structure to that of the register

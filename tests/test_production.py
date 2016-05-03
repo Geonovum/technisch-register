@@ -3,7 +3,7 @@
 
 import pytest
 from fs.osfs import OSFS
-from technisch_register.backend import fetch_repo, build_folders, create_infomodel_homepage
+from technisch_register.backend import fetch_repo, build_folders, create_infomodel_homepage, create_zipfile
 from technisch_register.settings import assets_path, sources_path, register_path, build_path, staging_path, root_path, repos_path
 from os import path as ospath
 from subprocess import call
@@ -20,6 +20,8 @@ class TestBackend:
         return 'nen3610', 'https://www.github.com/Geonovum/nen3610'
 
     def test_fetch_repo_clone(self, fetch_repo_parameters, root_directory):
+        """ Test whether a clone request is issue for a non-existing repo """
+
         initiator, url = fetch_repo_parameters
 
         root = root_directory
@@ -30,14 +32,24 @@ class TestBackend:
         assert initiator in root.listdir(ospath.join(build_path, sources_path), dirs_only=True)
 
     def test_fetch_repo_pull(self, fetch_repo_parameters, root_directory):
-        initiator, url = fetch_repo_parameters
+        """ Test whether a pull request is issued for an existing repo """
 
+        initiator, url = fetch_repo_parameters
         root = root_directory
 
         assert fetch_repo(root, sources_path, initiator, url, build_path) == 'pull'
 
-    # @pytest.mark.current
+    def test_create_zipfile(self, root_directory):
+        source = sources_path
+        initiator = 'nen3610'
+
+        create_zipfile(build_path, source, initiator, root_directory)
+
+        assert root_directory.exists(ospath.join(build_path, source, initiator, 'zipfile', initiator + '.zip'))
+
     def test_build_folders_staging(self, root_directory):
+        """ Checks whether the staging folders have been built successfully"""
+
         root = root_directory
         standard = load_repos(ospath.join(root_path, repos_path))[0]['nen3610']
 
