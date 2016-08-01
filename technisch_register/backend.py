@@ -15,7 +15,7 @@ import shutil
 def build(source, build_dir, root, initiator):
     """Builds the register in build_dir/source.
 
-    source is either settings.register_path of setting.staging_path
+    source is either settings.register_path of settings.staging_path
     """
 
     logging.info("Sync script started by %s...", initiator)
@@ -34,12 +34,15 @@ def build(source, build_dir, root, initiator):
     # check if initiator is present in repos.json
     if initiator in standards_id.keys():
         cleanup(build_path, source, build_dir, initiator)
+        
         logging.info("Fetching repo %s..." % initiator)
         fetch_repo(root, source, initiator, standards_id[initiator]['url'], build_path)
 
         create_zipfile(build_path, source, initiator, root)
+        
         logging.info("Building folders...")
         build_folders(source, build_dir, standards_id[initiator], root, standards_id[initiator]['cluster'], build_path)
+        
         create_infomodel_homepage(root, source, assets_path, build_path, build_dir, standards_id[initiator]['cluster'], standards_id[initiator])
 
         logging.info("Creating homepagepage...")
@@ -75,8 +78,8 @@ def create_zipfile(build_path, source, initiator, root):
 
     # create the ZIP artefact
     # by moving it from temp dir to zipfile dir
-    root.makedir(ospath.join(path, 'zipfile'), recursive=True)
-    root.move(path_temp_zip + '.zip', ospath.join(path, 'zipfile', initiator + '.zip'))
+    root.makedir(ospath.join(path, 'zipfile'), recursive=True, allow_recreate=True)
+    root.move(path_temp_zip + '.zip', ospath.join(path, 'zipfile', initiator + '.zip'), overwrite=True)
 
 def build_folders(sources_path, destination_temp, standard, root, repo_cluster, build_path):
     """Transforms a repo's folder structure to that of the register
@@ -135,12 +138,12 @@ def fetch_repo(root, source, repo, url, build_path):
 
     if root.exists(ospath.join(build_path, source, repo)):
         print "Repo %s exists, issuing a git pull..." % repo
-        call('cd %s; git pull' % ospath.join(root.getsyspath('.'), build_path, source, repo), shell=True)
+        status = call('cd %s; git reset --hard; git pull' % ospath.join(root.getsyspath('.'), build_path, source, repo), shell=True)
         return 'pull'
     else:
         print "Repo %s does not exist, issuing a git clone..." % repo
 
-        call ('git clone %s %s' % (url, ospath.join(root.getsyspath('.'), build_path, source, repo)), shell=True)
+        status = call ('git clone %s %s' % (url, ospath.join(root.getsyspath('.'), build_path, source, repo)), shell=True)
         # call('git clone %s %s/%s > /dev/null 2>&1' % (repo['url'], source, repo['id']), shell=True)
 
         return 'clone'
