@@ -8,8 +8,7 @@ from settings import root_path
 VERSION = '0.5.0'
 
 print "Content-Type: text/html"
-print 
-
+print
 print "Starting sync script..."
 
 chdir(root_path)
@@ -17,9 +16,10 @@ chdir(root_path)
 if 'verbose' in argv:
     Popen(['/usr/bin/python', 'run.py'], stdin=stdin)
 else:
-    with open(devnull, 'w') as fp:
+    with open('output.txt', 'a') as fp:
         # directing stderr to stdout is essential
         # otherwise script waits for Popen to finish
+        # and causes request to timeout
         Popen(['/usr/bin/python', path.join(root_path, 'run.py')], stdin=stdin, stdout=fp, stderr=STDOUT)
 
 print "Check https://register.geostandaarden.nl/log.txt for a status report."
