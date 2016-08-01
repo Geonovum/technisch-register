@@ -25,7 +25,6 @@ def run():
         if p_name == 'python.exe' or p_name == 'Python' or p_name == 'python':
             builder = proc.as_dict(attrs=['cmdline', 'create_time'])
             if builder['cmdline'][1] == 'run.py':
-                print 'found it'
                 num_processes += 1
 
     # if more than one intance of build.py is detected 
