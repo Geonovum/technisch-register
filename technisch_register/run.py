@@ -4,10 +4,7 @@ from fs.osfs import OSFS
 from json import load, dumps, loads
 from utils import run, cleanup, load_repos
 from sys import stdin, exit
-from os import path as ospath
-import codecs
-import time
-import webpages
+import datetime
 import backend
 import logging
 import settings
@@ -29,7 +26,9 @@ logging.basicConfig(filename='log.txt', level=logging.DEBUG, format='%(asctime)s
 
 #if __name__ == "__main__":
 
-# read GitHub's JSON payload from stdin
+print "\nRunning on %s" % datetime.datetime.now()
+
+# read GitHub's JSON POST payload from stdin
 # see ./github-payload.json for an example
 payload = load(stdin)
 
@@ -37,7 +36,6 @@ try:
     # published GitHub releases contain an 'action' key, try to retrieve it
     action = payload['action']
 except KeyError:
-    print 
     logging.error("This payload does not carry a release... aborting.")
     exit()
 
@@ -48,33 +46,21 @@ initiator = payload['repository']['name'].lower()
 queue = FifoSQLiteQueue('queue.db')
 
 if action == 'published':
-    if prerelease == True:
-        # check whether we can start the build.py script
-        # i.e. whether another instance isn't already running
-        if run():
+    # check whether we can start the build.py script
+    # i.e. whether another instance isn't already running
+    if run():
+        if prerelease == True:        
             print "Building staging..."
             backend.build(source, staging_build, root, initiator)
             backend.create_staging(staging_build, production_path, build_path)
         else:
-            print "Script is already running... setting repeat flag to staging..."
-            # set_repeat('staging')
-            queue.push(initiator, prerelease)
-            exit()
-    else:
-        if run():
             print "Building production..."
             backend.build(source, register_path, root, initiator)
             backend.create_production(register_path, backups, script_entry_path, production_path)
-        else:
-            print "Script is already running... setting repeat flag to production..."
-            # set_repeat('production')
-            queue.push(initiator, prerelease)
-            exit()
-
-# check whether we need to run script once more
-# repeat = get_repeat()
-
-# while repeat != 'none':
+    else:
+        print "Script is already running... queueing action." 
+        queue.push(initiator, prerelease)
+        exit()
 
 while len(queue) > 0:
     initiator, prerelease = queue.pop()
