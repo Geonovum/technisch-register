@@ -1,3 +1,29 @@
+# 2016-05-03
+
+- add ZIPping functionality. A zip is added to each standard's directory.
+
+# 2016-01-26
+
+- add documentation that details how to connect GitHub to `technisch-register` on register.geostandaarden.nl.
+- enable HTTPS.
+- enable continous integration with Travis CI.
+
+# 2016-01-19
+
+- add initialization script that builds the register for the first time after the module has been installed.
+
+# 2015-12-28
+
+- setup a `pytest` testing environment and add first tests.
+
+# 2015-12-23
+
+- add `setuptools` setup script 
+
+# 2015-12-16
+
+ - add clusters and clustering. Standards from a single family are now grouped on the homepage. For example, instead of separate entries for TOP50NL and TOP100NL there is now a single entry for BRT.
+
 # 2015-12-14
 
 - use `git pull` to fetch changes instead of `git clone`-ing all the repositories. Previously the whole register was rebuilt whenever a single repository published a new release. This resulted in long build times and allowed users to publish other users' prereleases to production.    
