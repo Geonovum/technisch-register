@@ -10,7 +10,7 @@ def read(fname):
 
 setup(
     name = "technisch_register",
-    version = "0.5.0",
+    version = "0.6.0",
     packages= find_packages(),
     install_requires = ['fs', 'beautifulsoup4', 'psutil', 'pytest>=2.8.0']
 )
