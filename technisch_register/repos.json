@@ -91,7 +91,7 @@
     },
     {
         "id": "stri",
-		"cluster": "",
+		"cluster": "ro",
         "titel": "Standaard Toegankelijkheid Ruimtelijke Instrumenten",
         "titel_kort":"STRI",
         "beschrijving": "Ieder ruimtelijk instrument is opgebouwd uit een samenhangende set bronbestanden. Voor verschillende typen instrumenten is dit een andere set. De STRI2012 geeft de vereisten voor beschikbaarstelling voor de in het IMRO gedefinieerde plannen, visies, besluiten e.d..",
@@ -100,7 +100,7 @@
     },
     {
         "id": "pcp",
-		"cluster": "",
+		"cluster": "ro",
         "titel": "Praktijkrichtlijn Plancontour en PDF",
         "titel_kort":"PCP",
         "beschrijving": "Het op basis van de objectgerichte plancontour toegang hebben tot de gescande planonderdelen wordt ook wel aangeduid als 'Plancontour & PDF'. Hiermee zijn oude ruimtelijke plannen van gemeenten, provincies en het rijk 'plat' digitaal beschikbaar en te benaderen vanuit de correcte geografische ligging van het gebied.",
@@ -109,7 +109,7 @@
     },
     {
         "id": "imro",
-		"cluster": "",
+		"cluster": "ro",
         "titel": "Informatiemodel Ruimtelijke Ordening",
         "titel_kort":"IMRO",
         "beschrijving": "IMRO is het informatiemodel voor het opstellen en uitwisselen van digitale plannen, visies en besluiten voor de ruimtelijke ordening (omgevingsinstrumenten). Het gaat hierbij om instrumenten zoals die voor de ruimtelijke ordening in de Wro en Wabo gedefinieerd zijn en op de verschillende administratieve niveaus gemaakt worden: gemeentelijk, provinciaal en nationaal.",
