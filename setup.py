@@ -12,5 +12,5 @@ setup(
     name = "technisch_register",
     version = "0.6.0",
     packages= find_packages(),
-    install_requires = ['fs', 'beautifulsoup4', 'psutil', 'pytest>=2.8.0']
+    install_requires = ['fs<1', 'beautifulsoup4', 'psutil', 'pytest>=2.8.0']
 )
