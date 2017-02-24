@@ -3,8 +3,15 @@
         "id": "brt",
         "titel": "BRT",
         "titel_kort":"BRT",
-        "beschrijving": "Beschrijvendetekst",
-        "beschrijving_kort": "Beschrijvendetekst"
+        "beschrijving": "Informatiemodellen Basisregistratie Topografie",
+        "beschrijving_kort": "Informatiemodellen Basisregistratie Topografie"
+    },
+	{
+        "id": "ro",
+        "titel": "RO standaarden",
+        "titel_kort":"RO standaarden",
+        "beschrijving": "De RO Standaarden bestaan uit afspraken die ervoor zorgen dat makers van plannen in heel Nederland dezelfde termen en kleuren toepassen conform de verplichting van de Wet ruimtelijke ordening. Ook zijn er technische afspraken gemaakt die ervoor zorgen dat plannen onbelemmerd digitaal uitgewisseld kunnen worden. Het geheel aan RO Standaarden omvat wettelijk verplichte standaarden en praktijkrichtlijnen. Op deze pagina vindt u de wettelijk verplichte onderdelen van de RO Standaarden, IMRO en STRI, en de facultatieve standaard PCP.",
+        "beschrijving_kort": "RO standaarden"
     },
 	{
         "id": "nen3610",
@@ -19,27 +26,6 @@
         "titel_kort":"IMGeo",
         "beschrijving": "Het informatiemodel geografie (IMGeo) is het informatiemodel horend bij de Basisregistratie Grootschalige Topografie (BGT). Het verplichte deel van IMGeo specificeert de inhoud van de BGT. Het optionele deel biedt ruimte voor het opnemen van meer objecttypen, gedetailleerdere kenmerken van objecten, en het uitwisselen van gegevens in 3D. Voor meer informatie zie BGT|IMGeo op de website van Geonovum.",
         "beschrijving_kort": "Informatiemodel Grootschalige Geografie"
-    },
-	    {
-        "id": "stri",
-        "titel": "Standaard Toegankelijkheid Ruimtelijke Instrumenten",
-        "titel_kort":"STRI",
-        "beschrijving": "Ieder ruimtelijk instrument is opgebouwd uit een samenhangende set bronbestanden. Voor verschillende typen instrumenten is dit een andere set. De STRI2012 geeft de vereisten voor beschikbaarstelling voor de in het IMRO gedefinieerde plannen, visies, besluiten e.d..",
-        "beschrijving_kort": "Standaard Toegankelijkheid Ruimtelijke Instrumenten"
-    },
-    {
-        "id": "pcp",
-        "titel": "Praktijkrichtlijn Plancontour en PDF",
-        "titel_kort":"PCP",
-        "beschrijving": "Het op basis van de objectgerichte plancontour toegang hebben tot de gescande planonderdelen wordt ook wel aangeduid als 'Plancontour & PDF'. Hiermee zijn oude ruimtelijke plannen van gemeenten, provincies en het rijk 'plat' digitaal beschikbaar en te benaderen vanuit de correcte geografische ligging van het gebied.",
-        "beschrijving_kort": "Praktijkrichtlijn Plancontour en PDF"
-    },
-    {
-        "id": "imro",
-        "titel": "Informatiemodel Ruimtelijke Ordening",
-        "titel_kort":"IMRO",
-        "beschrijving": "IMRO is het informatiemodel voor het opstellen en uitwisselen van digitale plannen, visies en besluiten voor de ruimtelijke ordening (omgevingsinstrumenten). Het gaat hierbij om instrumenten zoals die voor de ruimtelijke ordening in de Wro en Wabo gedefinieerd zijn en op de verschillende administratieve niveaus gemaakt worden: gemeentelijk, provinciaal en nationaal.",
-        "beschrijving_kort": "Informatiemodel Ruimtelijke Ordening"
     },
     {
         "id": "imkl2015",
