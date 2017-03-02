@@ -47,5 +47,14 @@
         "titel_kort": "IMAER",
         "beschrijving": "Dit model beschrijft het InformatieModel AERius (IMAER). IMAER is het standaard gegevens uitwisselingsformaat van AERIUS en wordt gebruikt voor het importeren, exporteren en uitwisselen van gegevens met en tussen de verschillende AERIUS producten (o.a. Calculator, Monitor en Register). In IMAER zijn de objecten opgenomen die nodig zijn voor het berekenen van emissie en depositie van verschillende stoffen (voornamelijk stikstof gerelateerd). Voor meer informatie zie de website van AERIUS: http://www.aerius.nl/",
         "beschrijving_kort": "Informatiemodel AERIUS"
+    },
+	{
+        "id": "imoov",
+        "cluster": "",
+        "titel": "Informatiemodel Opnembare Orde en Veiligheid",
+        "titel_kort": "IMOOV 2008 versie 1.1",
+        "beschrijving": "Het Informatiemodel voor de Openbare Orde en Veiligheid (IMOOV) maakt een soepele uitwisseling van geo-informatie mogelijk tussen brandweer, politie en andere hulpdiensten. Het informatiemodel richt zich in eerste instantie op bestrijding van drie soorten rampen: brand in grote gebouwen, verkeersongevallen op de weg en hoogwater",
+        "beschrijving_kort": "Informatiemodel IMOOV",
+        "url": "https://github.com/Geonovum/IMOOV"
     }
 ]
