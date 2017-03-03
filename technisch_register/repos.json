@@ -147,7 +147,7 @@
         "id": "imoov",
         "cluster": "",
         "titel": "Informatiemodel Openbare Orde en Veiligheid",
-        "titel_kort": "IMOOV 2008",
+        "titel_kort": "IMOOV",
         "beschrijving": "Het Informatiemodel voor de Openbare Orde en Veiligheid (IMOOV) maakt een soepele uitwisseling van geo-informatie mogelijk tussen brandweer, politie en andere hulpdiensten. Het informatiemodel richt zich in eerste instantie op bestrijding van drie soorten rampen: brand in grote gebouwen, verkeersongevallen op de weg en hoogwater. Actuele versie is 1.1/2008",
         "beschrijving_kort": "Informatiemodel IMOOV",
         "url": "https://github.com/Geonovum/IMOOV"
