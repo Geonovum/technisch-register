@@ -6,7 +6,8 @@ from os import path as ospath
 from settings import build_path
 from json import load
 
-def run():
+
+def build_script_running():
     """ Check if the build.py script is already running.
     Return True if it is not i.e. a new instance may be started.
     Return False if it is i.e. a new instance cannot be started.
@@ -30,9 +31,9 @@ def run():
     # if more than one intance of build.py is detected 
     # a new script cannot be launched
     if num_processes > 1:
-        return False
-    else:
         return True
+    else:
+        return False
 
 def cleanup(build_path, source, destination_temp, standard):
     """Remove the source and temporary destination folders."""
