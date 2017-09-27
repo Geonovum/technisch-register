@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup as BS
-from settings import build_path
+from settings import build_path, register_path, assets_path
 from json import load
 from subprocess import call
 from os import path as ospath
@@ -93,7 +93,7 @@ def create_overview_entry(standard, title_short, description):
     # print standard
     return BS(overview, 'html.parser')
 
-def create_cluster_overview(standards, source, destination_temp, repoCluster, root, assets_path):
+def create_cluster_overview(standards, repoCluster, root):
     """Creates a cluster's overview page
 
     e.g.https://register.geostandaarden.nl/brt/index.html
@@ -112,14 +112,14 @@ def create_cluster_overview(standards, source, destination_temp, repoCluster, ro
             overview = create_overview_entry(standard['id'], standard['titel_kort'], standard['beschrijving_kort'])
             el_container.append(overview)
 
-    with codecs.open(ospath.join(build_path, destination_temp, repoCluster, 'index.html'), 'w', encoding='utf8') as f:
+    with codecs.open(ospath.join(build_path, register_path, repoCluster, 'index.html'), 'w', encoding='utf8') as f:
             f.write(html.prettify())
         #OSFS('./').copydir('../web/assets', '%s/assets' % destination_temp)
         # call('cp -r web/assets %s/assets' % destination_temp, shell=True)
 
     print 'Done!'
         
-def create_register_homepage(clusters, source, destination_temp):
+def create_register_homepage(clusters):
     """Creates the register's homepage
 
     https://register.geostandaarden.nl
@@ -138,7 +138,7 @@ def create_register_homepage(clusters, source, destination_temp):
         overview = create_overview_entry(cluster['id'], cluster['titel_kort'], cluster['beschrijving_kort'])
         el_container.append(overview)
 
-    with codecs.open(ospath.join(build_path, destination_temp, 'index.html'), 'w', encoding='utf8') as f:
+    with codecs.open(ospath.join(build_path, register_path, 'index.html'), 'w', encoding='utf8') as f:
         f.write(html.prettify())
         #OSFS('./').copydir('../web/assets', '%s/assets' % destination_temp)
         # call('cp -r web/assets %s/assets' % destination_temp, shell=True)

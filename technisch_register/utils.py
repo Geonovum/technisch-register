@@ -3,7 +3,7 @@ from subprocess import call
 from fs.osfs import OSFS
 from fs.errors import ResourceNotFoundError
 from os import path as ospath
-from settings import build_path
+from settings import build_path, sources_path, register_path
 from json import load
 
 
@@ -35,15 +35,15 @@ def build_script_running():
     else:
         return False
 
-def cleanup(build_path, source, destination_temp, standard):
+def cleanup(standard):
     """Remove the source and temporary destination folders."""
 
     try:
-        source_fs = OSFS(ospath.join(build_path, source, standard))
+        source_fs = OSFS(ospath.join(build_path, sources_path, standard))
     except ResourceNotFoundError:
         return None
 
-    destination_fs = OSFS(ospath.join(build_path, destination_temp))
+    destination_fs = OSFS(ospath.join(build_path, register_path))
 
     artifacts = source_fs.listdir(dirs_only=True)
     if '.git' in artifacts: artifacts.remove('.git')

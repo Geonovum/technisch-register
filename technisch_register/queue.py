@@ -9,11 +9,11 @@ class FifoSQLiteQueue(object):
 
     _sql_create = (
         'CREATE TABLE IF NOT EXISTS queue '
-        '(id INTEGER PRIMARY KEY AUTOINCREMENT, initiator text, prerelease bool)'
+        '(id INTEGER PRIMARY KEY AUTOINCREMENT, initiator text)'
     )
     _sql_size = 'SELECT COUNT(*) FROM queue'
-    _sql_push = 'INSERT INTO queue (initiator, prerelease) VALUES (?,?)'
-    _sql_pop = 'SELECT id, initiator, prerelease FROM queue ORDER BY id LIMIT 1'
+    _sql_push = 'INSERT INTO queue (initiator,) VALUES (?,)'
+    _sql_pop = 'SELECT id, initiator FROM queue ORDER BY id LIMIT 1'
     _sql_del = 'DELETE FROM queue WHERE id = ?'
 
     def __init__(self, path):
@@ -23,18 +23,18 @@ class FifoSQLiteQueue(object):
         with self._db as conn:
             conn.execute(self._sql_create)
 
-    def push(self, initiator, prerelease):
+    def push(self, initiator):
         # if not isinstance(item, bytes):
             # raise TypeError('Unsupported type: {}'.format(type(item).__name__))
 
         with self._db as conn:
-            conn.execute(self._sql_push, (initiator, prerelease))
+            conn.execute(self._sql_push, initiator)
 
     def pop(self):
         with self._db as conn:
-            for id_, initiator, prerelease in conn.execute(self._sql_pop):
+            for id_, initiator in conn.execute(self._sql_pop):
                 conn.execute(self._sql_del, (id_,))
-                return initiator, prerelease
+                return initiator
 
     def close(self):
         size = len(self)
