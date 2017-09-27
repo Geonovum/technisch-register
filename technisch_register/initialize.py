@@ -8,7 +8,6 @@ root_fs = OSFS(s.root_path)
 root_fs.makedir(s.build_path, recursive=True, allow_recreate=True)
 build_fs = OSFS(s.build_path)
 build_fs.makedir(s.sources_path, allow_recreate=True)
-build_fs.makedir(s.staging_path, allow_recreate=True)
 build_fs.makedir(s.register_path, allow_recreate=True)
 
 # create production directory if needed
