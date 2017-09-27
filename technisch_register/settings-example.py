@@ -1,6 +1,6 @@
 root_path = '/home/username/technisch-register/technisch_register/'
 # location of the assets folder (in this case web/)
-assets_path =  '/home/username/technisch-register/technisch_register/'
+assets_path = '/home/username/technisch-register/technisch_register/'
 
 repos_path = 'repos.json'
 cluster_path = 'cluster.json'
@@ -19,3 +19,5 @@ register_path = 'register'
 staging_path = 'staging'
 # path to backups directory relative to production_path 
 backups_path = 'backups'
+
+python_path = '/home/<username>/<deployment>/virtualenv/bin/python'
