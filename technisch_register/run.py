@@ -10,10 +10,6 @@ import logging
 import settings
 from queue import FifoSQLiteQueue
 
-repos_path = settings.repos_path
-staging_build = settings.staging_path
-build_path = settings.build_path
-
 logging.basicConfig(filename='log.txt', level=logging.DEBUG, format='%(asctime)s %(levelname)s: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 
 print "\nRunning on %s" % datetime.datetime.now()
