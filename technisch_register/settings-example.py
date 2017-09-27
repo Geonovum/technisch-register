@@ -23,3 +23,6 @@ backups_path = 'backups'
 
 # path to Python executable in e.g. a virtual env
 python_path = '/home/<username>/<deployment>/virtualenv/bin/python'
+
+# The register's URL; use to denote production/staging deployment
+register_url = 'http://staging.register.geostandaarden.nl'

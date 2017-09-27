@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup as BS
-from settings import build_path, register_path, assets_path
+from settings import build_path, register_path, assets_path, register_url
 from json import load
 from subprocess import call
 from os import path as ospath
@@ -17,12 +17,14 @@ def create_standard_title(title, description):
     return BS(title, 'html.parser')
 
 def create_artifact_title(standard, artifact, title):
+
+
     title = '''
         <p><i class="fa fa-file-o"></i>
             <span style='margin-left: 25px'>
-                <a href="https://register.geostandaarden.nl/%s/%s">%s</a>
+                <a href="%s/%s/%s">%s</a>
             </span>
-        </p> ''' % (artifact, standard, title)
+        </p> ''' % (register_url, artifact, standard, title)
 
     return BS(title, 'html.parser')
 
