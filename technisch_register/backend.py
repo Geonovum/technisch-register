@@ -12,7 +12,7 @@ import logging
 from json import load
 import shutil
 
-def build(source, build_dir, root, initiator):
+def build_register(source, build_dir, root, initiator):
     """Builds the register in build_dir/source.
 
     source is either settings.register_path of settings.staging_path
@@ -170,7 +170,7 @@ def create_staging(staging_path, production_path, build_path):
 
     logging.info("Staging built successfully!")
 
-def create_production(destination, backups, script_entry_path, production_path):
+def deploy_production(destination, backups, script_entry_path, production_path):
     """Put the staging version to production hosted at 
     register.geostandaarden.nl
     """

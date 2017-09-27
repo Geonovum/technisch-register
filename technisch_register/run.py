@@ -24,8 +24,6 @@ assets_path = settings.assets_path
 
 logging.basicConfig(filename='log.txt', level=logging.DEBUG, format='%(asctime)s %(levelname)s: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 
-#if __name__ == "__main__":
-
 print "\nRunning on %s" % datetime.datetime.now()
 
 # read GitHub's JSON POST payload from stdin
@@ -40,7 +38,6 @@ except KeyError:
     exit()
 
 # extract the release type: release or prerelease
-prerelease = payload['release']['prerelease']
 initiator = payload['repository']['name'].lower()
 
 queue = FifoSQLiteQueue('queue.db')
@@ -48,31 +45,22 @@ queue = FifoSQLiteQueue('queue.db')
 if action == 'published':
     # check whether we can start the build.py script
     # i.e. whether another instance isn't already running
+    # TODO: rename run to sync_script_running
     if run():
-        if prerelease == True:        
-            print "Building staging..."
-            backend.build(source, staging_build, root, initiator)
-            backend.create_staging(staging_build, production_path, build_path)
-        else:
-            print "Building production..."
-            backend.build(source, register_path, root, initiator)
-            backend.create_production(register_path, backups, script_entry_path, production_path)
+            #backend.build_register ()
+            backend.build_register(source, register_path, root, initiator)
+
+            # backend.deploy_register ()
+            backend.deploy_production(register_path, backups, script_entry_path, production_path)
     else:
         print "Script is already running... queueing action." 
-        queue.push(initiator, prerelease)
+        queue.push(initiator)
         exit()
 
 while len(queue) > 0:
-    initiator, prerelease = queue.pop()
+    initiator = queue.pop()
 
-    if prerelease == True:
-        print "Repeating staging..."
-        backend.build(source, staging_build, root, initiator)
-        backend.create_staging(staging_build, production_path, build_path)
-    else:
-        print "Repeating production..."
-        backend.build(source, register_path, root, initiator)
-        backend.create_production(register_path, backups, script_entry_path, production_path)
+    backend.build_register(source, register_path, root, initiator)
+    backend.deploy_production(register_path, backups, script_entry_path, production_path)
 
-    # repeat = get_repeat()
 queue.close()
