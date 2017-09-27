@@ -2,7 +2,7 @@
 
 from fs.osfs import OSFS
 from json import load, dumps, loads
-from utils import run, cleanup, load_repos
+from utils import build_script_running, cleanup, load_repos
 from sys import stdin, exit
 import datetime
 import backend
@@ -46,14 +46,10 @@ if action == 'published':
     # check whether we can start the build.py script
     # i.e. whether another instance isn't already running
     # TODO: rename run to sync_script_running
-    if run():
-            #backend.build_register ()
+    if not build_script_running():
             backend.build_register(source, register_path, root, initiator)
-
-            # backend.deploy_register ()
             backend.deploy_production(register_path, backups, script_entry_path, production_path)
     else:
-        print "Script is already running... queueing action." 
         queue.push(initiator)
         exit()
 
