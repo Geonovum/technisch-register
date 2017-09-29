@@ -1,13 +1,11 @@
 #!/usr/bin/python
 
-from fs.osfs import OSFS
-from json import load, dumps, loads
-from utils import build_script_running, cleanup, load_repos
+from json import load
+from utils import build_script_running
 from sys import stdin, exit
 import datetime
 import backend
 import logging
-import settings
 from queue import FifoSQLiteQueue
 
 logging.basicConfig(filename='log.txt', level=logging.DEBUG, format='%(asctime)s %(levelname)s: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
@@ -25,11 +23,10 @@ except KeyError:
     exit()
 
 initiator = payload['repository']['name'].lower()
-prerelease = payload['release']['prerelease']
 
 queue = FifoSQLiteQueue('queue.db')
 
-if action == 'published' and prerelease == settings.prerelease:
+if action == 'published':
     if not build_script_running():
             backend.build_register(initiator)
             backend.deploy_register()
