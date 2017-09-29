@@ -16,14 +16,14 @@ This modules runs on Linux and macOS. You are encouraged to create a `staging` a
 
 1. create your `staging` directory 
 
-    cd /var/www/geostandaarden/
-    mkdir staging
+        cd /var/www/geostandaarden/
+        mkdir staging
     
 2. create a virtual environment called e.g. `tr_staging` and activate it
 
-    cd staging
-    virtualenv tr_staging
-    source tr_staging/bin/activate
+        cd staging
+        virtualenv tr_staging
+        source tr_staging/bin/activate
 
 3. Clone this repository and install the module in [editable mode](https://pip.pypa.io/en/latest/reference/pip_install/?highlight=editable#editable-installs) with `pip` as
 
@@ -33,20 +33,20 @@ This modules runs on Linux and macOS. You are encouraged to create a `staging` a
 
     The `-e` flag makes sure that "[any changes you make to the code will immediately apply accross the system](http://stackoverflow.com/a/24000174)". In other words, you don't have to install the module every time you update the code. `pip` will automatically install the project's dependencies (see `setup.py`).
     
-4. switch to the `staging` branch
+4. Switch to the `staging` branch
 
-    git checkout staging
+        git checkout staging
 
 5. Rename `technisch_register/settings-example.py` to `technisch_register/settings.py` and provide the needed paths.   
 
-6. run `technisch_register/initialize.py` to create the required directories and build the register
+6. Run `technisch_register/initialize.py` to create the required directories and build the register
 
         cd technisch_register
         python initialize.py
         
-7. copy `technisch_register/cgi-bin.py` to your server's `cgi-bin` folder and rename it to `build.py` and adapt the paths to `staging` and `production` environments as needed. 
+7. Copy `technisch_register/cgi-bin.py` to your server's `cgi-bin` folder, rename it to `build.py` and adapt the paths to `staging` and `production` environments as needed. 
 
-8. build the `production` environment by following steps 1 - 6 (except 4) while changing all mentions of `staging` to `production`
+8. Build the `production` environment by following steps 1 - 6 (except 4) while changing all mentions of `staging` to `production`
 
 #### running
 
