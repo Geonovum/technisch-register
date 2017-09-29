@@ -13,10 +13,10 @@ print "Starting sync script..."
 
 chdir(root_path)
 
-if 'verbose' in argv:
+if '--verbose' in argv:
     Popen([python_path, 'run.py'], stdin=stdin)
 else:
     # directing stderr to stdout is essential
     # otherwise script waits for Popen to finish
     # and causes request to timeout
-    Popen([python_path, path.join(root_path, 'run.py')], stdin=stdin, stdout=devnull, stderr=STDOUT)
+    Popen([python_path, path.join(root_path, 'run.py')], stdin=stdin, stdout=open(devnull, 'w'), stderr=STDOUT)
