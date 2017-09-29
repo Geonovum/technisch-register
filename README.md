@@ -12,31 +12,49 @@ The [Guide for registry maintainers](https://github.com/Geonovum/technisch-regis
 
 #### installing
 
-You need a Unix shell to run this module. Linux and OS X have one by default. If you have installed `git` on Windows you can use `Git Bash`. When making use of 'Git Bash' on a Windows machine it is important to run 'Git Bash' as an administrator. Can't find 'Git Bash'? Try [Babun](http://babun.github.io/) instead. 
+This modules runs on Linux and macOS. You are encouraged to create a `staging` and `production` environment on your server as follows  
 
+1. create your `staging` directory 
 
-1. Clone this repository and install the module in [editable mode](https://pip.pypa.io/en/latest/reference/pip_install/?highlight=editable#editable-installs) with `pip` as
+    cd /var/www/geostandaarden/
+    mkdir staging
+    
+2. create a virtual environment called e.g. `tr_staging` and activate it
+
+    cd staging
+    virtualenv tr_staging
+    source tr_staging/bin/activate
+
+3. Clone this repository and install the module in [editable mode](https://pip.pypa.io/en/latest/reference/pip_install/?highlight=editable#editable-installs) with `pip` as
 
         git clone https://www.github.com/geonovum/technisch-register
         cd technisch-register
         pip install -e ./
 
     The `-e` flag makes sure that "[any changes you make to the code will immediately apply accross the system](http://stackoverflow.com/a/24000174)". In other words, you don't have to install the module every time you update the code. `pip` will automatically install the project's dependencies (see `setup.py`).
+    
+4. switch to the `staging` branch
 
-2. Rename `technisch_register/settings-example.py` to `technisch_register/settings.py` and provide the needed paths. Windows users have to make sure that all directory path settings (all paths except for 'repos_path' and 'cluster_path') end with a forward slash.   
+    git checkout staging
 
-3. Create the required directories and build the register
+5. Rename `technisch_register/settings-example.py` to `technisch_register/settings.py` and provide the needed paths.   
+
+6. run `technisch_register/initialize.py` to create the required directories and build the register
 
         cd technisch_register
         python initialize.py
+        
+7. copy `technisch_register/cgi-bin.py` to your server's `cgi-bin` folder and rename it to `build.py` and adapt the paths to `staging` and `production` environments as needed. 
+
+8. build the `production` environment by following steps 1 - 6 (except 4) while changing all mentions of `staging` to `production`
 
 #### running
 
-The main script is `build.py`. It reads a GitHub JSON payload from `stdin` and builds the register in `staging` or `production` mode. Run `build.py` as
+The main script is `build.py`. It reads a GitHub JSON payload from `stdin`. Run `build.py` as
 
+    cd technisch_register
     cat github-payload.json | python build.py
 
-Line 32 of `github-payload.json` determines whether the script should build `staging` or  `production`. Change `prerelease` to `false` to build `production` and vice versa.
 
 #### testing
 
@@ -44,7 +62,3 @@ Install [pytest](http://pytest.org/latest/) and run the tests as
 
     pip install pytest
     py.test tests/
-
-#### notes
-
-The code is written on OS X and deployed on Ubuntu. Windows support is shaky at best. 
