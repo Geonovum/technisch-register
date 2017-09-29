@@ -1,14 +1,15 @@
-from subprocess import Popen
+#!/usr/bin/python
+
+from subprocess import Popen, PIPE
 from sys import stdin
 import json
 
-payload = json.load(stdin)
-prerelease = payload['release']['prerelease']
+payload = stdin.read()
 
-if prerelease:
+if json.loads(payload)['release']['prerelease']:
     environment = 'staging'
 else:
     environment = 'production'
 
-path = '/var/www/geostandaarden/{}/technisch-register/technisch_register/build.py'.format(environment)
-Popen(['/usr/bin/python', path], stdin=stdin)
+p = Popen(['/usr/bin/python', '/var/www/geostandaarden/{}/technisch-register/technisch_register/build.py'.format(environment)], stdin=PIPE)
+p.communicate(input=payload)
