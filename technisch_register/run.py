@@ -25,10 +25,11 @@ except KeyError:
     exit()
 
 initiator = payload['repository']['name'].lower()
+prerelease = payload['release']['prerelease']
 
 queue = FifoSQLiteQueue('queue.db')
 
-if action == 'published':
+if action == 'published' and prerelease == settings.prerelease:
     if not build_script_running():
             backend.build_register(initiator)
             backend.deploy_register()
