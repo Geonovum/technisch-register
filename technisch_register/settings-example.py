@@ -26,7 +26,3 @@ python_path = '/home/<username>/<deployment>/virtualenv/bin/python'
 
 # The register's URL; use to denote production/staging deployment
 register_url = 'http://staging.register.geostandaarden.nl'
-
-# specify whether to react to prereleaes
-# set True for staging env. and false for prod env.
-prerelease = True
