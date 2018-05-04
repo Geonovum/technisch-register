@@ -49,9 +49,18 @@
         "cluster": "brt",
 		"titel": "TOP500NL", 
         "titel_kort": "TOP500NL", 
-        "beschrijving": "TOP500NL is een onderdeel van de Basisregistratie Topografie en is afgeleid van TOP10NL. TOP500NL is vooral bedoeld voor het vervaardigen van een leesbare topografische kaart op schaalniveau 1: 250.000. TOP250NL is gemodelleerd binnen het Informatiemodel BRT (IMBRT).", 
+        "beschrijving": "TOP500NL is een onderdeel van de Basisregistratie Topografie en is afgeleid van European Regional Map (ERM). TOP500NL is vooral bedoeld voor het vervaardigen van een leesbare topografische kaart op schaalniveau 1: 500.000. TOP500NL is gemodelleerd binnen het Informatiemodel BRT (IMBRT).", 
         "beschrijving_kort": "BRT-TOP500NL product, gemodelleerd binnen IMBRT", 
         "url": "https://github.com/Kadaster/TOP500NL" 
+    }, 
+    { 
+        "id": "top1000nl", 
+        "cluster": "brt",
+		"titel": "TOP1000NL", 
+        "titel_kort": "TOP1000NL", 
+        "beschrijving": "TOP1000NL is een onderdeel van de Basisregistratie Topografie en is afgeleid van European Regional Map (ERM). TOP1000NL is vooral bedoeld voor het vervaardigen van een leesbare topografische kaart op schaalniveau 1: 1.000.000. TOP1000NL is gemodelleerd binnen het Informatiemodel BRT (IMBRT).", 
+        "beschrijving_kort": "BRT-TOP1000NL product, gemodelleerd binnen IMBRT", 
+        "url": "https://github.com/Kadaster/TOP1000NL" 
     }, 
     {
         "id": "brt-algemeen",
@@ -82,7 +91,7 @@
     },
     {
         "id": "stri",
-		"cluster": "",
+		"cluster": "ro",
         "titel": "Standaard Toegankelijkheid Ruimtelijke Instrumenten",
         "titel_kort":"STRI",
         "beschrijving": "Ieder ruimtelijk instrument is opgebouwd uit een samenhangende set bronbestanden. Voor verschillende typen instrumenten is dit een andere set. De STRI2012 geeft de vereisten voor beschikbaarstelling voor de in het IMRO gedefinieerde plannen, visies, besluiten e.d..",
@@ -91,7 +100,7 @@
     },
     {
         "id": "pcp",
-		"cluster": "",
+		"cluster": "ro",
         "titel": "Praktijkrichtlijn Plancontour en PDF",
         "titel_kort":"PCP",
         "beschrijving": "Het op basis van de objectgerichte plancontour toegang hebben tot de gescande planonderdelen wordt ook wel aangeduid als 'Plancontour & PDF'. Hiermee zijn oude ruimtelijke plannen van gemeenten, provincies en het rijk 'plat' digitaal beschikbaar en te benaderen vanuit de correcte geografische ligging van het gebied.",
@@ -100,12 +109,21 @@
     },
     {
         "id": "imro",
-		"cluster": "",
+		"cluster": "ro",
         "titel": "Informatiemodel Ruimtelijke Ordening",
         "titel_kort":"IMRO",
         "beschrijving": "IMRO is het informatiemodel voor het opstellen en uitwisselen van digitale plannen, visies en besluiten voor de ruimtelijke ordening (omgevingsinstrumenten). Het gaat hierbij om instrumenten zoals die voor de ruimtelijke ordening in de Wro en Wabo gedefinieerd zijn en op de verschillende administratieve niveaus gemaakt worden: gemeentelijk, provinciaal en nationaal.",
         "beschrijving_kort": "Informatiemodel Ruimtelijke Ordening",
         "url": "https://github.com/Geonovum/imro"
+    },
+	{
+        "id": "imropt",
+		"cluster": "ro",
+        "titel": "Informatiemodel Ruimtelijke Ordening planteksten",
+        "titel_kort":"IMROPT",
+        "beschrijving": "IMROPT is het informatiemodel voor het opstellen en uitwisselen van planteksten van digitale plannen, visies en besluiten voor de ruimtelijke ordening (omgevingsinstrumenten). Het gaat hierbij om instrumenten zoals die voor de ruimtelijke ordening in de Wro en Wabo gedefinieerd zijn en op de verschillende administratieve niveaus gemaakt worden: gemeentelijk, provinciaal en nationaal.",
+        "beschrijving_kort": "Informatiemodel Ruimtelijke Ordening Planteksten",
+        "url": "https://github.com/Geonovum/imropt"
     },
     {
         "id": "imkl2015",
@@ -133,5 +151,15 @@
         "beschrijving": "Dit model beschrijft het InformatieModel AERius (IMAER). IMAER is het standaard gegevens uitwisselingsformaat van AERIUS en wordt gebruikt voor het importeren, exporteren en uitwisselen van gegevens met en tussen de verschillende AERIUS producten (o.a. Calculator, Monitor en Register). In IMAER zijn de objecten opgenomen die nodig zijn voor het berekenen van emissie en depositie van verschillende stoffen (voornamelijk stikstof gerelateerd). Voor meer informatie zie de website van AERIUS: http://www.aerius.nl/",
         "beschrijving_kort": "Informatiemodel AERIUS",
         "url": "https://github.com/aerius/IMAER"
+    },
+        {
+        "id": "imoov",
+        "cluster": "",
+        "titel": "Informatiemodel Openbare Orde en Veiligheid",
+        "titel_kort": "IMOOV",
+        "beschrijving": "Het Informatiemodel voor de Openbare Orde en Veiligheid (IMOOV) maakt een soepele uitwisseling van geo-informatie mogelijk tussen brandweer, politie en andere hulpdiensten. Het informatiemodel richt zich in eerste instantie op bestrijding van drie soorten rampen: brand in grote gebouwen, verkeersongevallen op de weg en hoogwater. Actuele versie is 1.1/2008",
+        "beschrijving_kort": "Informatiemodel IMOOV",
+        "url": "https://github.com/Geonovum/IMOOV"
     }
+
 ]
