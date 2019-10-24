@@ -126,7 +126,7 @@ Vul je password in:
 
 <img src="./media/image11.png" width="336" height="201" />
 
-Vul de url <http://register.geostandaarden.nl/cgi-bin/build.py> in, selecteer “let me select individual elements” haal het vinkje bij “Push” weg en voeg er een toe bij “release” klik tot slot op add webhook zoals hieronder aangegeven:
+Vul de url <https://register.geostandaarden.nl/autodeploy/releasecreated.php> in, selecteer “let me select individual elements” haal het vinkje bij “Push” weg en voeg er een toe bij “release” klik tot slot op add webhook zoals hieronder aangegeven:
 
 <img src="./media/image12.png" width="556" height="888" />
 
